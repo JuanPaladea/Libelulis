@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function HeaderComponent() {
     return (
       <div className="relative overflow-hidden bg-white my-5">
@@ -79,12 +81,12 @@ export default function HeaderComponent() {
                   </div>
                 </div>
   
-                <a
-                  href="#"
+                <Link
+                  to="/Tienda"
                   className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
                 >
                   Tienda
-                </a>
+                </Link>
               </div>
             </div>
           </div>

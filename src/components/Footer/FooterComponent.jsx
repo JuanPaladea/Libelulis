@@ -2,7 +2,7 @@ import React from 'react'
 
 const FooterComponent = () => {
     return (
-        <footer class="bg-white dark:bg-gray-800 w-full py-8">
+        <footer class="bg-white dark:bg-gray-800 w-full py-16">
             <div class="max-w-screen-xl px-4 mx-auto">
                 <ul class="flex flex-wrap justify-between max-w-screen-md mx-auto text-lg font-light">
                     <li class="my-2">
@@ -13,11 +13,6 @@ const FooterComponent = () => {
                     <li class="my-2">
                         <a class="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200" href="#">
                             Configuration
-                        </a>
-                    </li>
-                    <li class="my-2">
-                        <a class="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200" href="#">
-                            Github
                         </a>
                     </li>
                     <li class="my-2">

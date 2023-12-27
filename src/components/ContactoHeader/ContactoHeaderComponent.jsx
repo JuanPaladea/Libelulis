@@ -6,69 +6,12 @@ const ContactoHeaderComponent = () => {
         <div class="relative">
             <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-8 lg:items-center">
                 <div class="ml-auto lg:col-start-2 lg:max-w-2xl">
-                    <p class="text-base font-semibold leading-6 text-indigo-500 uppercase">
-                        Interactive
-                    </p>
                     <h4 class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 dark:text-white sm:text-3xl sm:leading-9">
-                        Interactivity between team members is the key of the success.
+                        Contacto
                     </h4>
                     <p class="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-300">
-                        Build a simply and powered collaborative space for all your team. Track, share, measure, you have a fully control, it&#x27;s never be simply and efficient.
+                    ¡Nos encantaría escucharte! Si tienes alguna pregunta, comentario o simplemente quieres ponerte en contacto con nosotros, no dudes en hacerlo. Puedes comunicarte con nosotros a través del formulario de contacto o también puedes encontrarnos en nuestras redes sociales. ¡Esperamos saber de ti pronto!
                     </p>
-                    <ul class="gap-6 mt-8 md:grid md:grid-cols-2">
-                        <li class="mt-6 lg:mt-0">
-                            <div class="flex">
-                                <span class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-green-800 bg-green-100 rounded-full dark:text-green-500 drark:bg-transparent">
-                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                    Live modifications
-                                </span>
-                            </div>
-                        </li>
-                        <li class="mt-6 lg:mt-0">
-                            <div class="flex">
-                                <span class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-green-800 bg-green-100 rounded-full dark:text-green-500 drark:bg-transparent">
-                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                    Data tracker
-                                </span>
-                            </div>
-                        </li>
-                        <li class="mt-6 lg:mt-0">
-                            <div class="flex">
-                                <span class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-green-800 bg-green-100 rounded-full dark:text-green-500 drark:bg-transparent">
-                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                    24/24 support
-                                </span>
-                            </div>
-                        </li>
-                        <li class="mt-6 lg:mt-0">
-                            <div class="flex">
-                                <span class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-green-800 bg-green-100 rounded-full dark:text-green-500 drark:bg-transparent">
-                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                    Free tips to improve work time
-                                </span>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
                 <div class="relative mt-10 lg:-mx-4 relative-20 lg:mt-0 lg:col-start-1">
                     <div class="relative space-y-4">
@@ -84,6 +27,7 @@ const ContactoHeaderComponent = () => {
                 </div>
             </div>
         </div>
+        <hr class="my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
     </div>
   )
 }
