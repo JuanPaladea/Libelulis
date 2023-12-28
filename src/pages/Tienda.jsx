@@ -13,6 +13,6 @@ const Tienda = () => {
             <AdemasCompraronComponent/>
         </>
     )
-    }
+}
 
 export default Tienda

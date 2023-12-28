@@ -10,6 +10,7 @@ import Item from '../pages/Item'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import CartComponent from '../components/Cart/CartComponent'
+import Checkout from '../pages/Checkout'
 
 const MainRouter = () => {
     return (
@@ -23,6 +24,7 @@ const MainRouter = () => {
                 <Route path='/Contacto' element={<Contacto />}/>
                 <Route path='/Iniciar-Sesion' element={<Login />}/>
                 <Route path='/Registrarse' element={<Register />}/>
+                <Route path='/Checkout' element={<Checkout />}/>
                 <Route path="/item/:id" element={<Item/>}/>
             </Routes>
             <FooterComponent/>
