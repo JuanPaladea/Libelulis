@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import commerce from '../lib/commerce'
 
-const useCart = () => {
+export const CartContext = createContext()
+
+export const useCart = () => {
+    return useContext(CartContext)
+}
+
+export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(false);
   
@@ -37,17 +43,24 @@ const useCart = () => {
   
     const addToCart = (productId, q) => {
         setLoading(true);
-        return commerce.cart.add(productId, q)
-        .then((response) => {
-          setCart(response.cart);
-          return response.cart;
-        })
-        .catch((error) => {
-          console.error('Error adding to cart:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+
+        const existingItem = cart?.line_items.find((item) => item.product_id === productId);
+        if (existingItem) {
+          return updateLineItemQuantity(existingItem.id, existingItem.quantity + quantity);
+        } else {
+          return commerce.cart.add(productId, q)
+          .then((response) => {
+            setCart(response.cart);
+            return response.cart;
+          })
+          .catch((error) => {
+            console.error('Error adding to cart:', error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+        }
+
     };
   
     const updateLineItemQuantity = (itemId, q) => {
@@ -128,7 +141,7 @@ const useCart = () => {
       getCart();
     }, []); // Run once on component mount
   
-    return {
+    const value = {
       cart,
       getCart,
       refreshCart,
@@ -140,6 +153,11 @@ const useCart = () => {
       retrieveCartId,
       loading,
     };
+
+    return (
+        <CartContext.Provider value={value}>
+            {children}
+        </CartContext.Provider>
+    )
   };
   
-  export default useCart;

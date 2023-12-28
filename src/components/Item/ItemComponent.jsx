@@ -1,33 +1,11 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    theme: {
-      extend: {
-        gridTemplateRows: {
-          '[auto,auto,1fr]': 'auto auto 1fr',
-        },
-      },
-    },
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-import { useState } from 'react'
-import { StarIcon } from '@heroicons/react/20/solid'
-import { RadioGroup } from '@headlessui/react'
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function ItemComponent({product}) {
+
+  
+
   return (
     <div className="bg-white">
       <div className="pt-6">
@@ -57,6 +35,7 @@ export default function ItemComponent({product}) {
 
             <form className="mt-10">
               <button
+                onClick={() => addToCart(product.id, 1)}
                 type="submit"
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
