@@ -1,9 +1,12 @@
 import React from 'react'
 import MainRouter from './router/MainRouter'
+import { CartOpenProvider } from './context/CartOpenContext'
 
 const App = () => {
     return (
-        <MainRouter/>
+        <CartOpenProvider>
+            <MainRouter/>
+        </CartOpenProvider>
     )
 }
 

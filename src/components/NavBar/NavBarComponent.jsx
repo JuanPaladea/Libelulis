@@ -16,6 +16,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import { useCartOpen } from '../../context/CartOpenContext'
 
 const navigation = {
   pages: [
@@ -27,7 +28,8 @@ const navigation = {
 
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
-
+  const {cartOpen, setCartOpen} = useCartOpen()
+  
   return (
     <div className="bg-white">
       {/* Mobile menu */}
@@ -149,7 +151,7 @@ export default function NavBarComponent() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 flex items-center p-2">
+                  <a onClick={() => setCartOpen(!cartOpen)} className="group -m-2 flex items-center p-2">
                     <ShoppingBagIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"

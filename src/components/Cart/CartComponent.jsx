@@ -1,6 +1,8 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useCartOpen } from '../../context/CartOpenContext'
+import { Link } from 'react-router-dom'
 
 const products = [
   {
@@ -28,11 +30,11 @@ const products = [
 ]
 
 export default function CartComponent() {
-  const [open, setOpen] = useState(false)
+  const { cartOpen, setCartOpen } = useCartOpen()
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+    <Transition.Root show={cartOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={() => setCartOpen(!cartOpen)}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -66,7 +68,7 @@ export default function CartComponent() {
                           <button
                             type="button"
                             className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => setOpen(false)}
+                            onClick={() => setCartOpen(false)}
                           >
                             <span className="absolute -inset-0.5" />
                             <span className="sr-only">Close panel</span>
@@ -125,20 +127,20 @@ export default function CartComponent() {
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
-                        <a
-                          href="#"
+                        <Link
+                          onClick={() => setCartOpen(false)}
+                          to="/checkout"
                           className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                           Checkout
-                        </a>
+                        </Link>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
                           or
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                            onClick={() => setOpen(false)}
+                            className="font-medium text-indigo-600 hover:text-indigo-500 mx-1"
                           >
                             Continue Shopping
                             <span aria-hidden="true"> &rarr;</span>
