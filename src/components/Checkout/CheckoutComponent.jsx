@@ -1,33 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import useCart from '../../hooks/useCart'
-import commerce from '../../lib/commerce';
 
 const CheckoutComponent = () => {
-    const {cart, getCart} = useCart()
-
-    useEffect(() => {
-        const fetchData = async () => {
-          await getCart(); // Wait for the cart data to be fetched
-          await generateCheckoutToken(); // Now generate the checkout token
-        };
-        fetchData();
-    }, []);
-    
-    const generateCheckoutToken = async () => {
-    try {
-        if (!cart) {
-            console.error('cart undefined')
-            return
-        }
-
-        const token = await commerce.checkout.generateTokenFrom('cart');
-        console.log(token)
-        // Fetch the order using the generated token
-        const order = await commerce.checkout.capture(token.id, cart);
-        console.log(order);
-    } catch (error) {
-        console.log(error);
-    }};
+    const {cart} = useCart()
 
     return (
         <div>

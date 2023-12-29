@@ -16,11 +16,7 @@ const navigation = {
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
   const {cartOpen, setCartOpen} = useCartOpen();;
-  const {cart, getCart} = useCart();
-
-  useEffect(()=> {
-      getCart()
-  }, [cart])
+  const {cart} = useCart()
 
   return (
     <div className="bg-white">

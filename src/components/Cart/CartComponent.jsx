@@ -7,7 +7,7 @@ import useCart from '../../hooks/useCart'
 
 export default function CartComponent() {
   const { cartOpen, setCartOpen } = useCartOpen()
-  const { cart, removeItemFromCart } = useCart()
+  const {cart, removeItemFromCart} = useCart()
 
   return (
     <Transition.Root show={cartOpen} as={Fragment}>

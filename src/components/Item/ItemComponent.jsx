@@ -5,6 +5,7 @@ function classNames(...classes) {
 }
 
 export default function ItemComponent({product}) {
+
   const {addToCart} = useCart()
 
   return (
