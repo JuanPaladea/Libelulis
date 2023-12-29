@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import useCart from '../../hooks/useCart'
+import React from 'react'
+import { useCartContext } from '../../context/CartContext'
 
 const CheckoutComponent = () => {
-    const {cart} = useCart()
+    const {cart} = useCartContext()
 
     return (
         <div>

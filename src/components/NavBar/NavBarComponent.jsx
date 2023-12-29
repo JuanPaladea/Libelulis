@@ -3,7 +3,7 @@ import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useCartOpen } from '../../context/CartOpenContext'
-import useCart from '../../hooks/useCart'
+import { useCartContext } from '../../context/CartContext'
 
 const navigation = {
   pages: [
@@ -16,7 +16,7 @@ const navigation = {
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
   const {cartOpen, setCartOpen} = useCartOpen();;
-  const {cart} = useCart()
+  const {cart} = useCartContext()
 
   return (
     <div className="bg-white">

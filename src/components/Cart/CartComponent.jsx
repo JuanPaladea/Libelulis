@@ -3,11 +3,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useCartOpen } from '../../context/CartOpenContext'
 import { Link } from 'react-router-dom'
-import useCart from '../../hooks/useCart'
+import { useCartContext } from '../../context/CartContext'
 
 export default function CartComponent() {
   const { cartOpen, setCartOpen } = useCartOpen()
-  const {cart, removeItemFromCart} = useCart()
+  const {cart, removeItemFromCart} = useCartContext()
 
   return (
     <Transition.Root show={cartOpen} as={Fragment}>

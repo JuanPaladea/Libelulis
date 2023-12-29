@@ -1,4 +1,4 @@
-import useCart from "../../hooks/useCart"
+import { useCartContext } from "../../context/CartContext"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -6,7 +6,7 @@ function classNames(...classes) {
 
 export default function ItemComponent({product}) {
 
-  const {addToCart} = useCart()
+  const {addToCart} = useCartContext()
 
   return (
     <div className="bg-white">

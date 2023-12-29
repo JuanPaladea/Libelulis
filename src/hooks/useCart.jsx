@@ -1,43 +1,44 @@
-import { useEffect, useState } from "react";
-import commerce from "../lib/commerce";
+// import { useEffect, useState } from "react";
+// import commerce from "../lib/commerce";
 
-const useCart = () => {
-    const [cart, setCart] = useState(null);
-    const getCart = () => {
-        commerce.cart
-        .retrieve()
-        .then((cart) => 
-        setCart(cart))
-        .catch((error) => {
-            console.log('There was an error fetching the cart', error);
-        });
-    };
+// const useCart = () => {
+//     const [cart, setCart] = useState('');
 
-    useEffect(()=> {
-        getCart()
-    }, [])
+//     const getCart = () => {
+//         commerce.cart
+//         .retrieve()
+//         .then((cart) => 
+//         setCart(cart))
+//         .catch((error) => {
+//             console.log('There was an error fetching the cart', error);
+//         });
+//     };
 
-    const addToCart = (productId, q) => {
-        commerce.cart
-        .add(productId, q)
-        .then(() => getCart())
-        .catch((error) => console.log(error))
-    }
+//     useEffect(()=> {
+//         getCart()
+//     }, [])
 
-    const updateCart = (productId, q) => {
-        commerce.cart
-        .update(productId, { quantity: q })
-        .then(() => getCart())
-        .catch((error) => console.log(error))
-    }
+//     const addToCart = (productId, q) => {
+//         commerce.cart
+//         .add(productId, q)
+//         .then(() => getCart())
+//         .catch((error) => console.log(error))
+//     }
+
+//     const updateCart = (productId, q) => {
+//         commerce.cart
+//         .update(productId, { quantity: q })
+//         .then(() => getCart())
+//         .catch((error) => console.log(error))
+//     }
     
-    const removeItemFromCart = (itemId) => {
-        commerce.cart.remove(itemId)
-        .then(() => getCart())
-        .catch((error) => console.log(error))
-    }
+//     const removeItemFromCart = (itemId) => {
+//         commerce.cart.remove(itemId)
+//         .then(() => getCart())
+//         .catch((error) => console.log(error))
+//     }
 
-    return { cart, getCart, addToCart, updateCart, removeItemFromCart }
-}
+//     return { cart, getCart, addToCart, updateCart, removeItemFromCart }
+// }
 
-export default useCart
+// export default useCart
