@@ -1,12 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useCart from '../../hooks/useCart'
+import commerce from '../../lib/commerce';
 
 const CheckoutComponent = () => {
     const {cart, getCart} = useCart()
 
-    useEffect(()=> {
-        getCart()
-      }, [cart])
+    useEffect(() => {
+        const fetchData = async () => {
+          await getCart(); // Wait for the cart data to be fetched
+          await generateCheckoutToken(); // Now generate the checkout token
+        };
+        fetchData();
+    }, []);
+    
+    const generateCheckoutToken = async () => {
+    try {
+        if (!cart) {
+            console.error('cart undefined')
+            return
+        }
+
+        const token = await commerce.checkout.generateTokenFrom('cart');
+        console.log(token)
+        // Fetch the order using the generated token
+        const order = await commerce.checkout.capture(token.id, cart);
+        console.log(order);
+    } catch (error) {
+        console.log(error);
+    }};
 
     return (
         <div>
@@ -31,7 +52,7 @@ const CheckoutComponent = () => {
                     <div class="relative">
                         <input class="peer hidden" id="radio_1" type="radio" name="radio" checked />
                         <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-                        <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_1">
+                        <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" htmlFor="radio_1">
                         <img class="w-14 object-contain" src="/images/naorrAeygcJzX0SyNI4Y0.png" alt="" />
                         <div class="ml-5">
                             <span class="mt-2 font-semibold">Envío por correo argentino</span>

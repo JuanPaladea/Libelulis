@@ -4,23 +4,21 @@ import commerce from "../lib/commerce";
 const useCart = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(false);
-    
-    const getCart = () => {
-        setLoading(true);
-        commerce.cart.retrieve()
-        .then((cart) => {
-          setCart(cart);
-        })
-        .catch((error) => {
-          console.error('Error retrieving cart:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+
+    const getCart = async () => {
+      setLoading(true);
+      try {
+        const cartData = await commerce.cart.retrieve();
+        setCart(cartData);
+      } catch (error) {
+        console.error('Error retrieving cart:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     useEffect(()=> {
-        getCart()
+      getCart()
     }, [])
     
     const refreshCart = () => {
