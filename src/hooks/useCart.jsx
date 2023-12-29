@@ -4,7 +4,7 @@ import commerce from "../lib/commerce";
 const useCart = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    
     const getCart = () => {
         setLoading(true);
         commerce.cart.retrieve()
