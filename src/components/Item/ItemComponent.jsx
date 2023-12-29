@@ -1,10 +1,11 @@
+import useCart from "../../hooks/useCart"
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function ItemComponent({product}) {
-
-  
+  const {addToCart} = useCart()
 
   return (
     <div className="bg-white">
@@ -33,15 +34,12 @@ export default function ItemComponent({product}) {
             <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">{product.price.formatted_with_symbol}</p>
 
-            <form className="mt-10">
-              <button
-                onClick={() => addToCart(product.id, 1)}
-                type="submit"
-                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Añadir al carrito
-              </button>
-            </form>
+            <button
+              onClick={() => addToCart(product.id, 1)}
+              className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Añadir al carrito
+            </button>
           </div>
 
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">

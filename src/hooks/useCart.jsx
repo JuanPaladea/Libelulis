@@ -1,22 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import commerce from '../lib/commerce'
+import { useEffect, useState } from "react";
+import commerce from "../lib/commerce";
 
-export const CartContext = createContext()
-
-export const useCart = () => {
-    return useContext(CartContext)
-}
-
-export const CartProvider = ({ children }) => {
+const useCart = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(false);
-  
+
     const getCart = () => {
         setLoading(true);
-        return commerce.cart.retrieve()
+        commerce.cart.retrieve()
         .then((cart) => {
           setCart(cart);
-          return cart;
         })
         .catch((error) => {
           console.error('Error retrieving cart:', error);
@@ -25,10 +18,14 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+
+    useEffect(()=> {
+        getCart()
+    }, [])
+    
     const refreshCart = () => {
         setLoading(true);
-        return commerce.cart.refresh()
+        commerce.cart.refresh()
         .then((cart) => {
           setCart(cart);
           return cart;
@@ -40,15 +37,14 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+    
     const addToCart = (productId, q) => {
         setLoading(true);
-
         const existingItem = cart?.line_items.find((item) => item.product_id === productId);
         if (existingItem) {
           return updateLineItemQuantity(existingItem.id, existingItem.quantity + quantity);
         } else {
-          return commerce.cart.add(productId, q)
+          commerce.cart.add(productId, q)
           .then((response) => {
             setCart(response.cart);
             return response.cart;
@@ -60,12 +56,12 @@ export const CartProvider = ({ children }) => {
             setLoading(false);
           });
         }
-
+    
     };
-  
+    
     const updateLineItemQuantity = (itemId, q) => {
         setLoading(true);
-        return commerce.cart.update(itemId, { quantity: q })
+        commerce.cart.update(itemId, { quantity: q })
         .then((response) => {
           setCart(response.cart);
           return response.cart;
@@ -77,10 +73,10 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+    
     const getCartContent = () => {
         setLoading(true);
-        return commerce.cart.contents()
+        commerce.cart.contents()
         .then((items) => {
           console.log(items);
           return items;
@@ -92,10 +88,10 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+    
     const removeItemFromCart = (itemId) => {
         setLoading(true);
-        return commerce.cart.remove(itemId)
+        commerce.cart.remove(itemId)
         .then((response) => {
           setCart(response.cart);
           return response.cart;
@@ -107,10 +103,10 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+    
     const deleteCart = () => {
         setLoading(true);
-        return commerce.cart.delete()
+        commerce.cart.delete()
         .then(() => {
           setCart(null);
         })
@@ -121,10 +117,10 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
+    
     const retrieveCartId = () => {
         setLoading(true);
-        return commerce.cart.id()
+        commerce.cart.id()
         .then((cartId) => {
           console.log(cartId);
           return cartId;
@@ -136,28 +132,19 @@ export const CartProvider = ({ children }) => {
           setLoading(false);
         });
     };
-  
-    useEffect(() => {
-      getCart();
-    }, []); // Run once on component mount
-  
-    const value = {
-      cart,
-      getCart,
-      refreshCart,
-      addToCart,
-      updateLineItemQuantity,
-      getCartContent,
-      removeItemFromCart,
-      deleteCart,
-      retrieveCartId,
-      loading,
-    };
 
-    return (
-        <CartContext.Provider value={value}>
-            {children}
-        </CartContext.Provider>
-    )
-  };
-  
+    return {
+        cart,
+        getCart,
+        refreshCart,
+        addToCart,
+        updateLineItemQuantity,
+        getCartContent,
+        removeItemFromCart,
+        deleteCart,
+        retrieveCartId,
+        loading,
+    };
+}
+
+export default useCart

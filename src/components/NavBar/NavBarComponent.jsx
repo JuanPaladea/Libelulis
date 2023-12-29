@@ -1,22 +1,9 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useCartOpen } from '../../context/CartOpenContext'
+import useCart from '../../hooks/useCart'
 
 const navigation = {
   pages: [
@@ -28,8 +15,13 @@ const navigation = {
 
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
-  const {cartOpen, setCartOpen} = useCartOpen()
-  
+  const {cartOpen, setCartOpen} = useCartOpen();;
+  const {cart, getCart} = useCart();
+
+  useEffect(()=> {
+      getCart()
+  }, [cart])
+
   return (
     <div className="bg-white">
       {/* Mobile menu */}
@@ -116,7 +108,7 @@ export default function NavBarComponent() {
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    src="https://i.imgur.com/0twzt2t.png"
                     alt=""
                   />
                   <span className='mx-2'>Libelulis</span>
@@ -156,7 +148,7 @@ export default function NavBarComponent() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cart ? cart.total_items : 'ldng'}</span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>
