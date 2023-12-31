@@ -53,10 +53,9 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product) => {
         if (user) {
-            const cartItemDocRef = doc(db, `users/${user.uid}/cart`);
-            const ProductCollection = collection(cartItemDocRef, product.id)
-            console.log(product)
-            getDoc(ProductCollection)
+            const cartItemDocRef = collection(db, `users/${user.uid}/cart/`);
+            const ProductRef = doc(cartItemDocRef, product.id)
+            getDoc(ProductRef)
             .then((cartItemDoc) => {
                 if (cartItemDoc.exists()) {
                     // Update an existing document
@@ -81,9 +80,10 @@ export const CartProvider = ({ children }) => {
 
     const removeFromCart = (itemId) => {
         if (user) {
-            const userCartItemRef = doc(db, 'users', user.uid, 'cart', itemId);
+            const cartItemDocRef = collection(db, `users/${user.uid}/cart/`);
+            const ProductRef = doc(cartItemDocRef, itemId)
         
-            deleteDoc(userCartItemRef)
+            deleteDoc(ProductRef)
             .then(() => fetchCart())
             .catch((error) => {
                 console.error('Error checking cart item:', error);
