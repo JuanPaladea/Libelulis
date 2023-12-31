@@ -77,7 +77,7 @@ export default function CartComponent() {
                                         </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                        <p className="text-gray-500">Cantidad:</p>
+                                        <p className="text-gray-500">Cantidad: {product.quantity} </p>
 
                                         <div className="flex">
                                         <button

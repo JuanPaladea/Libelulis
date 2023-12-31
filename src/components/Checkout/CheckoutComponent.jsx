@@ -1,8 +1,9 @@
 import React from 'react'
 import { useCart } from '../../context/CartContext'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 const CheckoutComponent = () => {
-    const {cart} = useCart()
+    const {cart, removeFromCart} = useCart()
 
     return (
         <div>
@@ -12,12 +13,22 @@ const CheckoutComponent = () => {
                     <p class="text-gray-400">Verífica tu orden de compra</p>
                     <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
                         {cart ? cart.map((product) => 
-                            <div key={cart.product_id} class="flex flex-col rounded-lg bg-white sm:flex-row">
+                            <div key={product.id} class="flex flex-col rounded-lg bg-white sm:flex-row">
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4">
-                                    <span class="font-semibold">{product.name}</span>
-                                    <p class="text-lg font-bold">{product.price}</p>
+                                    <span class="font-semibold">{product.quantity}x {product.name}</span>
+                                        <p class="text-lg font-bold">{product.price}</p>
+                                        <p class="text-md">{product.price}</p>
                                 </div>
+                                <button
+                                    type="button"
+                                    className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
+                                    onClick={() => removeFromCart(product.id)}
+                                >
+                                    <span className="absolute -inset-0.5" />
+                                    <span className="sr-only">Close menu</span>
+                                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
                             </div>
                         ) : 'ldng'}
                     </div>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 const UserContext = createContext();
 
@@ -49,6 +50,9 @@ export const UserProvider = ({ children }) => {
             // The AuthCredential type that was used.
             const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
+        })
+        .finally(() => {
+            toast.success('logeado con exito')
         });
     }
 
@@ -56,7 +60,10 @@ export const UserProvider = ({ children }) => {
         signOut(auth)
             .catch((error) => {
             // An error happened.
-            });
+            })
+            .finally(
+                toast.success('Sesión finalizada')
+            );
     }
 
     const value = {
