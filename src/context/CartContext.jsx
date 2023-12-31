@@ -1,7 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
-import { getAuth } from "firebase/auth";
 
 const CartContext = createContext()
 
@@ -54,9 +53,10 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product) => {
         if (user) {
-            const cartItemDocRef = doc(db, `users/${user.uid}/cart` , product.id);
+            const cartItemDocRef = doc(db, `users/${user.uid}/cart`);
+            const ProductCollection = collection(cartItemDocRef, product.id)
             console.log(product)
-            getDoc(cartItemDocRef)
+            getDoc(ProductCollection)
             .then((cartItemDoc) => {
                 if (cartItemDoc.exists()) {
                     // Update an existing document
