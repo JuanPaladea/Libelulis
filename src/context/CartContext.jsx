@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
 import { getAuth } from "firebase/auth";
@@ -10,45 +10,103 @@ export const CartProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false)
     const db = getFirestore();
-    const cartsCollection = collection(db, 'carts')  
     const {user} = useUser()    
 
     useEffect(() => {   
+        const fetchCart = () => {
+            if (user) {
+                const userCartRef = collection(db, 'users', user.uid, 'cart');
+                getDocs(userCartRef)
+                .then((cartSnapshot) => {
+                    setCart(cartSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+                }).catch((error) => {
+                    console.error('Error fetching cart:', error);
+                }).finally(() => {
+                    setLoading(false)
+                });
+            } else {
+              setCart([]);
+            }
+        }
+        fetchCart()
+    }, [user])
+
+    const fetchCart = () => {
         if (user) {
             const userCartRef = collection(db, 'users', user.uid, 'cart');
             getDocs(userCartRef)
-            .then((snapshot) => {
-                setCart(snapshot.docs.map(doc => ({
+            .then((cartSnapshot) => {
+                const cartItems = cartSnapshot.docs.map((doc) => ({
                     id: doc.id,
-                    ...doc.data(),
-                })))
-            }).catch(() => {
-                setError(true)
-            }).finally(setLoading(false))
+                    ...doc.data()
+                }));
+                setCart(cartItems);
+            })
+            .catch((error) => {
+                console.error('Error fetching cart:', error);
+                // Handle error (e.g., show a notification to the user)
+            })
+            .finally(() => {
+                setLoading(false);
+            });
         }
-    }, [cartsCollection, user])
+    };
 
     const addToCart = (product) => {
         if (user) {
-            const userCartRef = collection(db, 'users', user.uid, 'cart');
-            addDoc(userCartRef, product)
-            .then(
-                setCart((prevCart) => [...prevCart, product])
-            ).catch(() => {
-                setError(true)
-            }).finally(() => setLoading(false))
+            const cartItemDocRef = doc(db, 'users', user.uid, 'cart', product.id);
+            getDoc(cartItemDocRef)
+            .then((cartItemDoc) => {
+                if (cartItemDoc.exists()) {
+                    // Update an existing document
+                    updateDoc(cartItemDocRef, product)
+                        .then(() => fetchCart())
+                        .catch((error) => console.error('Error updating cart item:', error))
+                        .finally(()=> {setLoading(false)});
+                } else {
+                    // Create a new document
+                    addDoc(cartItemDocRef, product)
+                    .then(() => fetchCart())
+                    .catch((error) => console.error('Error adding to cart:', error))
+                    .finally(()=> {setLoading(false)});
+                }}
+            ).catch((error) => {
+                console.error('Error checking cart item:', error);
+            }).finally(() => {
+                setLoading(false)
+            });
         }
-    }
+    };
 
-    const removeFromCart = (productId) => {
-        const userCartItemRef = doc(db, 'users', user.uid, 'cart', productId);
-        deleteDoc(userCartItemRef)
-        .then(
-            setCart((prevCart) => prevCart.filter((item) => item.id !== productId))
-        ).catch(() => {
-            setError(true)
-        }).finally(() => setLoading(false))
-    }
+    const removeFromCart = (itemId) => {
+        if (user) {
+            const userCartItemRef = doc(db, 'users', user.uid, 'cart', itemId);
+        
+            deleteDoc(userCartItemRef)
+            .then(() => fetchCart())
+            .catch((error) => {
+                console.error('Error checking cart item:', error);
+            }).finally(() => {
+                setLoading(false)
+            });
+        }
+    };
+
+    const clearCart = () => {
+        if (user) {
+          const userCartRef = collection(db, 'users', user.uid, 'cart');
+      
+          getDocs(userCartRef)
+            .then((cartSnapshot) => {
+              const deletePromises = cartSnapshot.docs.map((doc) => deleteDoc(doc.ref));
+              return Promise.all(deletePromises);
+            })
+            .then(() => fetchCart())
+            .catch((error) => {
+              console.error('Error clearing cart:', error);
+            });
+        }
+      };
 
     return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
