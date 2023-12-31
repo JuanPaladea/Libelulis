@@ -19,6 +19,7 @@ export const useCollection = (collectionName) => {
             setError(true)
         }).finally(setLoading(false))
     }, [])
+    
     return {productos, loading, error}
 }
 

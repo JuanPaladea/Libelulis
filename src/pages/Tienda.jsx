@@ -6,9 +6,8 @@ import CategoriesComponent from '../components/Categories/CategoriesComponent'
 import { useCollection } from '../hooks/useCollection'
 
 const Tienda = () => {
-
     const {productos} = useCollection('products')
-
+    
     return (
         <>
             <TiendaHeaderComponent/>

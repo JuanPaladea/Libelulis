@@ -98,7 +98,8 @@ export default function NavBarComponent() {
                         <Link onClick={() => {
                           setOpen(false);
                           signOutUser()
-                        }} className="-m-2 block p-2 font-medium text-red-900">
+                        }} className="-m-2 block p-2 font-medium text-red-900"
+                          to="/">
                           Cerrar Sesión
                         </Link>
                     </div>
@@ -213,6 +214,7 @@ export default function NavBarComponent() {
                               <Link
                                 onClick={() => signOutUser()}
                                 className={`block px-4 py-2 text-sm text-red-700 ${active ? 'bg-gray-100' : ''}`}
+                                to="/"
                               >
                                 Cerrar sesión
                               </Link>
