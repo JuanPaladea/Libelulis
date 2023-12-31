@@ -54,7 +54,8 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product) => {
         if (user) {
-            const cartItemDocRef = doc(db, 'users', user.uid, 'cart', product.id);
+            const cartItemDocRef = doc(db, `users/${user.uid}/cart` , product.id);
+            console.log(product)
             getDoc(cartItemDocRef)
             .then((cartItemDoc) => {
                 if (cartItemDoc.exists()) {
