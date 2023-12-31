@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
         const cartDoc = doc(db, 'carts', productId); 
         deleteDoc(cartDoc)
         .then(
-            setCart(cart.filter(item => item.id !== productId))
+            setCart((prevCart) => prevCart.filter((item) => item.id !== productId))
         ).catch(() => {
             setError(true)
         }).finally(setLoading(false))
