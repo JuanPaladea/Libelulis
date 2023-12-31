@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
 import { toast } from "react-toastify";
@@ -52,32 +52,50 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const addToCart = (product) => {
+    const addToCart = (product) => {    
+        const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
+        const productRef = doc(cartItemDocRef, product.id);
         if (user) {
-            const cartItemDocRef = collection(db, `users/${user.uid}/cart/${product.id}`);
-            const ProductRef = doc(cartItemDocRef, product.id)
-            getDoc(ProductRef)
-            console.log(product)
-            .then((cartItemDoc) => {
-                if (cartItemDoc.exists()) {
-                    // Update an existing document
-                    updateDoc(cartItemDocRef, product)
-                        .then(() => fetchCart())
-                        .catch((error) => console.error('Error updating cart item:', error))
-                        .finally(()=> {setLoading(false);});
-                } else {
-                    // Create a new document
-                    addDoc(ProductRef, product)
-                    .then(() => fetchCart())
-                    .catch((error) => console.error('Error adding to cart:', error))
-                    .finally(()=> {setLoading(false);});
-                }}
-            ).catch((error) => {
-                console.error('Error checking cart item:', error);
-            }).finally(() => {
-                setLoading(false)
-            });
+            getDoc(productRef)
+                .then((cartItemDoc) => {
+                    if (cartItemDoc.exists()) {
+                        // Update an existing document
+                        updateCartItem(productRef, product);
+                    } else {
+                        // Create a new document
+                        addToCartItem(productRef, product);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking cart item:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                    toast.success(`${product.name} agregado`)
+                });
         }
+    };
+    
+    const updateCartItem = (productRef, product) => {
+        updateDoc(productRef, product)
+            .then(() => fetchCart())
+            .catch((error) => {
+                console.error('Error updating cart item:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+    
+    const addToCartItem = (productRef, product) => {
+        setDoc(productRef, product)
+            .then(() => fetchCart())
+            .catch((error) => {
+                console.error('Error adding to cart:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const removeFromCart = (itemId) => {
