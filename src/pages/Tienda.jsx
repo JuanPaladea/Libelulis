@@ -3,15 +3,17 @@ import TiendaHeaderComponent from '../components/TiendaHeader/TiendaHeaderCompon
 import AdemasCompraronComponent from '../components/AdemasCompraron/AdemasCompraronComponent'
 import ProductListComponent from '../components/ProductList/ProductListComponent'
 import CategoriesComponent from '../components/Categories/CategoriesComponent'
-import {useProductos} from '../hooks/useProductos'
+import { useCollection } from '../hooks/useCollection'
 
 const Tienda = () => {
-    const {products} = useProductos()
+
+    const {productos} = useCollection('products')
+
     return (
         <>
             <TiendaHeaderComponent/>
             <CategoriesComponent/>
-            <ProductListComponent products={products}/>
+            <ProductListComponent products={productos} />
             <AdemasCompraronComponent/>
         </>
     )

@@ -1,52 +1,53 @@
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-import commerce from "../lib/commerce";
 
 const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
-    const [cart, setCart] = useState("");
-    
-    const getCart = () => {
-        commerce.cart
-        .retrieve()
-        .then((cart) => 
-        setCart(cart))
-        .catch((error) => {
-            console.log('There was an error fetching the cart', error);
-        });
-    };
-    
-    useEffect(()=> {
-        getCart()
-    }, [])
+    const [cart, setCart] = useState([])
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false)
+    const db = getFirestore();
+    const cartsCollection = collection(db, 'carts')        
 
-    const addToCart = (productId, q) => {
-        commerce.cart
-        .add(productId, q)
-        .then(() => getCart())
-        .catch((error) => console.log(error))
+    useEffect(() => {
+        getDocs(cartsCollection)
+        .then((snapshot) => {
+            setCart(snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            })))
+        }).catch(() => {
+            setError(true)
+        }).finally(setLoading(false))
+    }, [cartsCollection, cart, setCart, setLoading, setError])
+
+    const addToCart = (product) => {
+        addDoc(cartsCollection, product)
+        .then(
+            setCart([...cart, product])
+        ).catch(() => {
+            setError(true)
+        }).finally(setLoading(false))
     }
 
-    const updateCart = (productId, q) => {
-        commerce.cart
-        .update(productId, { quantity: q })
-        .then(() => getCart())
-        .catch((error) => console.log(error))
-    }
-    
-    const removeItemFromCart = (itemId) => {
-        commerce.cart.remove(itemId)
-        .then(() => getCart())
-        .catch((error) => console.log(error))
+    const removeFromCart = (productId) => {
+        const cartDoc = doc(db, 'carts', productId); 
+        deleteDoc(cartDoc)
+        .then(
+            setCart(cart.filter(item => item.id !== productId))
+        ).catch(() => {
+            setError(true)
+        }).finally(setLoading(false))
     }
 
     return (
-        <CartContext.Provider value={{ cart, getCart, addToCart, updateCart, removeItemFromCart }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
           {children}
         </CartContext.Provider>
       );
 }
 
-export const useCartContext = () => {
+export const useCart = () => {
     return useContext(CartContext)
 }

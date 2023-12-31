@@ -4,23 +4,15 @@ import AdemasCompraronComponent from '../components/AdemasCompraron/AdemasCompra
 import ReviewComponent from '../components/Review/ReviewComponent'
 import NewsletterComponent from '../components/Newsletter/NewsletterComponent'
 import { useParams } from 'react-router-dom'
-import { useProduct } from '../hooks/useProductos'
+import { useUnico } from '../hooks/useCollection'
 
 const Item = () => {
   const {id} = useParams()
-  const {product, fetchProduct} = useProduct(id)
-
-  useEffect(() => {
-    fetchProduct()
-  }, [fetchProduct])
-
-  if (!product) {
-    return <p>Loading...</p>;
-  }
+  const {producto} = useUnico('products', id)
 
   return (
     <div>
-        <ItemComponent product={product}/>
+        <ItemComponent product={producto} />
         <AdemasCompraronComponent/>
         <ReviewComponent/>
         <NewsletterComponent/>

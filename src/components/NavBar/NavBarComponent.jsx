@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Fragment, useState } from 'react'
+import { Dialog, Menu, Popover, Transition } from '@headlessui/react'
+import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useCartOpen } from '../../context/CartOpenContext'
-import { useCartContext } from '../../context/CartContext'
+import { useUser } from '../../context/UserContext'
 
 const navigation = {
   pages: [
@@ -16,7 +16,7 @@ const navigation = {
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
   const {cartOpen, setCartOpen} = useCartOpen();;
-  const {cart} = useCartContext()
+  const {user, signOutUser} = useUser();
 
   return (
     <div className="bg-white">
@@ -56,28 +56,66 @@ export default function NavBarComponent() {
                     <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
+                  <div className="ml-7 flex">
+                  <Link className='flex items-center' to="/" onClick={() => setOpen(false)}>
+                    <span className="sr-only">Libelulis</span>
+                    <img
+                      className="h-7 w-auto"
+                      src="https://i.imgur.com/0twzt2t.png"
+                      alt="libelulis logo"
+                    />
+                    <span className='mx-2'>Libelulis</span>
+                  </Link>
+              </div>
                 </div>
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   {navigation.pages.map((page) => (
                     <div key={page.name} className="flow-root">
-                      <a href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
+                      <Link to={page.href} onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
                         {page.name}
-                      </a>
+                      </Link>
                     </div>
                   ))}
                 </div>
-                <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                  <div className="flow-root">
-                    <Link to="/Iniciar-Sesion" className="-m-2 block p-2 font-medium text-gray-900">
-                      Iniciar Sesión
-                    </Link>
-                  </div>
-                  <div className="flow-root">
-                    <Link to="/Registrarse" className="-m-2 block p-2 font-medium text-gray-900">
-                      Registrarse
-                    </Link>
-                  </div>
-                </div>
+                  {user ? (
+                    <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                        <Link to="/Usuario" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                          <div class="flex -space-x-2">
+                            {user.photoURL ? (
+                              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
+                            )
+                            :
+                            (
+                              ""
+                            )}
+                          </div>
+                          <div className="font-medium text-gray-700 hover:text-gray-800">
+                            {user.displayName}
+                          </div>
+                        </Link>
+                        <Link onClick={() => {
+                          setOpen(false);
+                          signOutUser()
+                        }} className="-m-2 block p-2 font-medium text-red-900">
+                          Cerrar Sesión
+                        </Link>
+                    </div>
+                  ) 
+                  :
+                  (
+                    <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                      <div className="flow-root">
+                        <Link to="/Iniciar-Sesion" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
+                          Iniciar Sesión
+                        </Link>
+                      </div>
+                      <div className="flow-root">
+                        <Link to="/Registrarse" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
+                          Registrarse
+                        </Link>
+                      </div>
+                    </div>
+                  )} 
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -125,9 +163,65 @@ export default function NavBarComponent() {
                   ))}
                 </div>
               </Popover.Group>
-
+              {/* User Menu */}
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                {user ?
+                (
+                <Menu as="div" className="relative ml-3">
+                  <div>
+                    <Menu.Button className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                      <div class="flex -space-x-2 overflow-hidden">
+                        {user.photoURL ? (
+                          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
+                        )
+                        :
+                        (
+                          ""
+                        )}
+                      </div>
+                      <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                        {user.displayName}
+                      </div>
+                      
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="/Usuario"
+                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                              >
+                                Tu cuenta
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                onClick={() => signOutUser()}
+                                className={`block px-4 py-2 text-sm text-red-700 ${active ? 'bg-gray-100' : ''}`}
+                              >
+                                Cerrar sesión
+                              </Link>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                </Menu>
+                )
+                :
+                (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <Link to="/Iniciar-Sesion" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Iniciar Sesión
                   </Link>
@@ -135,7 +229,8 @@ export default function NavBarComponent() {
                   <Link to="/Registrarse" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Registrarse
                   </Link>
-                </div>
+                </div>)
+                }
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
@@ -144,7 +239,7 @@ export default function NavBarComponent() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cart ? cart.total_items : 'ldng'}</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>

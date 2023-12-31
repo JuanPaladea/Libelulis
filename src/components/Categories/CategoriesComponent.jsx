@@ -1,17 +1,5 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
+import { Link } from "react-router-dom"
+
 const callouts = [
     {
       name: 'Veranito',
@@ -54,10 +42,10 @@ const callouts = [
                     />
                   </div>
                   <h3 className="mt-6 text-sm text-gray-500">
-                    <a href={callout.href}>
+                    <Link to="/Tienda">
                       <span className="absolute inset-0" />
                       {callout.name}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="text-base font-semibold text-gray-900">{callout.description}</p>
                 </div>

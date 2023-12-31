@@ -1,12 +1,11 @@
-import { useCartContext } from "../../context/CartContext"
+import { useCart } from "../../context/CartContext"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function ItemComponent({product}) {
-
-  const {addToCart} = useCartContext()
+  const {addToCart} = useCart();
 
   return (
     <div className="bg-white">
@@ -14,13 +13,13 @@ export default function ItemComponent({product}) {
         {/* Image gallery */}
         <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-            <img src={product.assets[0].url} alt={product.assets[0].description} class="h-full w-full object-cover object-center"/>
+            <img src={product.img} alt={product.name} class="h-full w-full object-cover object-center"/>
           </div>
           <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-            <img src={product.assets[1].url} alt={product.assets[1].description} class="h-full w-full object-cover object-center"/>
+            <img src="https://i.imgur.com/NJoXaOT.jpg" alt="model" class="h-full w-full object-cover object-center"/>
           </div>
           <div class="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
-            <img src={product.image.url} alt={product.image.description} class="h-full w-full object-cover object-center"/>
+            <img src={product.img} alt={product.name} class="h-full w-full object-cover object-center"/>
           </div>
         </div>
 
@@ -33,10 +32,10 @@ export default function ItemComponent({product}) {
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">{product.price.formatted_with_symbol}</p>
+            <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
 
             <button
-              onClick={() => addToCart(product.id, 1)}
+              onClick={() => addToCart(product)}
               className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Añadir al carrito

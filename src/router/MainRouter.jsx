@@ -11,11 +11,13 @@ import Login from '../pages/Login'
 import Register from '../pages/Register'
 import CartComponent from '../components/Cart/CartComponent'
 import Checkout from '../pages/Checkout'
+import Error from '../pages/Error'
+import Usuario from '../pages/Usuario'
 
 const MainRouter = () => {
     return (
         <BrowserRouter>
-            <CartComponent/>
+            {<CartComponent/>}
             <NavBarComponent/>
             <Routes>
                 <Route path='/' element={<Home />}/>
@@ -25,6 +27,8 @@ const MainRouter = () => {
                 <Route path='/Iniciar-Sesion' element={<Login />}/>
                 <Route path='/Registrarse' element={<Register />}/>
                 <Route path='/Checkout' element={<Checkout />}/>
+                <Route path='/Error' element={<Error />}/>
+                <Route path='/Usuario' element={<Usuario />}/>
                 <Route path="/item/:id" element={<Item/>}/>
             </Routes>
             <FooterComponent/>

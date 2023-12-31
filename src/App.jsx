@@ -2,14 +2,17 @@ import React from 'react'
 import MainRouter from './router/MainRouter'
 import { CartOpenProvider } from './context/CartOpenContext'
 import { CartProvider } from './context/CartContext'
+import { UserProvider } from './context/UserContext'
 
 const App = () => {
     return (
-        <CartProvider>
-            <CartOpenProvider>
-                <MainRouter/>
-            </CartOpenProvider>
-        </CartProvider>
+        <UserProvider>
+            <CartProvider>
+                <CartOpenProvider>
+                    <MainRouter/>
+                </CartOpenProvider>
+            </CartProvider>
+        </UserProvider>
     )
 }
 

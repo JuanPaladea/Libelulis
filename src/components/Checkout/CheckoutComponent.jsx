@@ -1,8 +1,8 @@
 import React from 'react'
-import { useCartContext } from '../../context/CartContext'
+import { useCart } from '../../context/CartContext'
 
 const CheckoutComponent = () => {
-    const {cart} = useCartContext()
+    const {cart} = useCart()
 
     return (
         <div>
@@ -11,12 +11,12 @@ const CheckoutComponent = () => {
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>
                     <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-                        {cart ? cart.line_items.map((product) => 
+                        {cart ? cart.map((product) => 
                             <div key={cart.product_id} class="flex flex-col rounded-lg bg-white sm:flex-row">
-                                <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.image.url} alt="" />
+                                <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4">
-                                    <span class="font-semibold">{product.product_name}</span>
-                                    <p class="text-lg font-bold">{product.price.formatted_with_symbol}</p>
+                                    <span class="font-semibold">{product.name}</span>
+                                    <p class="text-lg font-bold">{product.price}</p>
                                 </div>
                             </div>
                         ) : 'ldng'}
@@ -75,7 +75,7 @@ const CheckoutComponent = () => {
                     <div class="mt-6 border-t border-b py-2">
                         <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                        <p class="font-semibold text-gray-900">{cart ? cart.subtotal.formatted_with_symbol : 'ldng'}</p>
+                        <p class="font-semibold text-gray-900">{cart.map((item) => item.price).reduce((total, price) => total + price, 0)}</p>
                         </div>
                         <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Envío</p>
@@ -84,7 +84,7 @@ const CheckoutComponent = () => {
                     </div>
                     <div class="mt-6 flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Total</p>
-                        <p class="text-2xl font-semibold text-gray-900">{cart ? cart.subtotal.formatted_with_symbol : 'ldng'}</p>
+                        <p class="text-2xl font-semibold text-gray-900">{cart.map((item) => item.price).reduce((total, price) => total + price, 0)}</p>
                     </div>
                     </div>
                     <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">Comprar</button>
