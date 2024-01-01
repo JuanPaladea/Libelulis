@@ -18,7 +18,7 @@ export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
   const {cartOpen, setCartOpen} = useCartOpen();;
   const {user, signOutUser} = useUser();
-  const {cart} = useCart()
+  const {cart, totalItems} = useCart()
 
   return (
     <div className="bg-white">
@@ -243,7 +243,7 @@ export default function NavBarComponent() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cart.length}</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"> {totalItems} </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
                 </div>

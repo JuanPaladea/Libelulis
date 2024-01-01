@@ -1,14 +1,15 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useCartOpen } from '../../context/CartOpenContext'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
+import { formatedPrice, formatedTotalPrice } from "../../utilities/utils";
 
 export default function CartComponent() {
     const {cartOpen, setCartOpen} = useCartOpen()
-    const {cart, addToCart, removeFromCart} = useCart()
-    
+    const {cart, removeFromCart, totalItems} = useCart()
+
     return (
         <Transition.Root show={cartOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => setCartOpen(!cartOpen)}>
@@ -57,7 +58,7 @@ export default function CartComponent() {
                         <div className="mt-8">
                             <div className="flow-root">
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                {cart ? cart.map((product) => (
+                                {cart ? totalItems === 0 ? 'el carrito está vacio' : cart.map((product) => (
                                 <li key={product.id} className="flex py-6">
                                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                     <img
@@ -73,7 +74,9 @@ export default function CartComponent() {
                                         <h3>
                                             <a>{product.name}</a>
                                         </h3>
-                                        <p className="ml-4">{product.price}</p>
+                                        <p className="ml-4 text-right">{formatedTotalPrice(product)}
+                                        <p class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</p>
+                                        </p>
                                         </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">

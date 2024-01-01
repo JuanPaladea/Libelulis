@@ -1,9 +1,10 @@
 import React from 'react'
 import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 
 const CheckoutComponent = () => {
-    const {cart, removeFromCart} = useCart()
+    const {cart, removeFromCart, totalItems} = useCart()
 
     return (
         <div>
@@ -12,13 +13,17 @@ const CheckoutComponent = () => {
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>
                     <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-                        {cart ? cart.map((product) => 
+                        {cart ? 
+                        (totalItems === 0 ? 
+                            'El carrito está vacío' 
+                            : 
+                            (cart.map((product) => 
                             <div key={product.id} class="flex flex-col rounded-lg bg-white sm:flex-row">
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4">
-                                    <span class="font-semibold">{product.quantity}x {product.name}</span>
-                                        <p class="text-lg font-bold">{product.price}</p>
-                                        <p class="text-md">{product.price}</p>
+                                    <span class="font-semibold"> {product.quantity > 1 ? `${product.quantity}x` : ''} {product.name}</span>
+                                        <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
+                                        <p class="text-md"> {product.quantity > 1 ? `${formatedPrice(product)}` : '' } </p>
                                 </div>
                                 <button
                                     type="button"
@@ -29,8 +34,8 @@ const CheckoutComponent = () => {
                                     <span className="sr-only">Close menu</span>
                                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
-                            </div>
-                        ) : 'ldng'}
+                            </div>)
+                        )) : 'ldng'}
                     </div>
 
                     <p class="mt-8 text-lg font-medium">Envío</p>
@@ -86,7 +91,12 @@ const CheckoutComponent = () => {
                     <div class="mt-6 border-t border-b py-2">
                         <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                        <p class="font-semibold text-gray-900">{cart.map((item) => item.price).reduce((total, price) => total + price, 0)}</p>
+                        <p class="font-semibold text-gray-900">{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                            style: 'currency',
+                            currency: 'ARS',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}</p>
                         </div>
                         <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Envío</p>
@@ -95,7 +105,12 @@ const CheckoutComponent = () => {
                     </div>
                     <div class="mt-6 flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Total</p>
-                        <p class="text-2xl font-semibold text-gray-900">{cart.map((item) => item.price).reduce((total, price) => total + price, 0)}</p>
+                        <p class="text-2xl font-semibold text-gray-900">{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                            style: 'currency',
+                            currency: 'ARS',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}</p>
                     </div>
                     </div>
                     <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">Comprar</button>

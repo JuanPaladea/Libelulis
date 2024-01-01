@@ -5,14 +5,21 @@ import ReviewComponent from '../components/Review/ReviewComponent'
 import NewsletterComponent from '../components/Newsletter/NewsletterComponent'
 import { useParams } from 'react-router-dom'
 import { useUnico } from '../hooks/useCollection'
+import LoaderComponent from '../components/Loader/LoaderComponent'
 
 const Item = () => {
   const {id} = useParams()
   const {producto} = useUnico('products', id)
-
+  
   return (
     <div>
-        <ItemComponent product={producto} />
+        {producto ? (
+          <ItemComponent product={producto} />
+        )
+        :
+        (
+          <LoaderComponent/>
+        )}
         <AdemasCompraronComponent/>
         <ReviewComponent/>
         <NewsletterComponent/>

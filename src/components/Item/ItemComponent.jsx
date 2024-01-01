@@ -1,12 +1,8 @@
 import { useCart } from "../../context/CartContext"
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function ItemComponent({product}) {
   const {addToCart} = useCart();
-
+  
   return (
     <div className="bg-white">
       <div className="pt-6">
@@ -32,7 +28,16 @@ export default function ItemComponent({product}) {
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+            <p className="text-3xl tracking-tight text-gray-900">{product.price ? (product.price .toLocaleString('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+            ) 
+            : 
+            ''}
+            </p>
 
             <button
               onClick={() => addToCart(product)}

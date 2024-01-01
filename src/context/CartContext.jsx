@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
 import { toast } from "react-toastify";
@@ -10,24 +10,9 @@ export const CartProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false)
     const db = getFirestore();
-    const {user} = useUser()    
+    const {user} = useUser()
 
     useEffect(() => {   
-        const fetchCart = () => {
-            if (user) {
-                const userCartRef = collection(db, 'users', user.uid, 'cart');
-                getDocs(userCartRef)
-                .then((cartSnapshot) => {
-                    setCart(cartSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-                }).catch((error) => {
-                    console.error('Error fetching cart:', error);
-                }).finally(() => {
-                    setLoading(false)
-                });
-            } else {
-              setCart([]);
-            }
-        }
         fetchCart()
     }, [user])
 
@@ -136,10 +121,16 @@ export const CartProvider = ({ children }) => {
               console.error('Error clearing cart:', error);
             });
         }
-      };
+    };
+
+    const calculateTotalItems = (cartItems) => {
+        return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
+    };
+
+    const totalItems = calculateTotalItems(cart)
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems }}>
           {children}
         </CartContext.Provider>
       );
