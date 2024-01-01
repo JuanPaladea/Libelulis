@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useCart } from "../../context/CartContext"
 
 export default function ItemComponent({product}) {
   const {addToCart} = useCart();
-  
+  const [count, setCount] = useState(1)
+
   return (
     <div className="bg-white">
       <div className="pt-6">
@@ -39,8 +41,20 @@ export default function ItemComponent({product}) {
             ''}
             </p>
 
+            <div>
+              <p className="mt-4 text-gray-500 text-lg">Cantidad:
+                <select id="quantity" value={count} onChange={(e) => setCount(+e.target.value)}>
+                    {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
+                    <option key={value} value={value}>
+                        {value}
+                    </option>
+                    ))}
+                </select>
+              </p>
+            </div>
+
             <button
-              onClick={() => addToCart(product)}
+              onClick={() => addToCart(product, count)}
               className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Añadir al carrito

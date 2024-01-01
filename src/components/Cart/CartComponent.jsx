@@ -5,6 +5,7 @@ import { useCartOpen } from '../../context/CartOpenContext'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { formatedPrice, formatedTotalPrice } from "../../utilities/utils";
+import ItemCountComponent from '../ItemCount/ItemCountComponent'
 
 export default function CartComponent() {
     const {cartOpen, setCartOpen} = useCartOpen()
@@ -80,8 +81,7 @@ export default function CartComponent() {
                                         </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                        <p className="text-gray-500">Cantidad: {product.quantity} </p>
-
+                                        <ItemCountComponent product={product} />
                                         <div className="flex">
                                         <button
                                             onClick={() => removeFromCart(product.id)}

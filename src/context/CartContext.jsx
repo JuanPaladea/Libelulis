@@ -37,7 +37,7 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const addToCart = (product) => {    
+    const addToCart = (product, quantity = 1) => {    
         if (user) {
             const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
             const productRef = doc(cartItemDocRef, product.id);
@@ -53,7 +53,7 @@ export const CartProvider = ({ children }) => {
                         updateCartItem(productRef, updatedProduct);
                     } else {
                         // Create a new document
-                        const newProduct = { ...product, quantity: 1 };
+                        const newProduct = { ...product, quantity};
                         addToCartItem(productRef, newProduct);
                     }
                 })
@@ -71,13 +71,29 @@ export const CartProvider = ({ children }) => {
     
     const updateCartItem = (productRef, product) => {
         updateDoc(productRef, product)
+        .then(() => fetchCart())
+        .catch((error) => {
+            console.error('Error updating cart item:', error);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    };
+
+    const updateCartItemQuantity = (product, newQuantity) => {
+        if (user) {
+          const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
+          const productRef = doc(cartItemDocRef, product.id);
+    
+          updateDoc(productRef, { quantity: newQuantity })
             .then(() => fetchCart())
             .catch((error) => {
-                console.error('Error updating cart item:', error);
+              console.error('Error updating cart item:', error);
             })
             .finally(() => {
-                setLoading(false);
+              toast.success('Cantidad actualizada');
             });
+        }
     };
     
     const addToCartItem = (productRef, product) => {
@@ -126,11 +142,10 @@ export const CartProvider = ({ children }) => {
     const calculateTotalItems = (cartItems) => {
         return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
     };
-
     const totalItems = calculateTotalItems(cart)
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity }}>
           {children}
         </CartContext.Provider>
       );

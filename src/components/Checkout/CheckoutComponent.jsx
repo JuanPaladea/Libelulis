@@ -2,6 +2,7 @@ import React from 'react'
 import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
+import ItemCountComponent from '../ItemCount/ItemCountComponent'
 
 const CheckoutComponent = () => {
     const {cart, removeFromCart, totalItems} = useCart()
@@ -21,9 +22,12 @@ const CheckoutComponent = () => {
                             <div key={product.id} class="flex flex-col rounded-lg bg-white sm:flex-row">
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4">
-                                    <span class="font-semibold"> {product.quantity > 1 ? `${product.quantity}x` : ''} {product.name}</span>
+                                    <span class="font-semibold">{product.name}</span>
                                         <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
                                         <p class="text-md"> {product.quantity > 1 ? `${formatedPrice(product)}` : '' } </p>
+                                </div>
+                                <div class="flex w-full flex-col px-4 py-4">
+                                    <ItemCountComponent product={product} />
                                 </div>
                                 <button
                                     type="button"
