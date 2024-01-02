@@ -1,8 +1,38 @@
+import { addDoc, collection, getFirestore } from "firebase/firestore"
+import { useState } from "react"
+import { toast } from "react-toastify"
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function ContactFormComponent() {
+  const [name, setName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const db = getFirestore();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addDoc(collection(db, 'contacts'), {
+      name,
+      lastName,
+      email,
+      message,
+      timestamp: new Date()
+    }).then(() => {
+      setName('')
+      setLastName('')
+      setEmail('')
+      setMessage('')
+      toast.success('Mensaje enviado')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
   return (
     <div className="isolate bg-white px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -19,6 +49,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <input
+                onChange={(e) => setName(e.target.value)}
                 type="text"
                 name="first-name"
                 id="first-name"
@@ -33,6 +64,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <input
+                onChange={(e) => setLastName(e.target.value)}              
                 type="text"
                 name="last-name"
                 id="last-name"
@@ -47,6 +79,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <input
+                onChange={(e) => setEmail(e.target.value)}              
                 type="email"
                 name="email"
                 id="email"
@@ -61,6 +94,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <textarea
+                onChange={(e) => setMessage(e.target.value)}
                 name="message"
                 id="message"
                 rows={4}
@@ -72,6 +106,7 @@ export default function ContactFormComponent() {
         </div>
         <div className="mt-10">
           <button
+            onClick={handleSubmit}
             type="submit"
             className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
