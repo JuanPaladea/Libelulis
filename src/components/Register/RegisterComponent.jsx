@@ -26,8 +26,10 @@ export default function Example() {
           </h2>
         </div>
       </div>
-      <form className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
         <LoginWithGoogleComponent/>
+      </div>
+      <form className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

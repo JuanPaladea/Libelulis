@@ -19,7 +19,7 @@ const CheckoutComponent = () => {
                             'El carrito está vacío' 
                             : 
                             (cart.map((product) => 
-                            <div key={product.id} class="flex flex-col rounded-lg bg-white sm:flex-row">
+                            <div key={product.id} class="flex rounded-lg bg-white sm:flex-row">
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4">
                                     <span class="font-semibold">{product.name}</span>

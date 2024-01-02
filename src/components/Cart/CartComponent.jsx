@@ -103,7 +103,12 @@ export default function CartComponent() {
                         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-900">
                             <p>Subtotal</p>
-                            <p>0</p>
+                            <p>{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                            style: 'currency',
+                            currency: 'ARS',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500"></p>
                         <div className="mt-6">

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { toast } from 'react-toastify';
+import { redirect } from 'react-router-dom';
 
 const UserContext = createContext();
 
@@ -41,6 +42,7 @@ export const UserProvider = ({ children }) => {
         const provider = new GoogleAuthProvider();
         signInWithRedirect(auth, provider)
         getRedirectResult(auth)
+        .then(redirect('/'))
         .catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;

@@ -6,7 +6,6 @@ import { useUser } from "../../context/UserContext";
 export default function LoginComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const {loginUser} = useUser()
 
   return (

@@ -21,7 +21,7 @@ export default function NavBarComponent() {
   const {cart, totalItems} = useCart()
 
   return (
-    <div className="bg-white">
+    <div className="bg-white sticky top-0 w-full z-50">
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>
@@ -93,6 +93,11 @@ export default function NavBarComponent() {
                           </div>
                           <div className="font-medium text-gray-700 hover:text-gray-800">
                             {user.displayName}
+                          </div>
+                        </Link>
+                        <Link to="/checkout" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                          <div className="font-medium text-gray-700 hover:text-gray-800">
+                            Carrito
                           </div>
                         </Link>
                         <Link onClick={() => {
@@ -205,6 +210,17 @@ export default function NavBarComponent() {
                                 className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
                               >
                                 Tu cuenta
+                              </Link>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="/checkout"
+                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                              >
+                                Carrito
                               </Link>
                             )}
                           </Menu.Item>

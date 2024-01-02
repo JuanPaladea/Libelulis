@@ -123,22 +123,6 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const clearCart = () => {
-        if (user) {
-          const userCartRef = collection(db, 'users', user.uid, 'cart');
-      
-          getDocs(userCartRef)
-            .then((cartSnapshot) => {
-              const deletePromises = cartSnapshot.docs.map((doc) => deleteDoc(doc.ref));
-              return Promise.all(deletePromises);
-            })
-            .then(() => fetchCart())
-            .catch((error) => {
-              console.error('Error clearing cart:', error);
-            });
-        }
-    };
-
     const calculateTotalItems = (cartItems) => {
         return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
     };
