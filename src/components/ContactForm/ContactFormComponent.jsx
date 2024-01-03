@@ -50,6 +50,7 @@ export default function ContactFormComponent() {
             <div className="mt-2.5">
               <input
                 onChange={(e) => setName(e.target.value)}
+                value={name}
                 type="text"
                 name="first-name"
                 id="first-name"
@@ -64,6 +65,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <input
+                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}              
                 type="text"
                 name="last-name"
@@ -79,6 +81,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <input
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}              
                 type="email"
                 name="email"
@@ -94,6 +97,7 @@ export default function ContactFormComponent() {
             </label>
             <div className="mt-2.5">
               <textarea
+                value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 name="message"
                 id="message"

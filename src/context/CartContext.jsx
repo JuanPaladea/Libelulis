@@ -12,11 +12,16 @@ export const CartProvider = ({ children }) => {
     const db = getFirestore();
     const {user} = useUser()
 
-    useEffect(() => {   
-        fetchCart()
+    useEffect(() => {
+        if (user) {
+            fetchCartFromFirestore()
+        } else {
+            fetchCartFromLocalStorage()
+            setLoading(false)
+        }
     }, [user])
 
-    const fetchCart = () => {
+    const fetchCartFromFirestore = () => {
         if (user) {
             const userCartRef = collection(db, 'users', user.uid, 'cart');
             getDocs(userCartRef)
@@ -25,7 +30,14 @@ export const CartProvider = ({ children }) => {
                     id: doc.id,
                     ...doc.data()
                 }));
-                setCart(cartItems);
+                if (cartItems.length === 0 && cart.length > 0) {
+                    cart.forEach((product) => {
+                      const productRef = doc(userCartRef, product.id);
+                      addToCartItem(productRef, product);
+                    });
+                } else {
+                    setCart(cartItems);
+                }
             })
             .catch((error) => {
                 console.error('Error fetching cart:', error);
@@ -35,6 +47,15 @@ export const CartProvider = ({ children }) => {
                 setLoading(false);
             });
         }
+    };
+
+    const fetchCartFromLocalStorage = () => {
+        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+        setCart(localCart);
+    };
+
+    const saveCartToLocalStorage = (cartItems) => {
+        localStorage.setItem('cart', JSON.stringify(cartItems));
     };
 
     const addToCart = (product, quantity = 1) => {    
@@ -48,7 +69,7 @@ export const CartProvider = ({ children }) => {
                         const existingProduct = cartItemDoc.data();
                         const updatedProduct = {
                             ...existingProduct,
-                            quantity: (existingProduct.quantity || 0) + 1,
+                            quantity: (existingProduct.quantity || 0) + quantity,
                         };
                         updateCartItem(productRef, updatedProduct);
                     } else {
@@ -56,22 +77,32 @@ export const CartProvider = ({ children }) => {
                         const newProduct = { ...product, quantity};
                         addToCartItem(productRef, newProduct);
                     }
+                    toast.success(product.name + ' agregado al carrito')
                 })
                 .catch((error) => {
                     console.error('Error checking cart item:', error);
                 })
-                .finally(() => {
-                    setLoading(false);
-                    toast.success(`${product.name} agregado`)
-                });
         } else {
-            toast.error('Debe estar logeado para agregar al carrito')
+            const updatedCart = [...cart];
+            const existingProductIndex = updatedCart.findIndex((item) => item.id === product.id);
+
+            if (existingProductIndex !== -1) {
+                updatedCart[existingProductIndex].quantity += quantity;
+            } else {
+                updatedCart.push({ ...product, quantity });
+            }
+            setCart(updatedCart);
+            saveCartToLocalStorage(updatedCart);
+            toast.success(`${product.name} agregado al carrito`);
         }
-    };
+    }
     
     const updateCartItem = (productRef, product) => {
         updateDoc(productRef, product)
-        .then(() => fetchCart())
+        .then(() => {
+            fetchCartFromFirestore()
+            updateLocalCart();
+        })
         .catch((error) => {
             console.error('Error updating cart item:', error);
         })
@@ -86,19 +117,29 @@ export const CartProvider = ({ children }) => {
           const productRef = doc(cartItemDocRef, product.id);
     
           updateDoc(productRef, { quantity: newQuantity })
-            .then(() => fetchCart())
+            .then(() => fetchCartFromFirestore())
             .catch((error) => {
               console.error('Error updating cart item:', error);
             })
             .finally(() => {
               toast.success('Cantidad actualizada');
             });
+        } else {
+            const updatedCart = cart.map((item) => {
+                if (item.id === product.id) {
+                  return { ...item, quantity: newQuantity };
+                }
+                return item;
+            });
+            setCart(updatedCart);
+            saveCartToLocalStorage(updatedCart);
+            toast.success('Cantidad actualizada');
         }
     };
     
     const addToCartItem = (productRef, product) => {
         setDoc(productRef, product)
-            .then(() => fetchCart())
+            .then(() => fetchCartFromFirestore())
             .catch((error) => {
                 console.error('Error adding to cart:', error);
             })
@@ -113,13 +154,27 @@ export const CartProvider = ({ children }) => {
             const ProductRef = doc(cartItemDocRef, itemId)
         
             deleteDoc(ProductRef)
-            .then(() => fetchCart())
+            .then(() => {
+                const updatedLocalCart = cart.filter((item) => item.id !== itemId);
+                setCart(updatedLocalCart);
+                saveCartToLocalStorage(updatedLocalCart);
+                setLoading(false);
+                toast.success(`Eliminado del carrito`)            
+            })
             .catch((error) => {
                 console.error('Error checking cart item:', error);
-            }).finally(() => {
-                setLoading(false)
-                toast.success(`Removido del carrito`)
-            });
+            })
+        } else {
+            const updatedCart = cart.filter((item) => item.id !== itemId);
+            setCart(updatedCart);
+            saveCartToLocalStorage(updatedCart);
+            toast.success(`Eliminado del carrito`);
+        }
+    };
+
+    const updateLocalCart = () => {
+        if (user) {
+          saveCartToLocalStorage(cart);
         }
     };
 
@@ -129,7 +184,7 @@ export const CartProvider = ({ children }) => {
     const totalItems = calculateTotalItems(cart)
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity, fetchCartFromLocalStorage, }}>
           {children}
         </CartContext.Provider>
       );

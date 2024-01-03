@@ -16,23 +16,23 @@ import Usuario from '../pages/Usuario'
 
 const MainRouter = () => {
     return (
-        <BrowserRouter>
-            {<CartComponent/>}
-            <NavBarComponent/>
-            <Routes>
-                <Route path='/' element={<Home />}/>
-                <Route path='/Tienda' element={<Tienda />}/>
-                <Route path='/Sobre-Nosotros' element={<SobreNosotros />}/>
-                <Route path='/Contacto' element={<Contacto />}/>
-                <Route path='/Iniciar-Sesion' element={<Login />}/>
-                <Route path='/Registrarse' element={<Register />}/>
-                <Route path='/Checkout' element={<Checkout />}/>
-                <Route path='/Error' element={<Error />}/>
-                <Route path='/Usuario' element={<Usuario />}/>
-                <Route path="/item/:id" element={<Item/>}/>
-            </Routes>
-            <FooterComponent/>
-        </BrowserRouter>
+            <div>
+                <CartComponent/>
+                <NavBarComponent/>
+                <Routes>
+                    <Route path='/' element={<Home />}/>
+                    <Route path='/Tienda' element={<Tienda />}/>
+                    <Route path='/Sobre-Nosotros' element={<SobreNosotros />}/>
+                    <Route path='/Contacto' element={<Contacto />}/>
+                    <Route path='/Iniciar-Sesion' element={<Login />}/>
+                    <Route path='/Registrarse' element={<Register />}/>
+                    <Route path='/Checkout' element={<Checkout />}/>
+                    <Route path='/Error' element={<Error />}/>
+                    <Route path='/Usuario' element={<Usuario />}/>
+                    <Route path="/item/:id" element={<Item/>}/>
+                </Routes>
+                <FooterComponent/>
+            </div>
     )
 }
 

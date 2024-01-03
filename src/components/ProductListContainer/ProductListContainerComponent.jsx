@@ -24,6 +24,9 @@ export default function ProductListContainerComponent({products}) {
   const [orderedProducts, setOrderedProducts] = useState([...products]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSortOption, setSelectedSortOption] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+
   useEffect(() => {
     // Function to update the orderedProducts array based on selectedCategory and selectedSortOption
     const updateOrderedProducts = () => {
@@ -44,17 +47,25 @@ export default function ProductListContainerComponent({products}) {
         return 0;
       });
 
-      setOrderedProducts(sortedProducts);
+      const searchedProducts = sortedProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      setOrderedProducts(searchedProducts);
     };
 
     updateOrderedProducts();
-  }, [products, selectedCategory, selectedSortOption]);
+  }, [products, selectedCategory, selectedSortOption, searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <div className="bg-white">
       <div>
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">Tienda</h1>
 
             <div className="flex items-center">
@@ -122,7 +133,6 @@ export default function ProductListContainerComponent({products}) {
                     />
                   </Menu.Button>
                 </div>
-
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
@@ -156,8 +166,25 @@ export default function ProductListContainerComponent({products}) {
               </Menu>
             </div>
           </div>
-          <ProductListComponent products={orderedProducts} />
+          <form className='mt-4'>   
+            <label for="default-search" class="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input 
+                type="search" 
+                id="default-search" 
+                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                placeholder="Busca tu producto..."
+                value={searchQuery} 
+                onChange={handleSearchChange}/>
+            </div>
+          </form>
         </main>
+          <ProductListComponent products={orderedProducts} />
       </div>
     </div>
   )

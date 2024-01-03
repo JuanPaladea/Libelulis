@@ -22,7 +22,7 @@ export default function ItemComponent({product}) {
         </div>
 
         {/* Product info */}
-        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
+        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16">
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.name}</h1>
           </div>
@@ -71,14 +71,14 @@ export default function ItemComponent({product}) {
               </div>
 
               <div class="mt-10">
-                <h3 class="text-sm font-medium text-gray-900">Highlights</h3>
+                <h3 class="text-sm font-medium text-gray-900">Detalles</h3>
 
                 <div class="mt-4">
                   <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-                    <li class="text-gray-400"><span class="text-gray-600">Hand cut and sewn locally</span></li>
-                    <li class="text-gray-400"><span class="text-gray-600">Dyed with our proprietary colors</span></li>
-                    <li class="text-gray-400"><span class="text-gray-600">Pre-washed &amp; pre-shrunk</span></li>
-                    <li class="text-gray-400"><span class="text-gray-600">Ultra-soft 100% cotton</span></li>
+                    <li class="text-gray-400"><span class="text-gray-600"><span class="font-bold">Calidad Premium</span>: Destaca la calidad excepcional de tus productos de ropa. Puedes mencionar la elección de materiales de alta gama, la artesanía cuidadosa o cualquier característica única que garantice durabilidad y comodidad.</span></li>
+                    <li class="text-gray-400"><span class="text-gray-600"><span class="font-bold">Diseño Exclusivo</span>: Resalta la originalidad y exclusividad de tus diseños. Si hay detalles únicos, patrones distintivos o colaboraciones especiales, asegúrate de incluirlos en los highlights para atraer a aquellos que buscan prendas únicas y a la moda.</span></li>
+                    <li class="text-gray-400"><span class="text-gray-600"><span class="font-bold">Sostenibilidad y Responsabilidad Ambiental</span>: Si tus productos están fabricados de manera sostenible o si tu empresa sigue prácticas respetuosas con el medio ambiente, es fundamental incluirlo en tus highlights. La conciencia ambiental es una característica cada vez más valorada por los consumidores.</span></li>
+                    <li class="text-gray-400"><span class="text-gray-600"><span class="font-bold">Confort y Funcionalidad</span>:Si tus prendas ofrecen un nivel excepcional de comodidad o incluyen características funcionales específicas (como bolsillos ocultos, tejidos transpirables, etc.), asegúrate de destacarlo. Los clientes aprecian la combinación de estilo y practicidad en la ropa que compran.</span></li>
                   </ul>
                 </div>
               </div>

@@ -1,20 +1,24 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline'
+import { addDoc, collection, getFirestore } from 'firebase/firestore'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 export default function NewsletterComponent() {
+  const [email, setEmail] = useState('')
+  const db = getFirestore()
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    subscribeToNewsletter(email)
+  }
+
+  const subscribeToNewsletter = (email) => {
+    addDoc(collection(db, 'subscribers'), {email})
+    .then(setEmail(''))
+    .catch(error => console.error(error))
+    .finally(toast.success('suscripto con éxito'))
+  }
+
   return (
     <div className="relative isolate overflow-hidden bg-gray-200 py-16 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -33,11 +37,14 @@ export default function NewsletterComponent() {
                 name="email"
                 type="email"
                 autoComplete="email"
+                value={email}
                 required
                 className="min-w-0 flex-auto rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 placeholder="Introduce tu mail"
+                onChange={(e) => setEmail(e.target.value)}
               />
               <button
+                onClick={handleSubmit}
                 type="submit"
                 className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >

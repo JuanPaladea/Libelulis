@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { toast } from 'react-toastify';
-import { redirect } from 'react-router-dom';
+import { redirect, unstable_HistoryRouter, useNavigate } from 'react-router-dom';
 
 const UserContext = createContext();
 
@@ -12,6 +12,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const auth = getAuth();
+    const navigate = useNavigate()
     
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -22,50 +23,60 @@ export const UserProvider = ({ children }) => {
 
     const createUser = (email, password) => {
         createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            toast.success('Usuario creado con éxito')
+            navigate('/Iniciar-Sesion')
+        })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
             console.log(error)
+            toast.error(error.message)
         });
     }
 
     const loginUser = (email, password) => {
         signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            toast.success('Sesión iniciada con éxito')
+            navigate('/Tienda')
+        })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            console.log(error)
+            toast.error(error.message)
         });
     }
 
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         signInWithRedirect(auth, provider)
-        getRedirectResult(auth)
-        .then(redirect('/'))
-        .catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.customData.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
+        .then(() => {
+            return getRedirectResult(auth)
+        })  
+        .then((result) => {
+            if (result.user) {
+                toast.success('logeado con exito')
+            } else {
+                toast.error('Error al iniciar con google')
+            }
         })
-        .finally(() => {
-            toast.success('logeado con exito')
-        });
+        .catch((error) => {
+            console.error(error);
+            toast.error('Hubo un problema durante la autenticación con Google');
+        })
+        .finally(
+            navigate('/')
+        );
     }
 
     const signOutUser = () => {
         signOut(auth)
-            .catch((error) => {
-            // An error happened.
-            })
-            .finally(
+            .then(() => {
+                navigate('/')
                 toast.success('Sesión finalizada')
-            );
+            })
+            .catch((error) => {
+                console.error(error);
+                toast.error('Failed to sign out');
+            });
     }
 
     const value = {

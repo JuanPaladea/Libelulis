@@ -5,9 +5,11 @@ import { CartProvider } from './context/CartContext'
 import { UserProvider } from './context/UserContext'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BrowserRouter } from 'react-router-dom'
 
 const App = () => {
     return (
+        <BrowserRouter>
         <UserProvider>
             <CartProvider>
                 <CartOpenProvider>
@@ -27,6 +29,7 @@ const App = () => {
                 </CartOpenProvider>
             </CartProvider>
         </UserProvider>
+        </BrowserRouter>
     )
 }
 
