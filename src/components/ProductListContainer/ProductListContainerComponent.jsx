@@ -10,9 +10,9 @@ const sortOptions = [
 ]
 
 const categories = [
-  { name: 'Buzo', current: false },
-  { name: 'Remera', current: false },
-  { name: 'Campera', current: false },
+  { id: "buzo", name: 'Buzos', current: false },
+  { id: "remera", name: 'Remeras', current: false },
+  { id: "campera", name: 'Camperas', current: false },
 ]
 
 function classNames(...classes) {
@@ -22,9 +22,9 @@ function classNames(...classes) {
 export default function ProductListContainerComponent({products}) {
 
   const [orderedProducts, setOrderedProducts] = useState([...products]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSortOption, setSelectedSortOption] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
 
   useEffect(() => {
@@ -32,9 +32,10 @@ export default function ProductListContainerComponent({products}) {
     const updateOrderedProducts = () => {
       let filteredProducts = [...products];
 
-      if (selectedCategory) {
-        filteredProducts = filteredProducts.filter((product) =>
-          product.category.toLowerCase().includes(selectedCategory.toLowerCase())
+      if (selectedCategories.length > 0) {
+        // Filter products based on selected categories
+          filteredProducts = filteredProducts.filter((product) =>
+          selectedCategories.includes(product.category.toLowerCase())
         );
       }
 
@@ -55,10 +56,23 @@ export default function ProductListContainerComponent({products}) {
     };
 
     updateOrderedProducts();
-  }, [products, selectedCategory, selectedSortOption, searchQuery]);
+  }, [products, selectedCategories, selectedSortOption, searchQuery]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleCategoryChange = (category) => {
+    // Toggle the selected category
+    setSelectedCategories((prevSelectedCategories) => {
+      if (prevSelectedCategories.includes(category)) {
+        // If category is already selected, remove it
+        return prevSelectedCategories.filter((c) => c !== category);
+      } else {
+        // Otherwise, add the category
+        return [...prevSelectedCategories, category];
+      }
+    });
   };
 
   return (
@@ -94,7 +108,7 @@ export default function ProductListContainerComponent({products}) {
                     <div className="py-1">
                         <Menu.Item key="Todos los productos">
                           <Link
-                            onClick={() => setSelectedCategory(false)}
+                            onClick={() => setSelectedCategories([])}
                             className={classNames(
                               'text-gray-500',
                               'block px-4 py-2 text-sm'
@@ -103,22 +117,26 @@ export default function ProductListContainerComponent({products}) {
                             Todos los productos
                           </Link>
                         </Menu.Item>
-                      {categories.map((option) => (
-                        <Menu.Item key={option.name}>
-                          {({ active }) => (
-                            <Link
-                              onClick={() => setSelectedCategory(option.name)}
-                              className={classNames(
-                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                            >
-                              {option.name}
-                            </Link>
-                          )}
-                        </Menu.Item>
-                      ))}
+                        {categories.map((option) => (
+                          <Menu.Item key={option.id}>
+                            {() => (
+                              <label className="px-4 flex items-center">
+                                <input
+                                  type="checkbox"
+                                  name="category"
+                                  checked={selectedCategories.includes(option.id)}
+                                  onChange={() => handleCategoryChange(option.id)}
+                                  className="form-checkbox h-4 w-4 text-blue-500"
+                                />
+                                <span
+                                  className='text-gray-500 ml-2 block px-4 py-2 text-sm'
+                                >
+                                  {option.name}
+                                </span>
+                              </label>
+                            )}
+                          </Menu.Item>
+                        ))}
                     </div>
                   </Menu.Items>
                 </Transition>

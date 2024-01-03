@@ -6,21 +6,18 @@ const callouts = [
       description: 'Prendas para el verano',
       imageSrc: 'https://i.imgur.com/jD46IlW.jpg',
       imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
-      href: '#',
     },
     {
       name: 'Mochilas',
       description: 'Mochilas de tela hechas a mano',
       imageSrc: 'https://i.imgur.com/GzRZ4A4.jpg',
       imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
-      href: '#',
     },
     {
       name: 'Riñoneras',
       description: 'Riñoneras hechas con amorcito',
       imageSrc: 'https://i.imgur.com/cImlyYf.jpg',
       imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
-      href: '#',
     },
   ]
   
@@ -42,7 +39,7 @@ const callouts = [
                     />
                   </div>
                   <h3 className="mt-6 text-sm text-gray-500">
-                    <Link to="/Tienda" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    <Link to="/Tienda">
                       <span className="absolute inset-0" />
                       {callout.name}
                     </Link>
