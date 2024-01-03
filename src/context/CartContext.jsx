@@ -30,14 +30,7 @@ export const CartProvider = ({ children }) => {
                     id: doc.id,
                     ...doc.data()
                 }));
-                if (cartItems.length === 0 && cart.length > 0) {
-                    cart.forEach((product) => {
-                      const productRef = doc(userCartRef, product.id);
-                      addToCartItem(productRef, product);
-                    });
-                } else {
-                    setCart(cartItems);
-                }
+                setCart(cartItems);
             })
             .catch((error) => {
                 console.error('Error fetching cart:', error);
@@ -156,9 +149,9 @@ export const CartProvider = ({ children }) => {
             deleteDoc(ProductRef)
             .then(() => {
                 const updatedLocalCart = cart.filter((item) => item.id !== itemId);
-                setCart(updatedLocalCart);
                 saveCartToLocalStorage(updatedLocalCart);
-                setLoading(false);
+                setCart(updatedLocalCart);
+                fetchCartFromFirestore()
                 toast.success(`Eliminado del carrito`)            
             })
             .catch((error) => {
