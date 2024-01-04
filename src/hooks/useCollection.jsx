@@ -1,44 +1,53 @@
-import { useEffect, useState } from "react"
-import { collection, getDocs, getFirestore, getDoc, doc } from 'firebase/firestore'
+import { useEffect, useState } from "react";
+import { collection, getFirestore, onSnapshot, doc } from "firebase/firestore";
 
 export const useCollection = (collectionName) => {
-    const [productos, setProductos] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false)
-    
-    useEffect(() => {
-        const db = getFirestore();
-        const productsCollection = collection(db, collectionName)        
-        getDocs(productsCollection)
-        .then((snapshot) => {
-            setProductos(snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-            })))
-        }).catch(() => {
-            setError(true)
-        }).finally(setLoading(false))
-    }, [])
-    
-    return {productos, loading, error}
-}
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const db = getFirestore();
+    const productsCollection = collection(db, collectionName);
+
+    const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
+      setProductos(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+      setLoading(false);
+    });
+
+    return () => {
+      // Unsubscribe from the snapshot listener when the component unmounts
+      unsubscribe();
+    };
+  }, [collectionName]);
+
+  return { productos, loading, error };
+};
 
 export const useUnico = (collectionName, id) => {
-    const [producto, setProducto] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false)
+  const [producto, setProducto] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-    useEffect(() => {
-        const db = getFirestore();
+  useEffect(() => {
+    const db = getFirestore();
+    const singleProduct = doc(db, collectionName, id);
 
-        const singleProduct = doc(db, collectionName, id)
-        getDoc(singleProduct)
-        .then((snapshot) => {
-            setProducto({id: snapshot.id, ...snapshot.data()})
-        }).catch(() => {
-            setError(true)
-        }).finally(setLoading(false))
-    }, [])
+    const unsubscribe = onSnapshot(singleProduct, (snapshot) => {
+      setProducto({ id: snapshot.id, ...snapshot.data() });
+      setLoading(false);
+    });
 
-    return {producto, loading, error}
-}
+    return () => {
+      // Unsubscribe from the snapshot listener when the component unmounts
+      unsubscribe();
+    };
+  }, [collectionName, id]);
+
+  return { producto, loading, error };
+};

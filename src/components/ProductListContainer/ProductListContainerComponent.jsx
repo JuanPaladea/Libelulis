@@ -35,7 +35,7 @@ export default function ProductListContainerComponent({products}) {
       if (selectedCategories.length > 0) {
         // Filter products based on selected categories
           filteredProducts = filteredProducts.filter((product) =>
-          selectedCategories.includes(product.category.toLowerCase())
+          product.category && selectedCategories.includes(product.category.toLowerCase())
         );
       }
 

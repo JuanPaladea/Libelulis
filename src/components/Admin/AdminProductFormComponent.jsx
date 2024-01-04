@@ -1,10 +1,12 @@
-import { collection, getFirestore } from 'firebase/firestore'
+import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const AdminProductFormComponent = () => {
     const [name, setName] = useState('')
     const [img, setImg] = useState('')
     const [price, setPrice] = useState('')
+    const [category, setCategory] = useState('');
     const db = getFirestore();
     const productsCollection = collection(db, 'products')
 
@@ -13,13 +15,15 @@ const AdminProductFormComponent = () => {
       addDoc(productsCollection, {
         name,
         img,
-        price: parseFloat(price)
+        price: parseFloat(price),
+        category // Add the selected category to the document
       })
       .then((newProductDoc) => {
         toast.success('Producto agregado con ID: ' + newProductDoc.id)
         setName('')
         setImg('')
         setPrice('')
+        setCategory('') // Reset category after submission
       })
       .catch((error) => {
         toast.error(error)
@@ -48,6 +52,61 @@ const AdminProductFormComponent = () => {
                     autoComplete="name"
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="category" className="block text-sm font-semibold leading-6 text-gray-900">
+                  Categoría
+                </label>
+                <div className="mt-2.5 flex justify-between align-center">
+                  <div>
+                    <input
+                      type="radio"
+                      name="category"
+                      value="buzo"
+                      checked={category === 'buzo'}
+                      onChange={() => setCategory('buzo')}
+                      />
+                    <label className='mx-2 my-auto'>
+                    Buzo
+                    </label>
+                  </div>
+                  <div>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="remera"
+                        checked={category === 'remera'}
+                        onChange={() => setCategory('remera')}
+                        />
+                    <label className='mx-2 my-auto'>
+                      Remera
+                    </label>
+                  </div>
+                  <div>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="campera"
+                        checked={category === 'campera'}
+                        onChange={() => setCategory('campera')}
+                      />
+                    <label className='mx-2 my-auto'>
+                      Campera
+                    </label>
+                  </div>
+                  <div>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="otro"
+                        checked={category === 'otro'}
+                        onChange={() => setCategory('otro')}
+                      />
+                    <label className='mx-2 my-auto'>
+                      Otro
+                    </label>
+                  </div>
                 </div>
               </div>
               <div>
