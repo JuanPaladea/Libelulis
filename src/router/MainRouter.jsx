@@ -13,6 +13,8 @@ import CartComponent from '../components/Cart/CartComponent'
 import Checkout from '../pages/Checkout'
 import Error from '../pages/Error'
 import Usuario from '../pages/Usuario'
+import Admin from '../pages/Admin'
+import AdminProductos from '../pages/AdminProductos'
 
 const MainRouter = () => {
     return (
@@ -29,6 +31,8 @@ const MainRouter = () => {
                     <Route path='/Checkout' element={<Checkout />}/>
                     <Route path='/Error' element={<Error />}/>
                     <Route path='/Usuario' element={<Usuario />}/>
+                    <Route path='/Admin' element={<Admin />}/>
+                    <Route path='/Admin-Productos' element={<AdminProductos />}/>
                     <Route path="/item/:id" element={<Item/>}/>
                 </Routes>
                 <FooterComponent/>

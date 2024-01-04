@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { toast } from 'react-toastify';
-import { redirect, unstable_HistoryRouter, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 
 const UserContext = createContext();
 
@@ -13,6 +14,30 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const auth = getAuth();
     const navigate = useNavigate()
+    const db = getFirestore();
+
+    const isAdmin = () => {
+        if (user) {
+            const userUidDocRef = doc(db, `users/${user.uid}`);
+            getDoc(userUidDocRef)
+            .then((userDoc) => {
+                if (userDoc.exists()) {
+                    const userData = userDoc.data()
+                    if (userData.isAdmin === true) {
+                        return true
+                    }
+                } else {
+                    return false
+                }
+            }).catch((error) => {
+                console.error(error)
+                return false
+            })
+        } else {
+            toast('usuario no identificado')
+            return false
+        }
+    }
     
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -85,6 +110,7 @@ export const UserProvider = ({ children }) => {
         signOutUser,
         createUser,
         loginUser,
+        isAdmin,
     }
 
     return (

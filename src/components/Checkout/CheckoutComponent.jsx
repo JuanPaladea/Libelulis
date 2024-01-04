@@ -3,9 +3,16 @@ import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
+import { useUser } from '../../context/UserContext'
+import { toast } from 'react-toastify'
 
 const CheckoutComponent = () => {
-    const {cart, removeFromCart, totalItems} = useCart()
+    const {cart, removeFromCart, totalItems, deleteCart} = useCart()
+    const {user} = useUser()
+
+    const handlePurchase = () => {
+        toast('Por implementar..');
+    }
 
     return (
         <div>
@@ -117,7 +124,7 @@ const CheckoutComponent = () => {
                         })}</p>
                     </div>
                     </div>
-                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">Comprar</button>
+                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handlePurchase}>Comprar</button>
                 </div>
             </div>
         </div>

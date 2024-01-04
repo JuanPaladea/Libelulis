@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useCartOpen } from '../../context/CartOpenContext'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
@@ -55,11 +55,11 @@ export default function CartComponent() {
                             </button>
                             </div>
                         </div>
-
                         <div className="mt-8">
                             <div className="flow-root">
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                {cart ? totalItems === 0 ? 'el carrito está vacio' : cart.map((product) => (
+                                {cart ? totalItems === 0 ? <ShoppingCartIcon className="h-10 w-10 mx-auto my-10 flex-shrink-0 text-gray-400 group-hover:text-gray-500"/> 
+                                : cart.map((product) => (
                                 <li key={product.id} className="flex py-6">
                                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                     <img

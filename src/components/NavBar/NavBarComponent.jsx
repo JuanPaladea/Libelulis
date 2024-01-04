@@ -17,7 +17,7 @@ const navigation = {
 export default function NavBarComponent() {
   const [open, setOpen] = useState(false)
   const {cartOpen, setCartOpen} = useCartOpen();;
-  const {user, signOutUser} = useUser();
+  const {user, signOutUser, isAdmin} = useUser();
   const {cart, totalItems} = useCart()
 
   return (
@@ -95,11 +95,23 @@ export default function NavBarComponent() {
                             {user.displayName}
                           </div>
                         </Link>
+                        { isAdmin ? 
+                        (
+                        <Link to="/admin" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                          <div className="font-medium text-gray-700 hover:text-gray-800">
+                            Admin
+                          </div>
+                        </Link>
+                        ) 
+                        : 
+                        (
                         <Link to="/checkout" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                           <div className="font-medium text-gray-700 hover:text-gray-800">
                             Carrito
                           </div>
                         </Link>
+                        )
+                        }
                         <Link onClick={() => {
                           setOpen(false);
                           signOutUser()
@@ -216,12 +228,23 @@ export default function NavBarComponent() {
 
                           <Menu.Item>
                             {({ active }) => (
+                              isAdmin ? (
+                              <Link
+                                to="/Admin"
+                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                              >
+                                Admin
+                              </Link>
+                              ) 
+                              : 
+                              (
                               <Link
                                 to="/checkout"
                                 className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
                               >
                                 Carrito
                               </Link>
+                              )
                             )}
                           </Menu.Item>
                           

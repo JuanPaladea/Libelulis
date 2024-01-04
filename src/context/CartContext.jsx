@@ -10,7 +10,7 @@ export const CartProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false)
     const db = getFirestore();
-    const {user} = useUser()
+    const {user, isAdmin} = useUser()
 
     useEffect(() => {
         if (user) {
@@ -103,6 +103,17 @@ export const CartProvider = ({ children }) => {
             setLoading(false);
         });
     };
+    
+    const addToCartItem = (productRef, product) => {
+        setDoc(productRef, product)
+        .then(() => fetchCartFromFirestore())
+        .catch((error) => {
+            console.error('Error adding to cart:', error);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    };
 
     const updateCartItemQuantity = (product, newQuantity) => {
         if (user) {
@@ -128,17 +139,6 @@ export const CartProvider = ({ children }) => {
             saveCartToLocalStorage(updatedCart);
             toast.success('Cantidad actualizada');
         }
-    };
-    
-    const addToCartItem = (productRef, product) => {
-        setDoc(productRef, product)
-            .then(() => fetchCartFromFirestore())
-            .catch((error) => {
-                console.error('Error adding to cart:', error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
     };
 
     const removeFromCart = (itemId) => {
