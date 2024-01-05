@@ -16,6 +16,7 @@ import Usuario from '../pages/Usuario'
 import Admin from '../pages/Admin'
 import AdminProductos from '../pages/AdminProductos'
 import AdminContactos from '../pages/AdminContactos'
+import AdminCompras from '../pages/AdminCompras'
 
 const MainRouter = () => {
     return (
@@ -35,6 +36,7 @@ const MainRouter = () => {
                     <Route path='/Admin' element={<Admin />}/>
                     <Route path='/Admin-Productos' element={<AdminProductos />}/>
                     <Route path='/Admin-Contactos' element={<AdminContactos />}/>
+                    <Route path='/Admin-Compras' element={<AdminCompras />}/>
                     <Route path="/item/:id" element={<Item/>}/>
                 </Routes>
                 <FooterComponent/>

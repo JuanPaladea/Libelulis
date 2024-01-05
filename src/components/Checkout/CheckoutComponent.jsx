@@ -1,17 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
-import { useUser } from '../../context/UserContext'
 import { toast } from 'react-toastify'
 
 const CheckoutComponent = () => {
-    const {cart, removeFromCart, totalItems, deleteCart} = useCart()
-    const {user} = useUser()
+    const {cart, removeFromCart, totalItems, checkout, totalPrice} = useCart()
+    const [shippingOption, setShippingOption] = useState('correo');
+    const [email, setEmail] = useState('')
+    const [address, setAddress] = useState('')
+    const [billingState, setBillingState] = useState('provincia');
+    const [CP, setCP] = useState('')
 
-    const handlePurchase = () => {
-        toast('Por implementar..');
+    const handleShippingOptionChange = (option) => {
+        setShippingOption(option);
+    };
+
+    const calculateShippingFee = () => {
+        return shippingOption === 'correo' ? 2500 : 0;
+    };
+
+    const billingData = {
+        Direccion: address,
+        Provincia: billingState,
+        CP: CP,
+    }
+
+    const handleCheckout = () => {
+        if (!email || !address || billingState === 'provincia' || !CP) {
+            toast.error('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+        const shippingFee = calculateShippingFee();
+        const totalWithShipping = totalPrice + shippingFee;
+        setEmail('');
+        setAddress('')
+        setBillingState('provincia')
+        setCP('')
+        checkout(totalWithShipping, billingData);
     }
 
     return (
@@ -52,7 +79,7 @@ const CheckoutComponent = () => {
                     <p class="mt-8 text-lg font-medium">Envío</p>
                     <form class="mt-5 grid gap-6">
                     <div class="relative">
-                        <input class="peer hidden" id="radio_1" type="radio" name="radio" checked />
+                        <input class="peer hidden" id="radio_1" type="radio" name="radio" checked={shippingOption === 'correo'} onChange={() => handleShippingOptionChange('correo')} />
                         <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                         <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" htmlFor="radio_1">
                         <img class="w-14 object-contain" src="/images/naorrAeygcJzX0SyNI4Y0.png" alt="" />
@@ -63,7 +90,7 @@ const CheckoutComponent = () => {
                         </label>
                     </div>
                     <div class="relative">
-                        <input class="peer hidden" id="radio_2" type="radio" name="radio" checked />
+                        <input class="peer hidden" id="radio_2" type="radio" name="radio" checked={shippingOption === 'retiro'} onChange={() => handleShippingOptionChange('retiro')} />
                         <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                         <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_2">
                         <img class="w-14 object-contain" src="/images/oG8xsl3xsOkwkMsrLGKM4.png" alt="" />
@@ -81,7 +108,7 @@ const CheckoutComponent = () => {
                     <div class="">
                     <label for="email" class="mt-4 mb-2 block text-sm font-medium">Email</label>
                     <div class="relative">
-                        <input type="text" id="email" name="email" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="ejemplo@gmail.com" />
+                        <input type="text" id="email" name="email" class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="ejemplo@gmail.com" required value={email} onChange={(e) => setEmail(e.target.value)}/>
                         <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
@@ -91,18 +118,20 @@ const CheckoutComponent = () => {
                     <label for="billing-address" class="mt-4 mb-2 block text-sm font-medium">Dirección de facturación</label>
                     <div class="flex flex-col sm:flex-row">
                         <div class="relative flex-shrink-0 sm:w-7/12">
-                        <input type="text" id="billing-address" name="billing-address" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Dirección" />
+                        <input type="text" id="billing-address" name="billing-address" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Dirección" required value={address} onChange={(e) => setAddress(e.target.value)}/>
                         </div>
-                        <select type="text" name="billing-state" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500">
-                        <option value="State">Provincia</option>
+                        <select type="text" name="billing-state" class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500" value={billingState} onChange={(e) => setBillingState(e.target.value)}>
+                        <option value="provincia">Provincia</option>
+                        <option value="CABA">CABA</option>
+                        <option value="NO CABA">NO CABA</option>
                         </select>
-                        <input type="text" name="billing-zip" class="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="CP" />
+                        <input type="text" name="billing-zip" class="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="CP" value={CP} onChange={(e) => setCP(e.target.value)}/>
                     </div>
 
                     <div class="mt-6 border-t border-b py-2">
                         <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                        <p class="font-semibold text-gray-900">{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                        <p class="font-semibold text-gray-900">{totalPrice.toLocaleString('es-AR', {
                             style: 'currency',
                             currency: 'ARS',
                             minimumFractionDigits: 2,
@@ -110,13 +139,18 @@ const CheckoutComponent = () => {
                         })}</p>
                         </div>
                         <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-900">Envío</p>
-                        <p class="font-semibold text-gray-900">$8.00</p>
+                        <p class="text-sm font-medium text-gray-900">{shippingOption === 'correo' ? ('Envío') : ('Retiro')}</p>
+                        <p class="font-semibold text-gray-900">{calculateShippingFee().toLocaleString('es-AR', {
+                            style: 'currency',
+                            currency: 'ARS',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}</p>
                         </div>
                     </div>
                     <div class="mt-6 flex items-center justify-between">
                         <p class="text-sm font-medium text-gray-900">Total</p>
-                        <p class="text-2xl font-semibold text-gray-900">{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                        <p class="text-2xl font-semibold text-gray-900">{(totalPrice + calculateShippingFee()).toLocaleString('es-AR', {
                             style: 'currency',
                             currency: 'ARS',
                             minimumFractionDigits: 2,
@@ -124,7 +158,7 @@ const CheckoutComponent = () => {
                         })}</p>
                     </div>
                     </div>
-                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handlePurchase}>Comprar</button>
+                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handleCheckout}>Comprar</button>
                 </div>
             </div>
         </div>
