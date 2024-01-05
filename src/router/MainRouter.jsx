@@ -15,6 +15,7 @@ import Error from '../pages/Error'
 import Usuario from '../pages/Usuario'
 import Admin from '../pages/Admin'
 import AdminProductos from '../pages/AdminProductos'
+import AdminContactos from '../pages/AdminContactos'
 
 const MainRouter = () => {
     return (
@@ -33,6 +34,7 @@ const MainRouter = () => {
                     <Route path='/Usuario' element={<Usuario />}/>
                     <Route path='/Admin' element={<Admin />}/>
                     <Route path='/Admin-Productos' element={<AdminProductos />}/>
+                    <Route path='/Admin-Contactos' element={<AdminContactos />}/>
                     <Route path="/item/:id" element={<Item/>}/>
                 </Routes>
                 <FooterComponent/>

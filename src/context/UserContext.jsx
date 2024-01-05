@@ -12,36 +12,34 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [isAdmin, setIsAdmin] = useState(false)
     const auth = getAuth();
     const navigate = useNavigate()
     const db = getFirestore();
 
-    const isAdmin = () => {
-        if (user) {
-            const userUidDocRef = doc(db, `users/${user.uid}`);
-            getDoc(userUidDocRef)
-            .then((userDoc) => {
-                if (userDoc.exists()) {
-                    const userData = userDoc.data()
-                    if (userData.isAdmin === true) {
-                        return true
-                    }
-                } else {
-                    return false
-                }
-            }).catch((error) => {
-                console.error(error)
-                return false
-            })
-        } else {
-            toast('usuario no identificado')
-            return false
-        }
-    }
-    
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
+
+            if (user) {
+                try {
+                    const userUidDocRef = doc(db, `users/${user.uid}`);
+                    const userDoc = await getDoc(userUidDocRef);
+
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        const adminStatus = userData.isAdmin === true;
+                        setIsAdmin(adminStatus); // Update admin status
+                    } else {
+                        setIsAdmin(false);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    setIsAdmin(false);
+                }
+            } else {
+                setIsAdmin(false);
+            }
         });
         return () => unsubscribe();
     }, [auth]);
