@@ -1,8 +1,11 @@
 import React from 'react'
+import AdminComprasComponent from '../components/Admin/AdminComprasComponent'
 
 const AdminCompras = () => {
   return (
-    <div>AdminCompras</div>
+    <div>
+      <AdminComprasComponent/>
+    </div>
   )
 }
 

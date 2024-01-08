@@ -7,6 +7,7 @@ const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([])
+    const [summary, setSummary] = useState(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false)
     const db = getFirestore();
@@ -190,6 +191,7 @@ export const CartProvider = ({ children }) => {
                 total: totalWithShipping,
                 timestamp: new Date(),
             };
+            setSummary(cart)
             try {
                 // Create a new document in 'compras' collection
                 await setDoc(newCompraDocRef, compraData);
@@ -220,7 +222,7 @@ export const CartProvider = ({ children }) => {
     const totalItems = calculateTotalItems(cart)
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity, fetchCartFromLocalStorage, checkout, totalPrice }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity, fetchCartFromLocalStorage, checkout, totalPrice, summary }}>
           {children}
         </CartContext.Provider>
       );

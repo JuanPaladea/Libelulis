@@ -17,6 +17,7 @@ import Admin from '../pages/Admin'
 import AdminProductos from '../pages/AdminProductos'
 import AdminContactos from '../pages/AdminContactos'
 import AdminCompras from '../pages/AdminCompras'
+import CheckOutSummary from '../pages/CheckOutSummary'
 
 const MainRouter = () => {
     return (
@@ -31,6 +32,7 @@ const MainRouter = () => {
                     <Route path='/Iniciar-Sesion' element={<Login />}/>
                     <Route path='/Registrarse' element={<Register />}/>
                     <Route path='/Checkout' element={<Checkout />}/>
+                    <Route path='/Summary' element={<CheckOutSummary/>}/>
                     <Route path='/Error' element={<Error />}/>
                     <Route path='/Usuario' element={<Usuario />}/>
                     <Route path='/Admin' element={<Admin />}/>
