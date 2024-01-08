@@ -61,7 +61,7 @@ const CheckoutComponent = () => {
                                 <div class="flex w-full flex-col px-4 py-4">
                                     <span class="font-semibold">{product.name}</span>
                                         <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
-                                        <p class="text-md"> {product.quantity > 1 ? `${formatedPrice(product)}` : '' } </p>
+                                        <p class="text-md"> {product.quantity > 1 ? `${product.quantity}x ${formatedPrice(product)}` : '' } </p>
                                 </div>
                                 <div class="flex w-full flex-col px-4 py-4">
                                     <ItemCountComponent product={product} />
