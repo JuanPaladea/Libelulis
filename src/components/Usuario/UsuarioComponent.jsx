@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useUser } from '../../context/UserContext'
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 
 const UsuarioComponent = () => {
   const {user} = useUser()
@@ -58,24 +59,26 @@ const UsuarioComponent = () => {
             <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
                 {purchaseHistory.map((compra) => (
-                  <li key={compra.id} className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                    <div className="flex w-0 flex-1 items-center">
-                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                        <span className="truncate font-medium">Compra {compra.id}</span>
+                  <Link to={`/compra/${compra.id}`}>
+                    <li key={compra.id} className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6 hover:bg-gray-100">
+                      <div className="flex w-0 flex-1 items-center">
+                        <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                          <span className="truncate font-medium">Compra {compra.id}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="ml-4 flex-shrink-0">
-                      <span className="truncate font-medium">Total items: {calculateTotalItems(compra.data.items)}</span>
-                    </div>
-                    <div className="ml-4 flex-shrink-0">
-                      {<span className="truncate font-medium">{compra.data.total.toLocaleString('es-AR', {
-                            style: 'currency',
-                            currency: 'ARS',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        })}</span>}
-                    </div>
-                  </li>
+                      <div className="ml-4 flex-shrink-0">
+                        <span className="truncate font-medium">Total items: {calculateTotalItems(compra.data.items)}</span>
+                      </div>
+                      <div className="ml-4 flex-shrink-0">
+                        {<span className="truncate font-medium">{compra.data.total.toLocaleString('es-AR', {
+                              style: 'currency',
+                              currency: 'ARS',
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                          })}</span>}
+                      </div>
+                    </li>
+                  </Link>
                 ))}
               </ul>
             </dd>
