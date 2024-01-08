@@ -4,6 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const CheckoutComponent = () => {
     const {cart, removeFromCart, totalItems, checkout, totalPrice} = useCart()
@@ -25,9 +26,10 @@ const CheckoutComponent = () => {
         Direccion: address,
         Provincia: billingState,
         CP: CP,
+        Envío: shippingOption
     }
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (!email || !address || billingState === 'provincia' || !CP) {
             toast.error('Por favor, completa todos los campos obligatorios.');
             return;
@@ -38,12 +40,13 @@ const CheckoutComponent = () => {
         setAddress('')
         setBillingState('provincia')
         setCP('')
-        checkout(totalWithShipping, billingData);
+        await checkout(totalWithShipping, billingData);
+        useNavigate('/')
     }
 
     return (
         <div>
-            <div class="grid mx-auto max-w-xl px-4 py-6 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid-cols-2">
+            <div class="grid mx-auto max-w-xl px-4 py-6 lg:max-w-7xl lg:grid-cols-2">
                 <div class="px-4 pt-8">
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>

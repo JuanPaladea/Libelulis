@@ -1,9 +1,41 @@
-import React from 'react'
-import { PaperClipIcon } from '@heroicons/react/20/solid'
+import React, { useEffect, useState } from 'react'
 import { useUser } from '../../context/UserContext'
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const UsuarioComponent = () => {
-    const {user} = useUser()
+  const {user} = useUser()
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const db = getFirestore()
+
+  useEffect(() => {
+    const fetchPurchaseHistory = async () => {
+      try {
+        // Create a query to get user's purchase history
+        const compraCollectionRef = collection(db, 'compras');
+        const userUid = user.uid;
+        const userComprasQuery = query(compraCollectionRef, where('user', 'array-contains', userUid));
+        const userComprasSnapshot = await getDocs(userComprasQuery);
+
+        // Extract data from each document
+        const purchases = userComprasSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }));
+        console.log(purchases)
+        setPurchaseHistory(purchases);
+      } catch (error) {
+        console.error('Error fetching user purchase history:', error);
+      }
+    };
+
+    if (user) {
+      fetchPurchaseHistory();
+    }
+  }, [user]);
+
+  const calculateTotalItems = (items) => {
+    return items.reduce((total, item) => total + (item.quantity || 0), 0);
+  };
 
   return (
     <div className='max-w-screen-xl p-4 px-4 mx-auto bg-white sm:px-6 lg:px-8 py-26 lg:mt-5'>
@@ -25,42 +57,26 @@ const UsuarioComponent = () => {
             <dt className="text-sm font-medium leading-6 text-gray-900">Historial de compra</dt>
             <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">Compra 1</span>
+                {purchaseHistory.map((compra) => (
+                  <li key={compra.id} className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                    <div className="flex w-0 flex-1 items-center">
+                      <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                        <span className="truncate font-medium">Compra {compra.id}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                  </div>
-                </li>
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">Compra 1</span>
+                    <div className="ml-4 flex-shrink-0">
+                      <span className="truncate font-medium">Total items: {calculateTotalItems(compra.data.items)}</span>
                     </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                  </div>
-                </li>
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">Compra 1</span>
+                    <div className="ml-4 flex-shrink-0">
+                      {<span className="truncate font-medium">{compra.data.total.toLocaleString('es-AR', {
+                            style: 'currency',
+                            currency: 'ARS',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}</span>}
                     </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                  </div>
-                </li>
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">Compra 1</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                  </div>
-                </li>
+                  </li>
+                ))}
               </ul>
             </dd>
           </div>

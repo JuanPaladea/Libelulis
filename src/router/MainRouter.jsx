@@ -17,7 +17,7 @@ import Admin from '../pages/Admin'
 import AdminProductos from '../pages/AdminProductos'
 import AdminContactos from '../pages/AdminContactos'
 import AdminCompras from '../pages/AdminCompras'
-import CheckOutSummary from '../pages/CheckOutSummary'
+import Compra from '../pages/Compra'
 
 const MainRouter = () => {
     return (
@@ -32,7 +32,6 @@ const MainRouter = () => {
                     <Route path='/Iniciar-Sesion' element={<Login />}/>
                     <Route path='/Registrarse' element={<Register />}/>
                     <Route path='/Checkout' element={<Checkout />}/>
-                    <Route path='/Summary' element={<CheckOutSummary/>}/>
                     <Route path='/Error' element={<Error />}/>
                     <Route path='/Usuario' element={<Usuario />}/>
                     <Route path='/Admin' element={<Admin />}/>
@@ -40,6 +39,7 @@ const MainRouter = () => {
                     <Route path='/Admin-Contactos' element={<AdminContactos />}/>
                     <Route path='/Admin-Compras' element={<AdminCompras />}/>
                     <Route path="/item/:id" element={<Item/>}/>
+                    <Route path="/Compra/:id" element={<Compra/>}/>
                 </Routes>
                 <FooterComponent/>
             </div>

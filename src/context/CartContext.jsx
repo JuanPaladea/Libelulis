@@ -201,10 +201,9 @@ export const CartProvider = ({ children }) => {
                   return deleteDoc(itemDocRef);
                 });
                 await Promise.all(deletePromises);
-
                 // Clear the local cart state
                 setCart([]);
-                toast.success('Compra realizada con éxito');
+                toast.success('Gracias por su compra');
             } catch (error) {
                 console.error('Error during checkout:', error);
                 toast.error('Error al realizar la compra');

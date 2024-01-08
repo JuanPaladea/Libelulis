@@ -3,9 +3,7 @@ import AdminComprasComponent from '../components/Admin/AdminComprasComponent'
 
 const AdminCompras = () => {
   return (
-    <div>
       <AdminComprasComponent/>
-    </div>
   )
 }
 

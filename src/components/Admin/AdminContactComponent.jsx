@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 export default function AdminContactComponent() {
 const [contacts, setContacts] = useState([])
-const [selectedContact, setSelectedContact] = useState(null);
 
 useEffect(() => {
     const db = getFirestore();
