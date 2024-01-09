@@ -8,9 +8,12 @@ import Error from '../pages/Error'
 const AdminProductos = () => {
   const {productos} = useCollection('products')
   const {isAdmin} = useUser()
+
   return (
     <div>
-      {isAdmin ? (
+      {isAdmin 
+      ? 
+      (
         <div>
           <AdminProductFormComponent/>
           <AdminProductsComponent products={productos}/>

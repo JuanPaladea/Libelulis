@@ -51,10 +51,12 @@ export const CartProvider = ({ children }) => {
                     // Handle the case when snapshot is null or undefined
                     console.error('Firestore snapshot is null or undefined.');
                 }
-              } catch (error) {
+            } catch (error) {
                 console.error('Error processing Firestore snapshot:', error);
-              }
-            })
+            } finally {
+                // Set loading to false when the data is fetched, regardless of success or failure
+                setLoading(false);
+            }})
           : () => {};
       
         fetchCart();
@@ -77,6 +79,7 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = async (product, quantity = 1) => {    
         try {
+            setLoading(true)
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -112,6 +115,9 @@ export const CartProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error adding to cart:', error);
+        } finally {
+            // Set loading to false when the data is fetched, regardless of success or failure
+            setLoading(false);
         }
     };
 
@@ -137,6 +143,7 @@ export const CartProvider = ({ children }) => {
 
     const updateCartItemQuantity = async (product, newQuantity) => {
         try {
+            setLoading(true)
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -155,11 +162,15 @@ export const CartProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error updating cart item:', error);
+        } finally {
+            // Set loading to false when the data is fetched, regardless of success or failure
+            setLoading(false);
         }
     };
 
     const removeFromCart = async (itemId) => {
         try {
+            setLoading(true)
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart/`);
                 const ProductRef = doc(cartItemDocRef, itemId);
@@ -177,11 +188,15 @@ export const CartProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error removing from cart:', error);
+        } finally {
+            // Set loading to false when the data is fetched, regardless of success or failure
+            setLoading(false);
         }
     };
 
     const checkout = async (totalWithShipping, billingData) => {
         if (user && cart.length > 0) {
+            setLoading(true)
             const compraCollectionRef = collection(db, 'compras');
             const newCompraDocRef = doc(compraCollectionRef);
             const compraData = {
@@ -207,6 +222,9 @@ export const CartProvider = ({ children }) => {
             } catch (error) {
                 console.error('Error during checkout:', error);
                 toast.error('Error al realizar la compra');
+            } finally {
+                // Set loading to false when the data is fetched, regardless of success or failure
+                setLoading(false);
             }
         } else if (cart.length <= 0) {
             toast.error('El carrito está vacío');
@@ -221,7 +239,7 @@ export const CartProvider = ({ children }) => {
     const totalItems = calculateTotalItems(cart)
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity, fetchCartFromLocalStorage, checkout, totalPrice, summary }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalItems, updateCartItemQuantity, fetchCartFromLocalStorage, checkout, totalPrice, summary, loading, setLoading, }}>
           {children}
         </CartContext.Provider>
       );

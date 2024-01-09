@@ -1,10 +1,10 @@
 import React from 'react'
 import 'ldrs/tailspin'
 
-const LoaderComponent = () => {
+const LoaderComponent = ({size = '40'}) => {
   return (
     <l-tailspin
-        size="40"
+        size={size}
         stroke="5"
         speed="0.9"
         color="black" 

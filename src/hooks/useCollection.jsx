@@ -4,7 +4,6 @@ import { collection, getFirestore, onSnapshot, doc } from "firebase/firestore";
 export const useCollection = (collectionName) => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     const db = getFirestore();
@@ -26,13 +25,12 @@ export const useCollection = (collectionName) => {
     };
   }, [collectionName]);
 
-  return { productos, loading, error };
+  return { productos, loading };
 };
 
 export const useUnico = (collectionName, id) => {
   const [producto, setProducto] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     const db = getFirestore();
@@ -49,5 +47,5 @@ export const useUnico = (collectionName, id) => {
     };
   }, [collectionName, id]);
 
-  return { producto, loading, error };
+  return { producto, loading };
 };

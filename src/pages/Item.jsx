@@ -9,17 +9,20 @@ import LoaderComponent from '../components/Loader/LoaderComponent'
 
 const Item = () => {
   const {id} = useParams()
-  const {producto} = useUnico('products', id)
+  const {producto, loading} = useUnico('products', id)
   
   return (
     <div>
-        {producto ? (
-          <ItemComponent product={producto} />
+        {loading 
+        ? 
+        (
+        <LoaderComponent/>
         )
         :
         (
-          <LoaderComponent/>
-        )}
+        <ItemComponent product={producto} />
+        )
+        }
         <AdemasCompraronComponent/>
         <ReviewComponent/>
         <NewsletterComponent/>

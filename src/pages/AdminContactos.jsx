@@ -7,7 +7,12 @@ const AdminContactos = () => {
     const {isAdmin} = useUser()
     return (
         <div>
-            {isAdmin ? <AdminContactComponent/> : <Error title='El usuario no es administrador'/>}
+            {isAdmin 
+            ? 
+            <AdminContactComponent/> 
+            : 
+            <Error title='El usuario no es administrador'/>
+            }
         </div>
     )
 }

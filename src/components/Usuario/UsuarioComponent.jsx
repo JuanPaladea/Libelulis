@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useUser } from '../../context/UserContext'
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import LoaderComponent from '../Loader/LoaderComponent';
 
 const UsuarioComponent = () => {
   const {user} = useUser()
   const [purchaseHistory, setPurchaseHistory] = useState([]);
-  const db = getFirestore()
+  const db = getFirestore();
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchPurchaseHistory = async () => {
       try {
+        setLoading(true)
         // Create a query to get user's purchase history
         const compraCollectionRef = collection(db, 'compras');
         const userUid = user.uid;
@@ -22,10 +25,11 @@ const UsuarioComponent = () => {
           id: doc.id,
           data: doc.data(),
         }));
-        console.log(purchases)
         setPurchaseHistory(purchases);
       } catch (error) {
         console.error('Error fetching user purchase history:', error);
+      } finally {
+        setLoading(false)
       }
     };
 
@@ -58,9 +62,13 @@ const UsuarioComponent = () => {
             <dt className="text-sm font-medium leading-6 text-gray-900">Historial de compra</dt>
             <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
-                {purchaseHistory.map((compra) => (
-                  <Link to={`/compra/${compra.id}`}>
-                    <li key={compra.id} className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6 hover:bg-gray-100">
+                {loading 
+                ?
+                <div className='p-6 w-full h-full flex items-center justify-center'><LoaderComponent/></div>
+                :
+                purchaseHistory.map((compra) => (
+                  <Link key={compra.id} to={`/compra/${compra.id}`}>
+                    <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6 hover:bg-gray-100">
                       <div className="flex w-0 flex-1 items-center">
                         <div className="ml-4 flex min-w-0 flex-1 gap-2">
                           <span className="truncate font-medium">Compra {compra.id}</span>

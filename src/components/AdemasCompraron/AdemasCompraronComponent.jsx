@@ -2,19 +2,36 @@ import { Link } from "react-router-dom"
 import { formatedPrice } from "../../utilities/utils"
 import { useCollection } from "../../hooks/useCollection"
 import { useCart } from "../../context/CartContext"
+import LoaderComponent from "../Loader/LoaderComponent"
 
 export default function AdemasCompraronComponent() {
 
-  const {productos} = useCollection('ademas-compraron')
-  const {addToCart} = useCart()
+  const {productos, loading: loadingProductos} = useCollection('ademas-compraron')
+  const {addToCart, loading} = useCart()
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-4">Otros además compraron</h2>
-
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {productos.map((product) => (
+    <div>
+      <div>
+        {
+        loading
+        &&
+        (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
+            <LoaderComponent/>
+          </div>
+        )
+        }
+      </div>
+      <div className="bg-white">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-4">Otros además compraron</h2>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          {loadingProductos 
+          ? 
+          <div className='p-6 w-full h-full flex items-center justify-center'><LoaderComponent/></div>
+          :
+          (
+          productos.map((product) => (
             <div key={product.id}>
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                 <div>
@@ -35,8 +52,10 @@ export default function AdemasCompraronComponent() {
                   Añadir al carrito
                 </button>
               </div>
-            </div>
-        ))}
+            </div>))
+          )
+          }
+          </div>
         </div>
       </div>
     </div>

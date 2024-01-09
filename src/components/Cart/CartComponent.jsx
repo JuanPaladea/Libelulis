@@ -1,14 +1,14 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useCartOpen } from '../../context/CartOpenContext'
 import { Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { formatedPrice, formatedTotalPrice } from "../../utilities/utils";
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
+import LoaderComponent from '../Loader/LoaderComponent'
 
 export default function CartComponent({cartOpen, setCartOpen}) {
-    const {cart, removeFromCart, totalItems} = useCart()
+    const {cart, removeFromCart, totalItems, loading} = useCart()
 
     return (
         <Transition.Root show={cartOpen} as={Fragment}>
@@ -40,74 +40,99 @@ export default function CartComponent({cartOpen, setCartOpen}) {
                     <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-                        <div className="flex items-start justify-between">
-                            <Dialog.Title className="text-lg font-medium text-gray-900">Carrito</Dialog.Title>
-                            <div className="ml-3 flex h-7 items-center">
-                            <button
-                                type="button"
-                                className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                                onClick={() => setCartOpen(false)}
-                            >
-                                <span className="absolute -inset-0.5" />
-                                <span className="sr-only">Close panel</span>
-                                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
+                            <div className="flex items-start justify-between">
+                                <Dialog.Title className="text-lg font-medium text-gray-900">Carrito</Dialog.Title>
+                                <div className="ml-3 flex h-7 items-center">
+                                <button
+                                    type="button"
+                                    className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
+                                    onClick={() => setCartOpen(false)}
+                                >
+                                    <span className="absolute -inset-0.5" />
+                                    <span className="sr-only">Close panel</span>
+                                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-8">
-                            <div className="flow-root">
-                            <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                {cart ? totalItems === 0 ? <ShoppingCartIcon className="h-10 w-10 mx-auto my-10 flex-shrink-0 text-gray-400 group-hover:text-gray-500"/> 
-                                : cart.map((product) => (
-                                <li key={product.id} className="flex py-6">
-                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                    <img
-                                        src={product.img}
-                                        alt={product.name}
-                                        className="h-full w-full object-cover object-center"
-                                    />
-                                    </div>
+                            <div className="mt-8">
+                                <div className="flow-root">
+                                    <ul role="list" className="-my-6 divide-y divide-gray-200">
+                                        {loading
+                                        ? 
+                                        (
+                                            <LoaderComponent size='30'/>
+                                        ) 
+                                        :
+                                        (
+                                            totalItems === 0 ? 
+                                            (
+                                                <ShoppingCartIcon className="h-10 w-10 mx-auto my-10 flex-shrink-0 text-gray-400 group-hover:text-gray-500"/> 
+                                            )
+                                            : 
+                                            (
+                                                cart.map((product) => (
+                                                <li key={product.id} className="flex py-6">
+                                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                    <img
+                                                        src={product.img}
+                                                        alt={product.name}
+                                                        className="h-full w-full object-cover object-center"
+                                                    />
+                                                    </div>
 
-                                    <div className="ml-4 flex flex-1 flex-col">
-                                    <div>
-                                        <div className="flex justify-between text-base font-medium text-gray-900">
-                                        <h3>
-                                            <a>{product.name}</a>
-                                        </h3>
-                                        <p className="ml-4 text-right">{formatedTotalPrice(product)}
-                                        <p class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</p>
-                                        </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-1 items-end justify-between text-sm">
-                                        <ItemCountComponent product={product} />
-                                        <div className="flex">
-                                        <button
-                                            onClick={() => removeFromCart(product.id)}
-                                            type="button"
-                                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                                        >
-                                            Eliminar
-                                        </button>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </li>
-                                )) : <li>Cargando Carrito</li>}
-                            </ul>
+                                                    <div className="ml-4 flex flex-1 flex-col">
+                                                    <div>
+                                                        <div className="flex justify-between text-base font-medium text-gray-900">
+                                                        <h3>
+                                                            <a>{product.name}</a>
+                                                        </h3>
+                                                        <p className="ml-4 text-right">{formatedTotalPrice(product)}
+                                                        <p class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</p>
+                                                        </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex flex-1 items-end justify-between text-sm">
+                                                        <ItemCountComponent product={product} />
+                                                        <div className="flex">
+                                                        <button
+                                                            onClick={() => removeFromCart(product.id)}
+                                                            type="button"
+                                                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                                                        >
+                                                            Eliminar
+                                                        </button>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </li>
+                                                ))
+                                            )
+                                        )}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-900">
                             <p>Subtotal</p>
-                            <p>{cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
-                            style: 'currency',
-                            currency: 'ARS',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        })}</p>
+                            <p>
+                            {loading 
+                            ? 
+                            (
+                                <LoaderComponent size='25'/>
+                            )
+                            :
+                            (
+                                cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0).toLocaleString('es-AR', {
+                                style: 'currency',
+                                currency: 'ARS',
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                                })
+                            )
+                            }
+                            </p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500"></p>
                         <div className="mt-6">

@@ -2,9 +2,9 @@ import { Fragment, useState } from 'react'
 import { Dialog, Menu, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
-import { useCartOpen } from '../../context/CartOpenContext'
 import { useUser } from '../../context/UserContext'
 import { useCart } from '../../context/CartContext'
+import LoaderComponent from '../Loader/LoaderComponent'
 
 const navigation = {
   pages: [
@@ -16,8 +16,8 @@ const navigation = {
 
 export default function NavBarComponent({cartOpen, setCartOpen}) {
   const [open, setOpen] = useState(false)
-  const {user, signOutUser, isAdmin} = useUser();
-  const {cart, totalItems} = useCart()
+  const {user, signOutUser, isAdmin, loading: userLoading} = useUser();
+  const {cart, totalItems, loading: cartLoading} = useCart()
 
   return (
     <div className="bg-white sticky top-0 w-full z-10">
@@ -78,7 +78,13 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                     </div>
                   ))}
                 </div>
-                  {user ? (
+                  {userLoading 
+                  ? 
+                  (<LoaderComponent size='20'/>) 
+                  : 
+                  (user 
+                    ? 
+                    (
                     <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                         <Link to="/Usuario" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                           <div class="flex -space-x-2">
@@ -94,7 +100,8 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                             {user.displayName}
                           </div>
                         </Link>
-                        { isAdmin ? 
+                        { isAdmin 
+                        ? 
                         (
                         <Link to="/admin" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                           <div className="font-medium text-gray-700 hover:text-gray-800">
@@ -119,22 +126,22 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                           Cerrar Sesión
                         </Link>
                     </div>
-                  ) 
-                  :
-                  (
-                    <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                      <div className="flow-root">
-                        <Link to="/Iniciar-Sesion" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
-                          Iniciar Sesión
-                        </Link>
+                    ) 
+                    :
+                    (
+                      <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                        <div className="flow-root">
+                          <Link to="/Iniciar-Sesion" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
+                            Iniciar Sesión
+                          </Link>
+                        </div>
+                        <div className="flow-root">
+                          <Link to="/Registrarse" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
+                            Registrarse
+                          </Link>
+                        </div>
                       </div>
-                      <div className="flow-root">
-                        <Link to="/Registrarse" onClick={() => setOpen(false)} className="-m-2 block p-2 font-medium text-gray-900">
-                          Registrarse
-                        </Link>
-                      </div>
-                    </div>
-                  )} 
+                  ))} 
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -184,96 +191,107 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
               </Popover.Group>
               {/* User Menu */}
               <div className="ml-auto flex items-center">
-                {user ?
+                {userLoading 
+                ? 
                 (
-                <Menu as="div" className="relative ml-3">
-                  <div>
-                    <Menu.Button className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                      <div class="flex -space-x-2 overflow-hidden">
-                        {user.photoURL ? (
-                          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
-                        )
-                        :
-                        (
-                          ""
-                        )}
-                      </div>
-                      <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                        {user.displayName}
-                      </div>
-                      
-                    </Menu.Button>
+                <LoaderComponent size='20'/>
+                ) 
+                : 
+                (
+                  user 
+                  ?
+                  (
+                  <Menu as="div" className="relative ml-3">
+                    <div>
+                      <Menu.Button className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <div class="flex -space-x-2 overflow-hidden">
+                          {user.photoURL ? (
+                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
+                          )
+                          :
+                          (
+                            ""
+                          )}
+                        </div>
+                        <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                          {user.displayName}
+                        </div>
+                        
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to="/Usuario"
+                                  className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                                >
+                                  Tu cuenta
+                                </Link>
+                              )}
+                            </Menu.Item>
+
+                            <Menu.Item>
+                              {({ active }) => (
+                                isAdmin 
+                                ? 
+                                (
+                                <Link
+                                  to="/Admin"
+                                  className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                                >
+                                  Admin
+                                </Link>
+                                ) 
+                                : 
+                                (
+                                <Link
+                                  to="/checkout"
+                                  className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                                >
+                                  Carrito
+                                </Link>
+                                )
+                              )}
+                            </Menu.Item>
+                            
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  onClick={() => signOutUser()}
+                                  className={`block px-4 py-2 text-sm text-red-700 ${active ? 'bg-gray-100' : ''}`}
+                                  to="/"
+                                >
+                                  Cerrar sesión
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          </Menu.Items>
+                        </Transition>
+                  </Menu>
+                  )
+                  :
+                  (
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <Link to="/Iniciar-Sesion" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Iniciar Sesión
+                    </Link>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <Link to="/Registrarse" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Registrarse
+                    </Link>
                   </div>
-                  <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <Link
-                                to="/Usuario"
-                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
-                              >
-                                Tu cuenta
-                              </Link>
-                            )}
-                          </Menu.Item>
-
-                          <Menu.Item>
-                            {({ active }) => (
-                              isAdmin ? (
-                              <Link
-                                to="/Admin"
-                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
-                              >
-                                Admin
-                              </Link>
-                              ) 
-                              : 
-                              (
-                              <Link
-                                to="/checkout"
-                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
-                              >
-                                Carrito
-                              </Link>
-                              )
-                            )}
-                          </Menu.Item>
-                          
-                          <Menu.Item>
-                            {({ active }) => (
-                              <Link
-                                onClick={() => signOutUser()}
-                                className={`block px-4 py-2 text-sm text-red-700 ${active ? 'bg-gray-100' : ''}`}
-                                to="/"
-                              >
-                                Cerrar sesión
-                              </Link>
-                            )}
-                          </Menu.Item>
-                        </Menu.Items>
-                      </Transition>
-                </Menu>
-                )
-                :
-                (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <Link to="/Iniciar-Sesion" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Iniciar Sesión
-                  </Link>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <Link to="/Registrarse" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Registrarse
-                  </Link>
-                </div>)
-                }
-
+                  )
+                )}
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
                   <a onClick={() => setCartOpen(!cartOpen)} className="group -m-2 flex items-center p-2">

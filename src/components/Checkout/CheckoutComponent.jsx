@@ -5,9 +5,10 @@ import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import LoaderComponent from '../Loader/LoaderComponent'
 
 const CheckoutComponent = () => {
-    const {cart, removeFromCart, totalItems, checkout, totalPrice} = useCart()
+    const {cart, removeFromCart, totalItems, checkout, totalPrice, loading} = useCart()
     const [shippingOption, setShippingOption] = useState('correo');
     const [email, setEmail] = useState('')
     const [address, setAddress] = useState('')
@@ -46,13 +47,21 @@ const CheckoutComponent = () => {
 
     return (
         <div>
+            {
+            loading
+            &&
+            (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
+                <LoaderComponent/>
+                </div>
+            )
+            }
             <div class="grid mx-auto max-w-xl px-4 py-6 lg:max-w-7xl lg:grid-cols-2">
                 <div class="px-4 pt-8">
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>
                     <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-                        {cart ? 
-                        (totalItems === 0 ? 
+                        {totalItems === 0 ? 
                             'El carrito está vacío' 
                             : 
                             (cart.map((product) => 
@@ -76,13 +85,18 @@ const CheckoutComponent = () => {
                                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
                             </div>)
-                        )) : 'ldng'}
+                        )}
                     </div>
-
                     <p class="mt-8 text-lg font-medium">Envío</p>
                     <form class="mt-5 grid gap-6">
                     <div class="relative">
-                        <input class="peer hidden" id="radio_1" type="radio" name="radio" checked={shippingOption === 'correo'} onChange={() => handleShippingOptionChange('correo')} />
+                        <input 
+                            class="peer hidden" 
+                            id="radio_1" 
+                            type="radio" 
+                            name="radio" 
+                            checked={shippingOption === 'correo'} 
+                            onChange={() => handleShippingOptionChange('correo')} />
                         <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                         <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" htmlFor="radio_1">
                         <img class="w-14 object-contain" src="/images/naorrAeygcJzX0SyNI4Y0.png" alt="" />
@@ -93,7 +107,13 @@ const CheckoutComponent = () => {
                         </label>
                     </div>
                     <div class="relative">
-                        <input class="peer hidden" id="radio_2" type="radio" name="radio" checked={shippingOption === 'retiro'} onChange={() => handleShippingOptionChange('retiro')} />
+                        <input 
+                            class="peer hidden" 
+                            id="radio_2" 
+                            type="radio" 
+                            name="radio" 
+                            checked={shippingOption === 'retiro'} 
+                            onChange={() => handleShippingOptionChange('retiro')} />
                         <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                         <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_2">
                         <img class="w-14 object-contain" src="/images/oG8xsl3xsOkwkMsrLGKM4.png" alt="" />
