@@ -74,8 +74,15 @@ export default function Example() {
 
     // Check if there are no validation errors before calling createUser
     if (!emailError && !passwordError && !password2Error) {
-      createUser(email, password);
+      createUser(email, password, name, lastName);
     }
+
+    setName('')
+    setLastName('')
+    setPassword('')
+    setPassword2('')
+    setEmail('')
+
   };
 
   return (
@@ -105,6 +112,7 @@ export default function Example() {
                 </label>
                 <div className="mt-2">
                   <input
+                    Required
                     onChange={(e) => setName(e.target.value)}
                     type="text"
                     name="first-name"
@@ -120,6 +128,7 @@ export default function Example() {
                 </label>
                 <div className="mt-2">
                   <input
+                    Required
                     onChange={(e) => setLastName(e.target.value)}                  
                     type="text"
                     name="last-name"

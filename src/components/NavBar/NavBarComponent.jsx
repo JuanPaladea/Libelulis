@@ -14,9 +14,8 @@ const navigation = {
   ],
 }
 
-export default function NavBarComponent() {
+export default function NavBarComponent({cartOpen, setCartOpen}) {
   const [open, setOpen] = useState(false)
-  const {cartOpen, setCartOpen} = useCartOpen();;
   const {user, signOutUser, isAdmin} = useUser();
   const {cart, totalItems} = useCart()
 

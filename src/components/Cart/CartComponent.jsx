@@ -7,8 +7,7 @@ import { useCart } from '../../context/CartContext'
 import { formatedPrice, formatedTotalPrice } from "../../utilities/utils";
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
 
-export default function CartComponent() {
-    const {cartOpen, setCartOpen} = useCartOpen()
+export default function CartComponent({cartOpen, setCartOpen}) {
     const {cart, removeFromCart, totalItems} = useCart()
 
     return (

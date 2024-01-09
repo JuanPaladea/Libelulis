@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from '../pages/Home'
 import NavBarComponent from '../components/NavBar/NavBarComponent'
@@ -20,10 +20,12 @@ import AdminCompras from '../pages/AdminCompras'
 import Compra from '../pages/Compra'
 
 const MainRouter = () => {
+    const [cartOpen, setCartOpen] = useState(false);
+
     return (
             <div>
-                <CartComponent/>
-                <NavBarComponent/>
+                <CartComponent cartOpen={cartOpen} setCartOpen={setCartOpen}/>
+                <NavBarComponent cartOpen={cartOpen} setCartOpen={setCartOpen}/>
                 <Routes>
                     <Route path='/' element={<Home />}/>
                     <Route path='/Tienda' element={<Tienda />}/>

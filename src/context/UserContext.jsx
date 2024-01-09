@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 const UserContext = createContext();
 
@@ -44,63 +44,73 @@ export const UserProvider = ({ children }) => {
         return () => unsubscribe();
     }, [auth]);
 
-    const createUser = (email, password) => {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            toast.success('Usuario creado con éxito')
-            navigate('/Iniciar-Sesion')
-        })
-        .catch((error) => {
-            console.log(error)
-            toast.error(error.message)
-        });
-    }
+    const createUser = async (email, password, name, lastname) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+    
+            // Update the user profile with custom data
+            await updateProfile(user, {
+                displayName: `${name} ${lastname}`
+            });
+    
+            // User creation and profile update successful
+            toast.success('Usuario creado con éxito');
+            navigate('/Iniciar-Sesion');
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message);
+        }
+    };
 
-    const loginUser = (email, password) => {
-        signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            toast.success('Sesión iniciada con éxito')
-            navigate('/Tienda')
-        })
-        .catch((error) => {
-            console.log(error)
-            toast.error(error.message)
-        });
-    }
-
-    const signInWithGoogle = () => {
-        const provider = new GoogleAuthProvider();
-        signInWithRedirect(auth, provider)
-        .then(() => {
-            return getRedirectResult(auth)
-        })  
-        .then((result) => {
-            if (result.user) {
-                toast.success('logeado con exito')
+    const loginUser = async (email, password) => {
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // Login successful
+            toast.success('Sesión iniciada con éxito');
+            navigate('/Tienda');
+        } catch (error) {
+            if (error.code === 'auth/wrong-password') {
+                toast.error('La contraseña es incorrecta. Por favor, inténtalo de nuevo.');
             } else {
-                toast.error('Error al iniciar con google')
+                toast.error(error.message);
             }
-        })
-        .catch((error) => {
+        }
+    }
+    
+    const signInWithGoogle = async () => {
+        try {
+            const provider = new GoogleAuthProvider();
+            await signInWithRedirect(auth, provider);
+    
+            const result = await getRedirectResult(auth);
+    
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // User is authenticated
+                    toast.success('Logeado con éxito');
+                    navigate('/');
+                } else {
+                    // No user found
+                    toast.error('Error al iniciar sesión con Google');
+                }
+            });
+        } catch (error) {
             console.error(error);
             toast.error('Hubo un problema durante la autenticación con Google');
-        })
-        .finally(
-            navigate('/')
-        );
-    }
+        }
+    };
 
-    const signOutUser = () => {
-        signOut(auth)
-            .then(() => {
-                navigate('/')
-                toast.success('Sesión finalizada')
-            })
-            .catch((error) => {
-                console.error(error);
-                toast.error('Failed to sign out');
-            });
-    }
+    const signOutUser = async () => {
+        try {
+            await signOut(auth);
+            navigate('/');
+            toast.success('Sesión finalizada');
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to sign out');
+        }
+    };
 
     const value = {
         user,
