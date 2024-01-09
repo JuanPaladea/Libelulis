@@ -9,8 +9,74 @@ export default function Example() {
   const [password2, setPassword2] = useState('');
   const [name, setName] = useState('')
   const [lastName, setLastName] = useState('')
-  
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [password2Error, setPassword2Error] = useState('');
+
   const {createUser} = useUser()
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (password2 && e.target.value !== password2) {
+      setPassword2Error('Las contraseñas no coinciden');
+    } else {
+      setPassword2Error('');
+    }
+  };
+
+  const handlePassword2Change = (e) => {
+    setPassword2(e.target.value);
+    if (password && e.target.value !== password) {
+      setPassword2Error('Las contraseñas no coinciden');
+    } else {
+      setPassword2Error('');
+    }
+  };
+
+  const validateEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email.trim()) {
+      setEmailError('El correo electrónico es requerido');
+    } else if (!emailRegex.test(email)) {
+      setEmailError('Ingrese un correo electrónico válido');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const validatePassword = () => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!password.trim()) {
+      setPasswordError('La contraseña es requerida');
+    } else if (!passwordRegex.test(password)) {
+      setPasswordError('La contraseña debe tener al menos 8 caracteres, una mayúscula y un número');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const validatePassword2 = () => {
+    if (password2 !== password) {
+      setPassword2Error('Las contraseñas no coinciden');
+    } else {
+      setPassword2Error('');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    validateEmail();
+    validatePassword();
+    validatePassword2();
+
+    // Check if there are no validation errors before calling createUser
+    if (!emailError && !passwordError && !password2Error) {
+      createUser(email, password);
+    }
+  };
 
   return (
     <div>
@@ -29,7 +95,7 @@ export default function Example() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
         <LoginWithGoogleComponent/>
       </div>
-      <form className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -76,6 +142,7 @@ export default function Example() {
                     autoComplete="email"
                     className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
+                  {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
                 </div>
               </div>
               <div className="sm:col-span-4" >
@@ -86,7 +153,7 @@ export default function Example() {
                   </div>
                   <div className="mt-2">
                     <input
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handlePasswordChange}
                       id="password"
                       name="password"
                       type="password"
@@ -94,6 +161,7 @@ export default function Example() {
                       required
                       className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
+                    {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
                   </div>
                 </div>
               <div className="sm:col-span-4" >
@@ -104,14 +172,14 @@ export default function Example() {
                   </div>
                   <div className="mt-2">
                     <input
-                      onChange={(e) => setPassword2(e.target.value)}
+                      onChange={handlePassword2Change}
                       id="password2"
                       name="password2"
                       type="password"
-                      autoComplete="current-password"
                       required
-                      className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className={`pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${password2 !== password && 'ring-red-300 focus:ring-red-600'}`}
                     />
+                    <p className="text-red-500 text-sm mt-1">{password2Error}</p>
                   </div>
                 </div>
             </div>
@@ -119,10 +187,7 @@ export default function Example() {
         </div>
         <div className="mt-6 flex items-center justify-start gap-x-6">
           <button
-            onClick={(e) => {
-              e.preventDefault;
-              createUser(email, password);
-            }}
+            type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Registrarse
