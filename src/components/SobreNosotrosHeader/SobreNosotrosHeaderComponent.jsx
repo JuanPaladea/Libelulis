@@ -1,5 +1,3 @@
-import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/react/20/solid'
-
 export default function SobreNosotrosHeaderComponent() {
   return (
     <div className="relative isolate overflow-hidden bg-white px-6 py-12 lg:overflow-visible lg:px-0">

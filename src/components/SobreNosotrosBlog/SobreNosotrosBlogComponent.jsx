@@ -12,7 +12,7 @@ const posts = [
       },
     },
     {
-      id: 1,
+      id: 2,
       title: '"La atención que recibí en este negocio fue excepcional. Desde el momento en que entré, me trataron con cortesía y profesionalismo. Resolvieron todas mis dudas y se tomaron el tiempo necesario para asegurarse de que estuviera satisfecho con mi experiencia. ¡Volveré sin duda!"',
       date: 'Ene, 2024',
       datetime: '2020-03-16',
@@ -24,7 +24,7 @@ const posts = [
       },
     },
     {
-      id: 1,
+      id: 3,
       title: '"¡Increíble atención al cliente! Siempre me siento valorado y escuchado cuando visito este negocio. El personal es amable y dispuesto a ayudar, lo cual hace que mi experiencia sea siempre positiva. Definitivamente recomendaría este lugar a mis amigos y familiares."',
       date: 'Sep, 2023',
       datetime: '2020-03-16',

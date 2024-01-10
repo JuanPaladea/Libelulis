@@ -147,7 +147,6 @@ export const CartProvider = ({ children }) => {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
                 await updateDoc(productRef, { quantity: newQuantity });
-                toast.success('Cantidad actualizada');
             } else {
                 const updatedCart = cart.map((item) => {
                     if (item.id === product.id) {
@@ -157,7 +156,6 @@ export const CartProvider = ({ children }) => {
                 });
                 setCart(updatedCart);
                 saveCartToLocalStorage(updatedCart);
-                toast.success('Cantidad actualizada');
             }
         } catch (error) {
             console.error('Error updating cart item:', error);
@@ -178,12 +176,10 @@ export const CartProvider = ({ children }) => {
                 const updatedLocalCart = cart.filter((item) => item.id !== itemId);
                 saveCartToLocalStorage(updatedLocalCart);
                 setCart(updatedLocalCart);    
-                toast.success(`Eliminado del carrito`);
             } else {
                 const updatedCart = cart.filter((item) => item.id !== itemId);
                 setCart(updatedCart);
                 saveCartToLocalStorage(updatedCart);
-                toast.success(`Eliminado del carrito`);
             }
         } catch (error) {
             console.error('Error removing from cart:', error);
