@@ -42,6 +42,7 @@ const MainRouter = () => {
                     <Route path='/Admin-Compras' element={<AdminCompras />}/>
                     <Route path="/item/:id" element={<Item/>}/>
                     <Route path="/Compra/:id" element={<Compra/>}/>
+                    <Route path="*" element={<Error />} />
                 </Routes>
                 <FooterComponent/>
             </div>

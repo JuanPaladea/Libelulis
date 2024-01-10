@@ -61,7 +61,7 @@ export const UserProvider = ({ children }) => {
     
             // User creation and profile update successful
             toast.success('Usuario creado con éxito');
-            navigate('/Iniciar-Sesion');
+            navigate('/');
         } catch (error) {
             console.error(error);
             toast.error(error.message);
@@ -77,7 +77,7 @@ export const UserProvider = ({ children }) => {
             await signInWithEmailAndPassword(auth, email, password);
             // Login successful
             toast.success('Sesión iniciada con éxito');
-            navigate('/Tienda');
+            navigate('/');
         } catch (error) {
             if (error.code === 'auth/wrong-password') {
                 toast.error('La contraseña es incorrecta. Por favor, inténtalo de nuevo.');
