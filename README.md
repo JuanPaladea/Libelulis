@@ -33,7 +33,7 @@ The app is live at [Libelulis](https://libelulis.vercel.app/) and is accessible 
 - Tailwind CSS
 - Headless UI
 - Heroicons
-- LDRS (Please provide details if not a typo)
+- LDRS
 
 ## Folder Structure
 
