@@ -5,9 +5,11 @@ import AdminEditProductComponent from "./AdminEditProductComponent";
 import { collection, deleteDoc, doc, getFirestore } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useUser } from "../../context/UserContext";
+import LoaderComponent from "../Loader/LoaderComponent";
 
 export default function AdminProductsComponent({ products }) {
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null);
   const db = getFirestore(); 
   const {isAdmin} = useUser()
@@ -21,21 +23,36 @@ export default function AdminProductsComponent({ products }) {
     }
   }
 
-  const handleDeleteClick = (product) => {
-    if (isAdmin) {
-      const productDocRef = doc(collection(db, 'products'), product.id);
-      deleteDoc(productDocRef)
-      .then(() => {
-        toast.success('Producto eliminado')
-      })
-      .catch(error => toast.error(error))
-    } else {
-      toast.error('No es administrador')
+  const handleDeleteClick = async (product) => {
+    try {
+      setLoading(true);
+  
+      if (isAdmin) {
+        const productDocRef = doc(collection(db, 'products'), product.id);
+        await deleteDoc(productDocRef);
+        toast.success('Producto eliminado');
+      } else {
+        toast.error('No es administrador');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al eliminar el producto');
+    } finally {
+      setLoading(false);
     }
-  }
+  };  
 
   return (
     <div className="bg-white">
+      {
+        loading 
+        &&
+        (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
+            <LoaderComponent/>
+          </div>
+        )
+      }
       {selectedProduct && (
         <AdminEditProductComponent open={open} setOpen={setOpen} product={selectedProduct} />
       )} 

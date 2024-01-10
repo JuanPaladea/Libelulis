@@ -12,7 +12,7 @@ export default function CartComponent({cartOpen, setCartOpen}) {
 
     return (
         <Transition.Root show={cartOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-20" onClose={() => setCartOpen(!cartOpen)}>
+        <Dialog as="div" className="relative z-40" onClose={() => setCartOpen(!cartOpen)}>
             <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"

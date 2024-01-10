@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([])
     const [summary, setSummary] = useState(null)
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false)
     const db = getFirestore();
     const {user} = useUser()
     const totalPrice = cart.map((item) => item.price * item.quantity).reduce((total, price) => total + price, 0)
@@ -37,7 +36,7 @@ export const CartProvider = ({ children }) => {
                 setLoading(false);
             }
         };
-      
+    
         const unsubscribe = user
           ? onSnapshot(collection(db, 'users', user.uid, 'cart'), (snapshot) => {
             try {

@@ -29,7 +29,7 @@ export const UserProvider = ({ children }) => {
               if (userDoc.exists()) {
                 const userData = userDoc.data();
                 const adminStatus = userData.isAdmin === true;
-                setIsAdmin(adminStatus); // Update admin status
+                setIsAdmin(adminStatus);
               } else {
                 setIsAdmin(false);
               }
@@ -40,7 +40,6 @@ export const UserProvider = ({ children }) => {
             console.error(error);
             setIsAdmin(false);
           } finally {
-            // Set loading to false when the data is fetched, regardless of success or failure
             setLoading(false);
           }
         });
@@ -113,7 +112,6 @@ export const UserProvider = ({ children }) => {
             console.error(error);
             toast.error('Hubo un problema durante la autenticación con Google');
         } finally {
-            // Set loading to false when the data is fetched, regardless of success or failure
             setLoading(false);
         }
     };
@@ -127,7 +125,6 @@ export const UserProvider = ({ children }) => {
             console.error(error);
             toast.error('Failed to sign out');
         } finally {
-            // Set loading to false when the data is fetched, regardless of success or failure
             setLoading(false);
         }
     };
