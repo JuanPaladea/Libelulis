@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
  
 export function CarouselComponent({img1, img2, img3, product}) {
   return (
-    <Carousel loop="true" transition={{ duration: 0.5 }} className="rounded-xl z-10">
+    <Carousel loop={true} transition={{ duration: 0.5 }} className="rounded-xl z-10">
         <Link to={`/item/${product.id}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <img
             src={img1}
