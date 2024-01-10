@@ -51,7 +51,7 @@ const CheckoutComponent = () => {
             loading
             &&
             (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-80 z-50">
                 <LoaderComponent/>
                 </div>
             )
@@ -67,23 +67,15 @@ const CheckoutComponent = () => {
                             (cart.map((product) => 
                             <div key={product.id} class="flex rounded-lg bg-white sm:flex-row">
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
-                                <div class="flex w-full flex-col px-4 py-4">
+                                <div class="flex w-full flex-col px-4 py-4 my-auto">
                                     <span class="font-semibold">{product.name}</span>
                                         <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
                                         <p class="text-md"> {product.quantity > 1 ? `${product.quantity}x ${formatedPrice(product)}` : '' } </p>
                                 </div>
-                                <div class="flex w-full flex-col px-4 py-4">
+                                <div class="flex flex-wrap justify-between w-full px-4 py-4 my-auto">
                                     <ItemCountComponent product={product} />
+                                    <XMarkIcon className="h-6 w-6 rounded-md text-gray-400 hover:cursor-pointer" aria-hidden="true" onClick={() => removeFromCart(product.id)}/>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
-                                    onClick={() => removeFromCart(product.id)}
-                                >
-                                    <span className="absolute -inset-0.5" />
-                                    <span className="sr-only">Close menu</span>
-                                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                                </button>
                             </div>)
                         )}
                     </div>
