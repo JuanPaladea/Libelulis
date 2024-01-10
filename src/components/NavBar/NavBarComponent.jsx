@@ -89,7 +89,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                         <Link to="/Usuario" onClick={()=> setOpen(false)} className="flex flex-1 items-center justify-start space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                           <div class="flex -space-x-2">
                             {user.photoURL ? (
-                              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
+                              <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
                             )
                             :
                             (
@@ -206,7 +206,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                       <Menu.Button className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-3" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                         <div class="flex -space-x-2 overflow-hidden">
                           {user.photoURL ? (
-                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
+                            <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white" src={user.photoURL} />
                           )
                           :
                           (
