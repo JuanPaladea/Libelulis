@@ -8,6 +8,7 @@ const AdminProductFormComponent = () => {
     const [name, setName] = useState('')
     const [img, setImg] = useState('')
     const [price, setPrice] = useState('')
+    const [stock, setStock] = useState('')
     const [category, setCategory] = useState('');
     const {isAdmin} = useUser();
     const [loading, setLoading] = useState(false)
@@ -18,7 +19,7 @@ const AdminProductFormComponent = () => {
       e.preventDefault();
       if (isAdmin) {
         setLoading(true);
-        if (!name.trim() || !img.trim() || !price.trim() || !category.trim()) {
+        if (!name.trim() || !img.trim() || !price.trim() || !category.trim() || !stock.trim()) {
           toast.error('Por favor, complete todos los campos.');
           setLoading(false)
           return;
@@ -28,6 +29,7 @@ const AdminProductFormComponent = () => {
             name,
             img,
             price: parseFloat(price),
+            stock: parseFloat(stock),
             category,
           });
       
@@ -35,6 +37,7 @@ const AdminProductFormComponent = () => {
           setName('');
           setImg('');
           setPrice('');
+          setStock('');
           setCategory('');
         } catch (error) {
           toast.error(error.message);
@@ -75,7 +78,6 @@ const AdminProductFormComponent = () => {
                       type="text"
                       name="name"
                       id="name"
-                      autoComplete="name"
                       className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -144,10 +146,25 @@ const AdminProductFormComponent = () => {
                      required
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      type="text"
+                      type="number"
                       name="price"
                       id="price"
-                      autoComplete="price"
+                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                    Stock
+                  </label>
+                  <div className="mt-2.5">
+                    <input
+                     required
+                      value={stock}
+                      onChange={(e) => setStock(e.target.value)}
+                      type="number"
+                      name="stock"
+                      id="stock"
                       className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>

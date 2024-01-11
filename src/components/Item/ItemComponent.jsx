@@ -41,24 +41,38 @@ export default function ItemComponent({product}) {
             ''}
             </p>
 
-            <div>
-              <p className="mt-4 text-gray-500 text-lg">Cantidad:
-                <select id="quantity" value={count} onChange={(e) => setCount(+e.target.value)}>
-                    {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
-                    <option key={value} value={value}>
-                        {value}
-                    </option>
-                    ))}
-                </select>
-              </p>
-            </div>
-
-            <button
-              onClick={() => addToCart(product, count)}
-              className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Añadir al carrito
-            </button>
+            {product.stock > 0 
+            ? 
+            (
+              <div>
+                <div>
+                  <p className="mt-4 text-gray-500 text-lg">Cantidad:
+                    <select id="quantity" value={count} onChange={(e) => setCount(+e.target.value)}>
+                        {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
+                        <option key={value} value={value}>
+                            {value}
+                        </option>
+                        ))}
+                    </select>
+                  </p>
+                </div>
+                <button
+                  onClick={() => addToCart(product, count)}
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Añadir al carrito
+                </button>
+              </div>
+            ) 
+            : 
+            (
+              <button
+                className="mt-10 flex w-full items-center justify-center rounded-md border border-gray-300 bg-gray-300 px-8 py-3 text-base font-medium text-gray-500 cursor-not-allowed"
+                disabled
+              >
+                Sin stock
+              </button>
+            )}
           </div>
 
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">

@@ -12,6 +12,7 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
     const [name, setName] = useState('')
     const [img, setImg] = useState('')
     const [price, setPrice] = useState('')
+    const [stock, setStock] = useState('')
     const [category, setCategory] = useState('')
     const db = getFirestore(); 
     const productsCollection = collection(db, 'products')
@@ -22,6 +23,7 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
         setImg(product.img || '');
         setPrice(product.price || '');
         setCategory(product.category || '');
+        setStock(product.stock || '');
     }, [product]);
 
     const handleUpdate = async (e) => {
@@ -33,10 +35,16 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
           toast.error('No es administrador');
           return;
         }
-    
+
         const parsedPrice = parseFloat(price);
         if (isNaN(parsedPrice)) {
           toast.error('Precio debe ser un número');
+          return;
+        }
+    
+        const parsedStock = parseFloat(stock);
+        if (isNaN(parsedStock)) {
+          toast.error('Stock debe ser un número');
           return;
         }
     
@@ -53,14 +61,18 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
         if (category.trim() !== "") {
           updateObject.category = category;
         }
+        if (!isNaN(parsedStock)) {
+          updateObject.stock = stock;
+        }
     
         await updateDoc(productDocRef, updateObject);
         setOpen(false);
-        toast.success('Producto actualizado');
         setName("");
+        setStock("");
         setPrice("");
         setImg("");
         setCategory("");
+        toast.success('Producto actualizado');
       } catch (error) {
         console.error(error);
         toast.error('Error al actualizar el producto');
@@ -115,7 +127,7 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                       <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                     <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
-                      <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
+                      <div className="my-auto aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
                         {<img src={product.img} alt={product.name} className="object-cover object-center" />}
                       </div>
                       <div className="sm:col-span-8 lg:col-span-7">
@@ -152,6 +164,23 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                         name="price"
                                         id="price"
                                         autoComplete="price"
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Stock
+                                    </label>
+                                    <div className="mt-2.5">
+                                    <input
+                                        onChange={(e) => setStock(e.target.value)}
+                                        value={stock}
+                                        placeholder={product.stock}
+                                        type="number"
+                                        name="stock"
+                                        id="stock"
+                                        autoComplete="stock"
                                         className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                     </div>

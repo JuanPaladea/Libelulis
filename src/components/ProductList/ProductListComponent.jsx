@@ -29,12 +29,25 @@ export default function ProductListComponent({ products }) {
                       <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
                       <p className="mt-1 text-lg font-medium text-gray-900">{formatedPrice(product)}</p>
                   <div>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="mt-2 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      Añadir al carrito
-                    </button>
+                    {product.stock > 0 
+                    ? 
+                    (
+                      <button
+                        onClick={() => addToCart(product)}
+                        className="mt-2 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        Añadir al carrito
+                      </button>
+                    ) 
+                    : 
+                    (
+                      <button
+                        className="mt-2 flex w-full items-center justify-center rounded-md border border-gray-300 bg-gray-300 px-8 py-3 text-base font-medium text-gray-500 cursor-not-allowed"
+                        disabled
+                      >
+                        Sin stock
+                      </button>
+                    )}
                   </div>
                 </div>
             ))}

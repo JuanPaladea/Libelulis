@@ -79,6 +79,12 @@ export const CartProvider = ({ children }) => {
     const addToCart = async (product, quantity = 1) => {    
         try {
             setLoading(true)
+            
+            if (quantity > product.stock) {
+                toast.error(`No hay suficiente stock disponible para ${product.name}`);
+                return;
+            }
+
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -143,6 +149,12 @@ export const CartProvider = ({ children }) => {
     const updateCartItemQuantity = async (product, newQuantity) => {
         try {
             setLoading(true)
+
+            if (newQuantity > product.stock) {
+                toast.error(`No hay suficiente stock disponible para ${product.name}`);
+                return;
+            }
+
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -205,10 +217,18 @@ export const CartProvider = ({ children }) => {
             try {
                 // Create a new document in 'compras' collection
                 await setDoc(newCompraDocRef, compraData);
-                const cartCollectionRef = collection(db, 'users', user.uid, 'cart');
+
+                const updateStockPromises = cart.map((item) => {
+                    const productRef = doc(collection(db, 'products'), item.id);
+                    const updatedStock = item.stock - item.quantity;
+                    return updateDoc(productRef, { stock: updatedStock });
+                });
+                await Promise.all(updateStockPromises);
+
                 const deletePromises = cart.map((item) => {
-                  const itemDocRef = doc(cartCollectionRef, item.id);
-                  return deleteDoc(itemDocRef);
+                    const cartCollectionRef = collection(db, 'users', user.uid, 'cart');
+                    const itemDocRef = doc(cartCollectionRef, item.id);
+                    return deleteDoc(itemDocRef);
                 });
                 await Promise.all(deletePromises);
                 // Clear the local cart state
