@@ -1,5 +1,6 @@
 import React from 'react'
-import 'ldrs/tailspin'
+import { tailspin } from 'ldrs'
+tailspin.register()
 
 const LoaderComponent = ({size = '40'}) => {
   return (
