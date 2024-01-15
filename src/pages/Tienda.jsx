@@ -5,12 +5,16 @@ import CategoriesComponent from '../components/Categories/CategoriesComponent'
 import { useCollection } from '../hooks/useCollection'
 import LoaderComponent from '../components/Loader/LoaderComponent'
 import ProductListContainerComponent from '../components/ProductListContainer/ProductListContainerComponent'
+import { motion } from 'framer-motion'
 
 const Tienda = () => {
     const {productos, loading} = useCollection('products')
     
     return (
-        <>
+        <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}>
             <TiendaHeaderComponent/>
             <CategoriesComponent/>
             {loading ? (
@@ -21,7 +25,7 @@ const Tienda = () => {
                 <ProductListContainerComponent products={productos} />
             )}
             <AdemasCompraronComponent/>
-        </>
+        </motion.div>
     )
 }
 

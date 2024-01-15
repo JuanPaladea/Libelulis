@@ -4,6 +4,7 @@ import Error from '../pages/Error'
 import { useParams } from 'react-router-dom'
 import { doc, getFirestore, onSnapshot } from 'firebase/firestore'
 import LoaderComponent from '../components/Loader/LoaderComponent'
+import { motion } from 'framer-motion'
 
 const Compra = () => {
     const {id} = useParams()
@@ -36,7 +37,10 @@ const Compra = () => {
     }, [id]);
 
     return (
-        <div>
+        <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}>
             {loading 
             ? 
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
@@ -52,7 +56,7 @@ const Compra = () => {
             (
             <Error/>
             )}
-        </div>
+        </motion.div>
     )
 }
 

@@ -5,13 +5,17 @@ import AdminProductFormComponent from '../components/Admin/AdminProductFormCompo
 import { useUser } from '../context/UserContext'
 import Error from '../pages/Error'
 import LoaderComponent from '../components/Loader/LoaderComponent'
+import { motion } from 'framer-motion'
 
 const AdminProductos = () => {
   const {productos, loading} = useCollection('products')
   const {isAdmin, loading: userLoading} = useUser()
 
   return (
-    <div>
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}>
       
       {userLoading 
       ? 
@@ -39,7 +43,7 @@ const AdminProductos = () => {
         (
           <Error title='El usuario no es administrador'/>
         )}
-    </div>
+    </motion.div>
   )
 }
 

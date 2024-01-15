@@ -3,10 +3,14 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useUser } from '../../context/UserContext'
 import LoaderComponent from '../Loader/LoaderComponent'
+import { motion } from 'framer-motion'
 
 const AdminProductFormComponent = () => {
     const [name, setName] = useState('')
     const [img, setImg] = useState('')
+    const [img2, setImg2] = useState('')
+    const [img3, setImg3] = useState('')
+    const [descripcion, setDescripcion] = useState('')
     const [price, setPrice] = useState('')
     const [stock, setStock] = useState('')
     const [category, setCategory] = useState('');
@@ -28,17 +32,23 @@ const AdminProductFormComponent = () => {
           const newProductDoc = await addDoc(productsCollection, {
             name,
             img,
+            img2,
+            img3,
             price: parseFloat(price),
             stock: parseFloat(stock),
             category,
+            descripcion,
           });
       
           toast.success('Producto agregado con ID: ' + newProductDoc.id);
           setName('');
           setImg('');
+          setImg2('');
+          setImg3('');
           setPrice('');
           setStock('');
           setCategory('');
+          setDescripcion('');
         } catch (error) {
           toast.error(error.message);
         } finally {
@@ -186,15 +196,65 @@ const AdminProductFormComponent = () => {
                     />
                   </div>
                 </div>
+                <div>
+                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                    Img2 url
+                  </label>
+                  <div className="mt-2.5">
+                    <input
+                      value={img2}
+                      onChange={(e) => setImg2(e.target.value)}
+                      type="text"
+                      name="img"
+                      id="img"
+                      autoComplete="img"
+                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                    Img3 url
+                  </label>
+                  <div className="mt-2.5">
+                    <input
+                      value={img3}
+                      onChange={(e) => setImg3(e.target.value)}
+                      type="text"
+                      name="img"
+                      id="img"
+                      autoComplete="img"
+                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                    Descripcion producto
+                  </label>
+                  <div className="mt-2.5">
+                    <textarea
+                      rows={6}
+                      value={descripcion}
+                      onChange={(e) => setDescripcion(e.target.value)}
+                      type="text"
+                      name="img"
+                      id="img"
+                      autoComplete="img"
+                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="mt-10">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.9}}
                   onClick={handleSubmit}
                   type="submit"
                   className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Agregar producto
-                </button>
+                </motion.button>
               </div>
             </form>
           </div>

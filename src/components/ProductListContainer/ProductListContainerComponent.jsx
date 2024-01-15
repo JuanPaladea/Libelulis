@@ -26,7 +26,6 @@ export default function ProductListContainerComponent({products}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-
   useEffect(() => {
     // Function to update the orderedProducts array based on selectedCategory and selectedSortOption
     const updateOrderedProducts = () => {

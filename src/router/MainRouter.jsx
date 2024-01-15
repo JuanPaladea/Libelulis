@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React, { useLayoutEffect, useState } from 'react'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Home from '../pages/Home'
 import NavBarComponent from '../components/NavBar/NavBarComponent'
 import FooterComponent from '../components/Footer/FooterComponent'
@@ -18,15 +18,30 @@ import AdminProductos from '../pages/AdminProductos'
 import AdminContactos from '../pages/AdminContactos'
 import AdminCompras from '../pages/AdminCompras'
 import Compra from '../pages/Compra'
+import { AnimatePresence } from 'framer-motion'
 
 const MainRouter = () => {
     const [cartOpen, setCartOpen] = useState(false);
+    const location = useLocation()
+    useLayoutEffect(() => {
+      const scrollToTop = () => {
+        document.documentElement.scrollTo(0, 0);
+      };
+  
+      // Scroll to top after a delay of 1000 milliseconds (1 second)
+      const delayScroll = setTimeout(scrollToTop, 250);
+    
+      return () => {
+        // Clear the timeout if the component is unmounted before the delay completes
+        clearTimeout(delayScroll);
+      };
+    }, [location.pathname]);
 
     return (
-            <div>
-                <CartComponent cartOpen={cartOpen} setCartOpen={setCartOpen}/>
-                <NavBarComponent cartOpen={cartOpen} setCartOpen={setCartOpen}/>
-                <Routes>
+            <AnimatePresence>
+                <CartComponent key="Cart" cartOpen={cartOpen} setCartOpen={setCartOpen}/>
+                <NavBarComponent key="NavBar" cartOpen={cartOpen} setCartOpen={setCartOpen}/>
+                <Routes key={location.pathname} location={location}>
                     <Route path='/' element={<Home />}/>
                     <Route path='/Tienda' element={<Tienda />}/>
                     <Route path='/Sobre-Nosotros' element={<SobreNosotros />}/>
@@ -44,8 +59,8 @@ const MainRouter = () => {
                     <Route path="/Compra/:id" element={<Compra/>}/>
                     <Route path="*" element={<Error />} />
                 </Routes>
-                <FooterComponent/>
-            </div>
+                <FooterComponent key='footer'/>
+            </AnimatePresence>
     )
 }
 

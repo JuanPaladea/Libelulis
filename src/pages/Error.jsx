@@ -1,9 +1,13 @@
+import { motion } from 'framer-motion'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Error({ title = "Página no encontrada", errorTipe = "Lo lamentamos, no encontrámos la página que estabas buscando"}) {
     return (
-        <div>
+        <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}>
         <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
             <div className="text-center">
             <p className="text-base font-semibold text-indigo-600">404</p>
@@ -22,6 +26,6 @@ export default function Error({ title = "Página no encontrada", errorTipe = "Lo
             </div>
             </div>
         </main>
-        </div>
+        </motion.div>
     )
 }

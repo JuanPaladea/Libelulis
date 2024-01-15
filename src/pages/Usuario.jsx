@@ -1,14 +1,17 @@
 import React from 'react'
 import UsuarioComponent from '../components/Usuario/UsuarioComponent'
 import { useUser } from '../context/UserContext'
-import { Link } from 'react-router-dom'
 import Error from '../pages/Error'
+import { motion } from 'framer-motion'
 
 
 const Usuario = () => {
   const {user} = useUser()
   return (
-    <div>
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}>
       {user ? (
         <UsuarioComponent/>
       )
@@ -16,7 +19,7 @@ const Usuario = () => {
       (
         <Error  title="Usuario no encontrado" errorTipe='No se encuentra la sesión iniciada'/>
       )}
-    </div>
+    </motion.div>
   )
 }
 

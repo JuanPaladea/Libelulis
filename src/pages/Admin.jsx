@@ -3,11 +3,15 @@ import AdminHomeComponent from '../components/Admin/AdminHomeComponent'
 import { useUser } from '../context/UserContext'
 import Error from '../pages/Error'
 import LoaderComponent from '../components/Loader/LoaderComponent'
+import { motion } from 'framer-motion'
 
 const Admin = () => {
     const {isAdmin, loading} = useUser()
     return (
-        <div>
+        <motion.div    
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}>
             {loading 
             ? 
             (
@@ -20,7 +24,7 @@ const Admin = () => {
                 : 
                 <Error title='El usuario no es administrador'/>
                 }
-        </div>
+        </motion.div>
     )
 }
 

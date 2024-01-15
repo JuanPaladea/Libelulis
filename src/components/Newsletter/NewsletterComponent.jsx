@@ -3,6 +3,7 @@ import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import LoaderComponent from '../Loader/LoaderComponent'
+import { motion } from 'framer-motion'
 
 export default function NewsletterComponent() {
   const [email, setEmail] = useState('')
@@ -10,9 +11,19 @@ export default function NewsletterComponent() {
 
   const db = getFirestore()
 
+  const isValidEmail = (email) => {
+    // Regular expression for a simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    subscribeToNewsletter(email)
+    if (isValidEmail(email)) {
+      subscribeToNewsletter(email);
+    } else {
+      toast.error('Por favor, introduce un correo electrónico válido');
+    }
   }
 
   const subscribeToNewsletter = async (email) => {
@@ -65,13 +76,13 @@ export default function NewsletterComponent() {
                   placeholder="Introduce tu mail"
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleSubmit}
-                  type="submit"
                   className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                 >
                   Suscribete
-                </button>
+                </motion.button>
               </div>
             </div>
             <dl className="grid grid-cols-2 gap-x-8 gap-y-10 lg:pt-2">

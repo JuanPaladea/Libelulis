@@ -11,6 +11,9 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState('')
     const [img, setImg] = useState('')
+    const [img2, setImg2] = useState('')
+    const [img3, setImg3] = useState('')
+    const [descripcion, setDescripcion] = useState('')
     const [price, setPrice] = useState('')
     const [stock, setStock] = useState('')
     const [category, setCategory] = useState('')
@@ -21,6 +24,9 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
     useEffect(() => {
         setName(product.name || '');
         setImg(product.img || '');
+        setImg2(product.img2 || '');
+        setImg3(product.img3 || '');
+        setDescripcion(product.descripcion || '');
         setPrice(product.price || '');
         setCategory(product.category || '');
         setStock(product.stock || '');
@@ -58,6 +64,15 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
         if (img.trim() !== '') {
           updateObject.img = img;
         }
+        if (img2.trim() !== '') {
+          updateObject.img2 = img2;
+        }
+        if (img3.trim() !== '') {
+          updateObject.img3 = img3;
+        }
+        if (descripcion.trim() !== '') {
+          updateObject.descripcion = descripcion;
+        }
         if (category.trim() !== "") {
           updateObject.category = category;
         }
@@ -70,7 +85,10 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
         setName("");
         setStock("");
         setPrice("");
+        setDescripcion("");
         setImg("");
+        setImg2("");
+        setImg3("");
         setCategory("");
         toast.success('Producto actualizado');
       } catch (error) {
@@ -236,13 +254,65 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                 </div>
                                 <div>
                                   <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
-                                  Img url
+                                  Imagen 1 url
                                   </label>
                                   <div className="mt-2.5">
                                   <input
                                       onChange={(e) => setImg(e.target.value)}
                                       value={img}
                                       placeholder={product.img}
+                                      type="text"
+                                      name="img"
+                                      id="img"
+                                      autoComplete="img"
+                                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                  Imagen 2 url
+                                  </label>
+                                  <div className="mt-2.5">
+                                  <input
+                                      onChange={(e) => setImg2(e.target.value)}
+                                      value={img2}
+                                      placeholder={product.img2}
+                                      type="text"
+                                      name="img"
+                                      id="img"
+                                      autoComplete="img"
+                                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                  Imagen 3 url
+                                  </label>
+                                  <div className="mt-2.5">
+                                  <input
+                                      onChange={(e) => setImg3(e.target.value)}
+                                      value={img3}
+                                      placeholder={product.img3}
+                                      type="text"
+                                      name="img"
+                                      id="img"
+                                      autoComplete="img"
+                                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                  Descripcion producto
+                                  </label>
+                                  <div className="mt-2.5">
+                                  <textarea
+                                      rows={6}
+                                      onChange={(e) => setDescripcion(e.target.value)}
+                                      value={descripcion}
+                                      placeholder={product.descripcion}
                                       type="text"
                                       name="img"
                                       id="img"

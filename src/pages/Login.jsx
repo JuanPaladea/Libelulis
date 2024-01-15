@@ -3,13 +3,17 @@ import LoginComponent from '../components/Login/LoginComponent'
 import { useUser } from '../context/UserContext'
 import LoaderComponent from '../components/Loader/LoaderComponent'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 const Login = () => {
   const {user, loading} = useUser()
   const navigate = useNavigate()
 
   return (
-    <div>
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}>
       {loading 
       ? 
       (
@@ -22,7 +26,7 @@ const Login = () => {
           : 
           <LoginComponent/>
           }
-    </div>
+    </motion.div>
   )
 }
 

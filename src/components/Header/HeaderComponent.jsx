@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export default function HeaderComponent() {
@@ -81,11 +82,14 @@ export default function HeaderComponent() {
                   </div>
                 </div>
   
-                <Link
-                  to="/Tienda"
-                  className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
-                >
-                  Tienda
+                <Link                   
+                to="/Tienda">
+                  <motion.button
+                    whileTap={{ scale: 0.9}}
+                    className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
+                  >
+                    Tienda
+                  </motion.button>
                 </Link>
               </div>
             </div>
