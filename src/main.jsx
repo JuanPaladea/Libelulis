@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDiNMWrctONAJK2dPUczpU031BIKxP2In0",
+    apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
     authDomain: "libelulis.firebaseapp.com",
     projectId: "libelulis",
     storageBucket: "libelulis.appspot.com",
