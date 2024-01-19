@@ -29,10 +29,10 @@ const FooterComponent = () => {
               <p class="text-md font-semibold text-gray-900">Legal</p>
               <ul class="text-gray-600">
                   <li class="my-4">
-                      <a href="#" class="hover:underline">Privacy Policy</a>
+                      <Link to="/FAQ" class="hover:underline">Preguntas frecuentes</Link>
                   </li>
                   <li>
-                      <a href="#" class="hover:underline">Terms &amp; Conditions</a>
+                      <a href="#" class="hover:underline">Terminos y condiciones</a>
                   </li>
               </ul>
             </div>
