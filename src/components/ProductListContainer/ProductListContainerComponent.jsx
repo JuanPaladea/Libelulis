@@ -77,9 +77,14 @@ export default function ProductListContainerComponent({products}) {
   return (
     <div className="bg-white">
       <div>
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl px-4">
+          <div class="flex flex-col">
+            <div class="h-1 bg-gray-200 rounded overflow-hidden">
+              <div class="w-24 h-full bg-indigo-500"></div>
+            </div>
+          </div>
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Tienda</h1>
+            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Tienda</h1>
 
             <div className="flex items-center">
             

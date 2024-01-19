@@ -3,8 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
 import { useUser } from '../../context/UserContext'
-import { toast } from 'react-toastify'
 import LoaderComponent from '../Loader/LoaderComponent'
+import toast from 'react-hot-toast'
 
 export default function AdminEditProductComponent({open, setOpen, product}) {
     const {isAdmin} = useUser()

@@ -1,9 +1,9 @@
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
 import { useUser } from '../../context/UserContext'
 import LoaderComponent from '../Loader/LoaderComponent'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 const AdminProductFormComponent = () => {
     const [name, setName] = useState('')

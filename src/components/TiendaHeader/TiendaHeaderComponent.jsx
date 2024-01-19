@@ -6,7 +6,7 @@ const TiendaHeaderComponent = () => {
         <div class="relative">
             <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-8 lg:items-center">
                 <div class="ml-auto lg:col-start-2 lg:max-w-2xl">
-                    <h4 class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 sm:text-3xl sm:leading-9">
+                    <h4 class="mt-2 text-4xl font-extrabold tracking-tight leading-8 text-gray-900 sm:leading-9">
                         Tienda oficial de Libelulis
                     </h4>
                     <p class="mt-4 text-lg leading-6 text-gray-500 00">

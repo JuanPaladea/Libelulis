@@ -1,9 +1,8 @@
 import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline'
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
-import LoaderComponent from '../Loader/LoaderComponent'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 export default function NewsletterComponent() {
   const [email, setEmail] = useState('')
@@ -28,80 +27,54 @@ export default function NewsletterComponent() {
 
   const subscribeToNewsletter = async (email) => {
     try {
-      setLoading(true); // Set loading to true before performing the asynchronous operation
-
-      await addDoc(collection(db, 'subscribers'), { email });
-
-      setEmail(''); // Clear the email after successful subscription
-      toast.success('Suscripto correctamente');
+      await toast.promise(
+        addDoc(collection(db, 'subscribers'), { email }),
+        {
+          loading: 'Suscribiendo...',
+          success: <b>Suscripto con éxito</b>,
+          error: <b>Ha ocurrido un error</b>,
+        }
+      );
+      setEmail('');
     } catch (error) {
-      console.error(error);
-      toast.error('Ha ocurrido un error al suscribirse');
-    } finally {
-      setLoading(false); // Set loading to false after the asynchronous operation completes
+      toast.error(error.message);
     }
   };
+  
 
   return (
     <div>
-        {
-          loading 
-          &&
-          (
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
-              <LoaderComponent/>
-            </div>
-          )
-        }
-      <div className="relative isolate overflow-hidden bg-gray-200 py-16 sm:py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2">
-            <div className="max-w-xl lg:max-w-lg">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Suscríbete a nuestro Newsletter.</h2>
-              <p className="mt-4 text-lg leading-8">
-                Obtendrás las últimas actualizaciones de nuestro catálogo.
-              </p>
-              <div className="mt-6 flex max-w-md gap-x-4">
-                <label htmlFor="email-address" className="sr-only">
-                  Email
-                </label>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  required
-                  className="min-w-0 flex-auto rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                  placeholder="Introduce tu mail"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleSubmit}
-                  className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                >
-                  Suscribete
-                </motion.button>
-              </div>
-            </div>
-            <dl className="grid grid-cols-2 gap-x-8 gap-y-10 lg:pt-2">
-              <div className="flex flex-col items-start justify-center">
-                <div className="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
-                  <CalendarDaysIcon className="h-6 w-6" aria-hidden="true" />
-                </div>
-                <dt className="mt-4 font-semibold">Artículos semanales</dt>
-              </div>
-              <div className="flex flex-col items-start justify-center">
-                <div className="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
-                  <HandRaisedIcon className="h-6 w-6" aria-hidden="true" />
-                </div>
-                <dt className="mt-4 font-semibold">No spam</dt>
-              </div>
-            </dl>
+      <section class="max-w-7xl mx-auto px-4 mt-12">
+        <div class="flex flex-col">
+          <div class="h-1 bg-gray-200 rounded overflow-hidden">
+            <div class="w-24 h-full bg-indigo-500"></div>
           </div>
         </div>
-      </div>
+        <div className='container mx-auto text-gray-600 body-font relative py-12'>
+          <div class="gap-8 items-center xl:gap-16 md:grid md:grid-cols-2">
+            <img class="w-full rounded-lg shadow" src="https://i.imgur.com/t5PWfCT.jpg" alt="dashboard image"/>
+            <div class="mt-4 md:mt-0">
+              <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">Suscríbete a nuestro newsletter</h2>
+              <p class="mb-6 font-light text-gray-500 md:text-lg">Obtendrás las últimas actualizaciones de nuestro catálogo.</p>
+              <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                <div class="relative w-full">
+                  <label for="email" class="hidden mb-2 text-sm font-medium text-gray-900 d">Email</label>
+                  <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                  </div>
+                  <input onChange={(e) => setEmail(e.target.value)} value={email} class="block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg focus:border-[#009cde]" placeholder="Introduce tu e-mail" type="email" id="email" required/>
+                </div>
+                <div>
+                    <motion.button
+                    onClick={(e) => handleSubmit(e)}
+                    whileTap={{ scale: 0.9 }}
+                    class="py-3 px-5 w-full text-sm font-medium text-center text-white rounded-lg border border-[#009cde] cursor-pointer bg-[#009cde] hover:bg-opacity-90 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800">Subscríbete</motion.button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

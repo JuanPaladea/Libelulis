@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const CartContext = createContext()
 

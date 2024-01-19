@@ -19,6 +19,7 @@ import AdminContactos from '../pages/AdminContactos'
 import AdminCompras from '../pages/AdminCompras'
 import Compra from '../pages/Compra'
 import { AnimatePresence } from 'framer-motion'
+import FAQ from '../pages/FAQ'
 
 const MainRouter = () => {
     const [cartOpen, setCartOpen] = useState(false);
@@ -49,6 +50,7 @@ const MainRouter = () => {
                     <Route path='/Iniciar-Sesion' element={<Login />}/>
                     <Route path='/Registrarse' element={<Register />}/>
                     <Route path='/Checkout' element={<Checkout />}/>
+                    <Route path='/FAQ' element={<FAQ />}/>
                     <Route path='/Error' element={<Error />}/>
                     <Route path='/Usuario' element={<Usuario />}/>
                     <Route path='/Admin' element={<Admin />}/>

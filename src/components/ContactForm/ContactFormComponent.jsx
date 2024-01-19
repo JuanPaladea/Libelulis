@@ -1,7 +1,7 @@
 import { addDoc, collection, getFirestore } from "firebase/firestore"
 import { useState } from "react"
-import { toast } from "react-toastify"
 import LoaderComponent from "../Loader/LoaderComponent"
+import toast from "react-hot-toast"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')

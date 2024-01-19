@@ -23,8 +23,15 @@ export default function AdemasCompraronComponent() {
         }
       </div>
       <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-4">Otros además compraron</h2>
+        <div className="mx-auto max-w-2xl px-4 lg:max-w-7xl">
+          <div class="flex flex-col">
+            <div class="h-1 bg-gray-200 rounded overflow-hidden">
+              <div class="w-24 h-full bg-indigo-500"></div>
+            </div>
+            <div class="flex flex-wrap sm:flex-row flex-col py-6 mb-12">
+              <h1 class="sm:w-2/5 text-gray-900 text-3xl tracking-tight font-extrabold mb-2 sm:mb-0">Otros además compraron</h1>
+            </div>
+          </div>
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           {loadingProductos 
           ? 

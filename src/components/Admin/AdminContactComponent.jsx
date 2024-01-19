@@ -2,8 +2,8 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import { collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import LoaderComponent from "../Loader/LoaderComponent";
-import { toast } from "react-toastify";
 import AdminSingleContactComponent from "./AdminSingleContactComponent";
+import toast from "react-hot-toast";
 
 export default function AdminContactComponent() {
     const [contacts, setContacts] = useState([])

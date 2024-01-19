@@ -3,9 +3,9 @@ import { formatedPrice } from "../../utilities/utils";
 import { CarouselComponent } from "../Carousel/CarouselComponent";
 import AdminEditProductComponent from "./AdminEditProductComponent";
 import { collection, deleteDoc, doc, getFirestore } from "firebase/firestore";
-import { toast } from "react-toastify";
 import { useUser } from "../../context/UserContext";
 import LoaderComponent from "../Loader/LoaderComponent";
+import toast from "react-hot-toast";
 
 export default function AdminProductsComponent({ products }) {
   const [open, setOpen] = useState(false)

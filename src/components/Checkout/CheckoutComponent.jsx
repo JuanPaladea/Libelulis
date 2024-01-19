@@ -3,9 +3,9 @@ import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import LoaderComponent from '../Loader/LoaderComponent'
+import toast from 'react-hot-toast'
 
 const CheckoutComponent = () => {
     const {cart, removeFromCart, totalItems, checkout, totalPrice, loading} = useCart()
