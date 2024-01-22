@@ -2,8 +2,8 @@ import React from 'react'
 
 const OrderSummary = () => {
   return (
-<section class="flex items-center py-16 bg-gray-100 md:py-20 font-poppins dark:bg-gray-800 ">
-    <div class="justify-center flex-1 max-w-6xl px-4 py-4 mx-auto bg-white border rounded-md dark:border-gray-900 dark:bg-gray-900 md:py-10 md:px-10">
+<section class="flex items-center py-16 px-5 max-w-7xl mx-auto">
+    <div class="justify-center flex-1 bg-white border rounded-md py-6">
         <div>
             <h1 class="px-4 mb-8 text-2xl font-semibold tracking-wide text-gray-700 dark:text-gray-300 ">
             Thank you. Your order has been received. </h1>

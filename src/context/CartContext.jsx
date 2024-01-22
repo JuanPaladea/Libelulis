@@ -77,14 +77,11 @@ export const CartProvider = ({ children }) => {
     };
 
     const addToCart = async (product, quantity = 1) => {    
-        try {
-            setLoading(true)
-            
+        try {            
             if (quantity > product.stock) {
                 toast.error(`No hay suficiente stock disponible para ${product.name}`);
                 return;
             }
-
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);

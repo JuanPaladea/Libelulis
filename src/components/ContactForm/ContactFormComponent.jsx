@@ -10,49 +10,40 @@ function classNames(...classes) {
 export default function ContactFormComponent() {
   const [name, setName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const db = getFirestore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
     try {
-      await addDoc(collection(db, 'contacts'), {
-        name,
-        lastName,
-        email,
-        message,
-        timestamp: new Date()
-      });
-  
+      await toast.promise(
+        addDoc(collection(db, 'contacts'), { 
+          name,
+          lastName,
+          email,
+          message,
+          timestamp: new Date() }),
+        {
+          loading: 'Enviando mensaje...',
+          success: <b>Mensaje enviado</b>,
+          error: <b>Ha ocurrido un error</b>,
+        }
+      );
       setName('');
       setLastName('');
       setEmail('');
       setMessage('');
-      toast.success('Mensaje enviado');
     } catch (error) {
       console.error(error);
       // Handle the error or show an error message to the user
       toast.error('Error al enviar el mensaje');
-    } finally {
-      setLoading(false)
     }
   };
 
   return (
     <div>
       <div>
-        {
-          loading
-          &&
-          (
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
-              <LoaderComponent/>
-            </div>
-          )
-        }
       </div>
       <div className="isolate bg-white px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">

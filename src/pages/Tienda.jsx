@@ -4,7 +4,6 @@ import { useCollection } from '../hooks/useCollection'
 import LoaderComponent from '../components/Loader/LoaderComponent'
 import ProductListContainerComponent from '../components/ProductListContainer/ProductListContainerComponent'
 import { motion } from 'framer-motion'
-import ColeccionesComponent from '../components/Colecciones/ColeccionesComponent'
 
 const Tienda = () => {
     const {productos, loading} = useCollection('products')
@@ -15,7 +14,6 @@ const Tienda = () => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}>
             <TiendaHeaderComponent/>
-            <ColeccionesComponent/>
             {loading ? (
                 <div className='p-6 w-full h-full flex items-center justify-center'><LoaderComponent/></div>
             )

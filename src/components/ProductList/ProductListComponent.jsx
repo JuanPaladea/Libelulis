@@ -1,22 +1,12 @@
 import { formatedPrice } from "../../utilities/utils";
 import { useCart } from "../../context/CartContext";
-import LoaderComponent from "../Loader/LoaderComponent";
 import { Link } from "react-router-dom";
 
 export default function ProductListComponent({ products }) {
-  const {addToCart, loading} = useCart()
+  const {addToCart } = useCart()
 
   return (
     <div>
-      {
-        loading 
-        &&
-        (
-          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-80 z-50">
-            <LoaderComponent/>
-          </div>
-        )
-      }
       <div class="bg-white py-6 sm:py-8 lg:py-12">
         <div class="mx-auto max-w-7xl px-4">
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

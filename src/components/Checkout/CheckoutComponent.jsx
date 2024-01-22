@@ -42,7 +42,6 @@ const CheckoutComponent = () => {
         setBillingState('provincia')
         setCP('')
         await checkout(totalWithShipping, billingData);
-        useNavigate('/')
     }
 
     return (

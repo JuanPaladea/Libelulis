@@ -52,7 +52,7 @@ export default function NewsletterComponent() {
         </div>
         <div className='container mx-auto text-gray-600 body-font relative py-12'>
           <div class="gap-8 items-center xl:gap-16 md:grid md:grid-cols-2">
-            <img class="w-full rounded-lg shadow" src="https://i.imgur.com/t5PWfCT.jpg" alt="dashboard image"/>
+            <img class="w-full rounded-lg shadow" src="https://images.unsplash.com/photo-1543269664-76bc3997d9ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="dashboard image"/>
             <div class="mt-4 md:mt-0">
               <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">Suscríbete a nuestro newsletter</h2>
               <p class="mb-6 font-light text-gray-500 md:text-lg">Obtendrás las últimas actualizaciones de nuestro catálogo.</p>

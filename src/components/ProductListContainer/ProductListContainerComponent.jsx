@@ -84,7 +84,7 @@ export default function ProductListContainerComponent({products}) {
             </div>
           </div>
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Tienda</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Productos</h1>
 
             <div className="flex items-center">
             
