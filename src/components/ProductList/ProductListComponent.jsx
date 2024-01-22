@@ -26,12 +26,12 @@ export default function ProductListComponent({ products }) {
                   <img src={product.img} loading="lazy" alt={product.name} class="h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
                 </Link>
                 <div class="flex-col items-start justify-between gap-2 rounded-b-lg bg-gray-100 p-4 shadow">
-                  <div className="flex items-start justify-between ">
+                  <div className="flex items-start justify-between my-2">
                     <div class="flex flex-col">
-                      <Link to={`/item/${product.id}`} class="font-bold text-gray-800 transition duration-100 hover:text-gray-500 lg:text-lg">{product.name}</Link>
+                      <Link to={`/item/${product.id}`} class="font-bold text-gray-800 transition duration-100 hover:text-gray-500">{product.name}</Link>
                     </div>
                     <div class="flex flex-col items-end">
-                      <span class="font-bold text-gray-600 lg:text-lg">{formatedPrice(product)}</span>
+                      <span class="font-bold text-gray-600">{formatedPrice(product)}</span>
                     </div>
                   </div>
                   <div class="flex">

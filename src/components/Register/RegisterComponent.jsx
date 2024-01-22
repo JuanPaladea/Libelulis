@@ -86,129 +86,48 @@ export default function Example() {
   };
 
   return (
-    <div>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+    <section class="bg-gray-50">
+      <div class="flex flex-col items-center justify-center px-5 mx-auto py-24">
           <img
             className="mx-auto h-20 w-auto"
             src="https://i.imgur.com/0twzt2t.png"
-            alt="Your Company"
+            alt="Libelulis"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Regístrate en nuestra página
-          </h2>
-        </div>
-      </div>
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
-        <LoginWithGoogleComponent/>
-      </div>
-      <form onSubmit={handleSubmit} className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-4xl lg:px-8">
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                  Nombre
-                </label>
-                <div className="mt-2">
-                  <input
-                    Required
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    name="first-name"
-                    id="first-name"
-                    autoComplete="given-name"
-                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
+          <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+              <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                  <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      Create and account
+                  </h1>
+                  <form class="space-y-4 md:space-y-6" action="#">
+                      <div>
+                          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                          <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/>
+                      </div>
+                      <div>
+                          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                          <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+                      </div>
+                      <div>
+                          <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                          <input type="confirm-password" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+                      </div>
+                      <div class="flex items-start">
+                          <div class="flex items-center h-5">
+                            <input id="terms" aria-describedby="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                          </div>
+                      </div>
+                      <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create an account</button>
+                      <LoginWithGoogleComponent/>
+                      <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                          Already have an account? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+                      </p>
+                  </form>
               </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                  Apellido
-                </label>
-                <div className="mt-2">
-                  <input
-                    Required
-                    onChange={(e) => setLastName(e.target.value)}                  
-                    type="text"
-                    name="last-name"
-                    id="last-name"
-                    autoComplete="family-name"
-                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div className="sm:col-span-4">
-                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Email
-                </label>
-                <div className="mt-2">
-                  <input
-                    onChange={(e) => setEmail(e.target.value)}
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
-                </div>
-              </div>
-              <div className="sm:col-span-4" >
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                      Contraseña
-                    </label>
-                  </div>
-                  <div className="mt-2">
-                    <input
-                      onChange={handlePasswordChange}
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                    {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
-                  </div>
-                </div>
-              <div className="sm:col-span-4" >
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                      Repita su contraseña
-                    </label>
-                  </div>
-                  <div className="mt-2">
-                    <input
-                      onChange={handlePassword2Change}
-                      id="password2"
-                      name="password2"
-                      type="password"
-                      required
-                      className={`pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${password2 !== password && 'ring-red-300 focus:ring-red-600'}`}
-                    />
-                    <p className="text-red-500 text-sm mt-1">{password2Error}</p>
-                  </div>
-                </div>
-            </div>
           </div>
-        </div>
-        <div className="mt-6 flex items-center justify-start gap-x-6">
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Registrarse
-          </button>
-        </div>
-      </form>
-      <p className="mt-10 text-center text-sm text-gray-500">
-              ¿Ya estás registrado?{' '}
-              <Link to="/Iniciar-Sesion" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                Inicia Sesión
-              </Link>
-            </p>
-    </div>
+      </div>
+    </section>
   )
 }

@@ -20,6 +20,9 @@ import AdminCompras from '../pages/AdminCompras'
 import Compra from '../pages/Compra'
 import { AnimatePresence } from 'framer-motion'
 import FAQ from '../pages/FAQ'
+import ForgotPassword from '../pages/ForgotPassword'
+import ResetPassword from '../pages/ResetPassword'
+import Summary from '../pages/Summary'
 
 const MainRouter = () => {
     const [cartOpen, setCartOpen] = useState(false);
@@ -49,6 +52,8 @@ const MainRouter = () => {
                     <Route path='/Contacto' element={<Contacto />}/>
                     <Route path='/Iniciar-Sesion' element={<Login />}/>
                     <Route path='/Registrarse' element={<Register />}/>
+                    <Route path='/ContraseñaOlvidada' element={<ForgotPassword />}/>
+                    <Route path='/ReiniciarContraseña' element={<ResetPassword />}/>
                     <Route path='/Checkout' element={<Checkout />}/>
                     <Route path='/FAQ' element={<FAQ />}/>
                     <Route path='/Error' element={<Error />}/>
@@ -59,6 +64,7 @@ const MainRouter = () => {
                     <Route path='/Admin-Compras' element={<AdminCompras />}/>
                     <Route path="/item/:id" element={<Item/>}/>
                     <Route path="/Compra/:id" element={<Compra/>}/>
+                    <Route path="/Summary/:id" element={<Summary/>}/>
                     <Route path="*" element={<Error />} />
                 </Routes>
                 <FooterComponent key='footer'/>
