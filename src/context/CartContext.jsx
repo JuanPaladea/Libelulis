@@ -211,27 +211,26 @@ export const CartProvider = ({ children }) => {
                 total: totalWithShipping,
                 timestamp: new Date(),
             };
-            setSummary(cart)
             try {
                 // Create a new document in 'compras' collection
                 await setDoc(newCompraDocRef, compraData);
-
+                
                 const updateStockPromises = cart.map((item) => {
                     const productRef = doc(collection(db, 'products'), item.id);
                     const updatedStock = item.stock - item.quantity;
                     return updateDoc(productRef, { stock: updatedStock });
                 });
                 await Promise.all(updateStockPromises);
-
+                
                 const deletePromises = cart.map((item) => {
                     const cartCollectionRef = collection(db, 'users', user.uid, 'cart');
                     const itemDocRef = doc(cartCollectionRef, item.id);
                     return deleteDoc(itemDocRef);
                 });
                 await Promise.all(deletePromises);
+                setSummary(cart)
                 // Clear the local cart state
                 setCart([]);
-                toast.success('Gracias por su compra');
             } catch (error) {
                 console.error('Error during checkout:', error);
                 toast.error('Error al realizar la compra');

@@ -172,7 +172,7 @@ const CheckoutComponent = () => {
                         })}</p>
                     </div>
                     </div>
-                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handleCheckout}>Comprar</button>
+                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handleCheckout}>Iniciar orden</button>
                 </div>
             </div>
         </div>
