@@ -56,7 +56,7 @@ export const UserProvider = ({ children }) => {
             
             // Update the user profile with custom data
             await updateProfile(user, {
-                displayName: `${name} ${lastname}`
+                email: email,
             });
     
             // User creation and profile update successful

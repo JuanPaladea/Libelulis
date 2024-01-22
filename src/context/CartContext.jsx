@@ -2,6 +2,7 @@ import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
 import toast from "react-hot-toast";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const CartContext = createContext()
 
@@ -241,7 +242,23 @@ export const CartProvider = ({ children }) => {
         } else if (cart.length <= 0) {
             toast.error('El carrito está vacío');
         } else if (!user) {
-            toast.error('el usuario no está autenticado');
+            // const auth = getAuth();
+            // setLoading(true);
+            // // Sign in anonymously
+            // const { user: anonymousUser } = await signInAnonymously(auth);
+            
+            // const compraCollectionRef = collection(db, 'compras');
+            // const newCompraDocRef = doc(compraCollectionRef);
+            // const compraData = {
+            //     user: [anonymousUser.uid], // You can include additional info if needed
+            //     Direccion: billingData,
+            //     items: cart,
+            //     total: totalWithShipping,
+            //     timestamp: new Date(),
+            // };
+            // setSummary(cart);
+            // setCart([]);
+            toast.error('El usuario no esta logeado');
         }
     };
 

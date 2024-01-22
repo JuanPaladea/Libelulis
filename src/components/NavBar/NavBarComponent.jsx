@@ -97,7 +97,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                             )}
                           </div>
                           <div className="font-medium text-gray-700 hover:text-gray-800">
-                            {user.displayName}
+                            {user.displayName || user.email || user.uid}
                           </div>
                         </Link>
                         { isAdmin 
@@ -214,7 +214,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                           )}
                         </div>
                         <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                          {user.displayName}
+                          {user.displayName || user.email || user.uid}
                         </div>
                         
                       </Menu.Button>

@@ -1,6 +1,7 @@
 import { formatedPrice } from "../../utilities/utils";
 import { useCart } from "../../context/CartContext";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function ProductListComponent({ products }) {
   const {addToCart } = useCart()
@@ -28,12 +29,13 @@ export default function ProductListComponent({ products }) {
                     {product.stock > 0 
                     ? 
                     (
-                      <button
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => addToCart(product)}
                         className="mt-2 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Añadir al carrito
-                      </button>
+                      </motion.button>
                     ) 
                     : 
                     (

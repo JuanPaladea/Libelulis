@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export default function GaleriaComponent() {
   return (
-    <div class="bg-white">
+    <div class="bg-gray-100 py-4">
       <div class="mx-auto max-w-7xl px-4">
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8">
           <div class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
