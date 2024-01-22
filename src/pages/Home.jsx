@@ -4,7 +4,7 @@ import NewsletterComponent from '../components/Newsletter/NewsletterComponent'
 import TestimoniesComponent from '../components/Testimonies/TestimoniesComponent'
 import { motion } from 'framer-motion'
 import GaleriaComponent from '../components/Galeria/GaleriaComponent'
-import ProductosDestacadosComponent from '../components/ProductosDestacados/ProductosDestacadosComponent'
+import ColeccionesComponent from '../components/Colecciones/ColeccionesComponent'
 
 const Home = () => {
     return (
@@ -14,8 +14,7 @@ const Home = () => {
         exit={{ opacity: 0 }}>
             <HeaderComponent/>
             <GaleriaComponent/>
-            <ProductosDestacadosComponent/>
-            <TestimoniesComponent/>
+            <ColeccionesComponent/>
             <NewsletterComponent/>
         </motion.div>
     )

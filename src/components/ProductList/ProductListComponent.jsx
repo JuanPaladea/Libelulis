@@ -1,7 +1,7 @@
 import { formatedPrice } from "../../utilities/utils";
 import { useCart } from "../../context/CartContext";
-import { CarouselComponent } from "../Carousel/CarouselComponent";
 import LoaderComponent from "../Loader/LoaderComponent";
+import { Link } from "react-router-dom";
 
 export default function ProductListComponent({ products }) {
   const {addToCart, loading} = useCart()
@@ -17,18 +17,24 @@ export default function ProductListComponent({ products }) {
           </div>
         )
       }
-      <div className='bg-white'>
-        <div className="mx-auto max-w-2xl px-4 py-12 lg:max-w-7xl">
-          <h2 className="sr-only">Products</h2>
-          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <div class="bg-white py-6 sm:py-8 lg:py-12">
+        <div class="mx-auto max-w-7xl px-4">
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
-                <div key={product.id}>
-                  <div className="h-96 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                        <CarouselComponent img1={product.img} img2={product.img2 || "https://i.imgur.com/NJoXaOT.jpg"} img3={product.img3 || "https://i.imgur.com/VMBVKFF.jpg"} product={product} />
+              <div key={product.id}>
+                <Link to={`/item/${product.id}`} class="group relative block h-96 overflow-hidden rounded-t-lg bg-gray-100">
+                  <img src={product.img} loading="lazy" alt={product.name} class="h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                </Link>
+                <div class="flex-col items-start justify-between gap-2 rounded-b-lg bg-gray-100 p-4 shadow">
+                  <div className="flex items-start justify-between ">
+                    <div class="flex flex-col">
+                      <Link to={`/item/${product.id}`} class="font-bold text-gray-800 transition duration-100 hover:text-gray-500 lg:text-lg">{product.name}</Link>
+                    </div>
+                    <div class="flex flex-col items-end">
+                      <span class="font-bold text-gray-600 lg:text-lg">{formatedPrice(product)}</span>
+                    </div>
                   </div>
-                      <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-                      <p className="mt-1 text-lg font-medium text-gray-900">{formatedPrice(product)}</p>
-                  <div>
+                  <div class="flex">
                     {product.stock > 0 
                     ? 
                     (
@@ -50,6 +56,7 @@ export default function ProductListComponent({ products }) {
                     )}
                   </div>
                 </div>
+              </div>
             ))}
           </div>
         </div>

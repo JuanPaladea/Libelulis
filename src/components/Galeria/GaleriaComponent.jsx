@@ -1,72 +1,43 @@
-import { motion } from "framer-motion"
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import ImagenComponent from "../Imagen/ImagenComponent"
 
 export default function GaleriaComponent() {
-  const [open, setOpen] = useState(false)
-  const [selected, setSelected] = useState('')
-  
   return (
-    <section class="text-gray-600 body-font max-w-7xl mx-auto">
-      {selected && <ImagenComponent open={open} setOpen={setOpen} imagen={selected}/>}
-      <div class="container px-4 py-24 mx-auto flex flex-wrap">
-        <div class="flex flex-wrap md:-m-2 -m-1">
-          <div class="flex flex-wrap md:w-1/2">
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-1/2">
-              <Link>
-                <img 
-                alt="gallery" 
-                class="w-full object-cover h-full object-center block hover:scale-105 transition-all shadow rounded-lg" 
-                src="https://i.imgur.com/aqoaU04.jpg"
-                onClick={() => {
-                  setOpen(true)
-                  setSelected('https://i.imgur.com/aqoaU04.jpg')}}
-                />
-              </Link>
-            </motion.div>
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-1/2">
-              <Link>
-                <img alt="gallery" class="w-full object-cover h-full object-center block hover:scale-105 transition-all shadow rounded-lg" src="https://i.imgur.com/VyfwdKv.jpg"/>
-              </Link>
-            </motion.div>
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-full">
-              <Link>
-                <img alt="gallery" class="w-full h-full object-cover object-center block hover:scale-105 transition-all shadow rounded-lg" src="https://i.imgur.com/xCFaL8h.jpg"/>
-              </Link>
-            </motion.div>
-          </div>
-          <div class="flex flex-wrap md:w-1/2">
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-full">
-              <Link>
-                <img alt="gallery" class="w-full h-full object-cover object-center block hover:scale-105 transition-all shadow rounded-lg" src="https://i.imgur.com/VtSYwB7.jpg"/>
-              </Link>
-            </motion.div>
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-1/2">
-              <Link>
-                <img alt="gallery" class="w-full object-cover h-full object-center block hover:scale-105 transition-all shadow rounded-lg" src="https://i.imgur.com/SjjYW6S.jpg"/>
-              </Link>
-            </motion.div>
-            <motion.div 
-            whileTap={{ scale: 0.9 }}
-            class="md:p-2 p-1 w-1/2">
-              <Link>
-                <img alt="gallery" class="w-full object-cover h-full object-center block hover:scale-105 transition-all shadow rounded-lg" src="https://i.imgur.com/2OLDBiE.jpg"/>
-              </Link>
-            </motion.div>
-          </div>
+    <div class="bg-white">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8">
+          <a href="#" class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
+            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Minh Pham" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
+
+            <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">VR</span>
+          </a>
+
+          <a href="#" class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
+            <img src="https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=1000" loading="lazy" alt="Photo by Magicle" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
+
+            <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Tech</span>
+          </a>
+
+          <a href="#" class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
+            <img src="https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=1000" loading="lazy" alt="Photo by Martin Sanchez" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
+
+            <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Dev</span>
+          </a>
+
+          <a href="#" class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Lorenzo Herrera" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
+
+            <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Retro</span>
+          </a>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
