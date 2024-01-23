@@ -3,12 +3,12 @@ import { useCart } from "../../context/CartContext";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function ProductListComponent({ products }) {
+export default function ProductListComponent({ productos }) {
   const {addToCart } = useCart()
 
   return (
     <div class="w-full grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-      {products.map((product) => (
+      {productos.map((product) => (
         <div key={product.id} class="w-full">
           <div>
             <Link to={`/item/${product.id}`} class="group relative block h-80 overflow-hidden rounded-t-lg bg-gray-100">

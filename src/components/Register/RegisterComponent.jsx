@@ -12,6 +12,7 @@ export default function Example() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [password2Error, setPassword2Error] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const {createUser} = useUser()
 
@@ -65,6 +66,14 @@ export default function Example() {
     }
   };
 
+  const handleShowPassword = () => {
+    setShowPassword(true);
+  };
+
+  const handleHidePassword = () => {
+    setShowPassword(false);
+  };
+
   const handleRegister = (e) => {
     e.preventDefault();
 
@@ -79,7 +88,9 @@ export default function Example() {
     setPassword('')
     setPassword2('')
     setEmail('')
-
+    setEmailError('');
+    setPasswordError('');
+    setPassword2Error('');
   };
 
   return (
@@ -98,17 +109,40 @@ export default function Example() {
                   <form class="space-y-4 md:space-y-6" action="#">
                       <div>
                           <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="ejemplo@gmail.com" required=""/>
+                          <input value={email} onChange={(e) => {setEmail(e.target.value); validateEmail()}} type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="ejemplo@gmail.com" required=""/>
                           {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
                       </div>
                       <div>
                           <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
-                          <input value={password} onChange={handlePasswordChange} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required=""/>
+                          <div className="relative">
+                            <input
+                              value={password}
+                              onChange={(e) => { handlePasswordChange(e); validatePassword() }}
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              id="password"
+                              placeholder="••••••••"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                              required=""
+                            />
+                            <div
+                              className="absolute right-2 top-2 cursor-pointer"
+                              onMouseDown={handleShowPassword}
+                              onMouseUp={handleHidePassword}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path
+                                  strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                              </svg>
+                            </div>
+                          </div>
                           {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
                       </div>
                       <div>
                           <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900">Confirma tu contraseña</label>
-                          <input value={password2} onChange={handlePassword2Change} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required=""/>
+                          <input value={password2} onChange={(e) => {handlePassword2Change(e); validatePassword2()}} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required=""/>
                           <p className="text-red-500 text-sm mt-1">{password2Error}</p>
                       </div>
                       <div class="flex items-start">

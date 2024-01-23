@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import TiendaHeaderComponent from '../components/TiendaHeader/TiendaHeaderComponent'
 import { useCollection } from '../hooks/useCollection'
 import LoaderComponent from '../components/Loader/LoaderComponent'
@@ -6,7 +6,14 @@ import ProductListContainerComponent from '../components/ProductListContainer/Pr
 import { motion } from 'framer-motion'
 
 const Tienda = () => {
-    const {productos, loading} = useCollection('products')
+    const [forceReload, setForceReload] = useState(false);
+    const { productos, loading, refetch } = useCollection('products', forceReload);
+    
+    useEffect(() => {
+        // Any logic you need when navigating back to the product list
+        // For example, if you want to force a reload when navigating back:
+        setForceReload((prev) => !prev);
+      }, []);
 
     return (
         <motion.div
