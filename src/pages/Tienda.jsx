@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TiendaHeaderComponent from '../components/TiendaHeader/TiendaHeaderComponent'
 import { useCollection } from '../hooks/useCollection'
 import LoaderComponent from '../components/Loader/LoaderComponent'
@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 
 const Tienda = () => {
     const {productos, loading} = useCollection('products')
-    
+
     return (
         <motion.div
         initial={{ opacity: 0 }}
