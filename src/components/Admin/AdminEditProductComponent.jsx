@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
+import { collection, doc, getFirestore, setDoc, updateDoc } from 'firebase/firestore'
 import { useUser } from '../../context/UserContext'
 import LoaderComponent from '../Loader/LoaderComponent'
 import toast from 'react-hot-toast'
@@ -15,7 +15,6 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
   const [img3, setImg3] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [price, setPrice] = useState('')
-  const [size, setSize] = useState('')
   const [colors, setColors] = useState([])
   const [category, setCategory] = useState('')
   const [stockCounts, setStockCounts] = useState({
@@ -38,13 +37,12 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
       setPrice(product.price || '');
       setCategory(product.category || '');
       setColors(product.colors || '');
-      setSize(product.size || '');
       const productSizes = product.sizes || {};
       setStockCounts({
-        S: productSizes.S || '',
-        M: productSizes.M || '',
-        L: productSizes.L || '',
-        XL: productSizes.XL || '',
+        S: productSizes.S !== undefined ? productSizes.S.toString() : '',
+        M: productSizes.M !== undefined ? productSizes.M.toString() : '',
+        L: productSizes.L !== undefined ? productSizes.L.toString() : '',
+        XL: productSizes.XL !== undefined ? productSizes.XL.toString() : '',
       });
   }, [product]);
 
@@ -52,72 +50,58 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
     e.preventDefault();
     try {
       setLoading(true);
-
+  
       if (!isAdmin) {
         toast.error('No es administrador');
         return;
       }
-
+  
       const parsedPrice = parseFloat(price);
       if (isNaN(parsedPrice)) {
         toast.error('Precio debe ser un número');
         return;
       }
   
-      const parsedStock = parseFloat(stock);
-      if (isNaN(parsedStock)) {
-        toast.error('Stock debe ser un número');
-        return;
-      }
-  
-      const updateObject = {};
-      if (name.trim() !== '') {
-        updateObject.name = name;
-      }
-      if (!isNaN(parsedPrice)) {
-        updateObject.price = parsedPrice;
-      }
-      if (img.trim() !== '') {
-        updateObject.img = img;
-      }
-      if (img2.trim() !== '') {
-        updateObject.img2 = img2;
-      }
-      if (img3.trim() !== '') {
-        updateObject.img3 = img3;
-      }
-      if (descripcion.trim() !== '') {
-        updateObject.descripcion = descripcion;
-      }
-      if (category.trim() !== "") {
-        updateObject.category = category;
-      }
-      if (!isNaN(parsedStock)) {
-        updateObject.stock = stock;
-      }
-
-      const sizesCollection = collection(productsCollection, product.id, 'sizes');
-      const sizesData = {
-        S: parseInt(stockCounts.S),
-        M: parseInt(stockCounts.M),
-        L: parseInt(stockCounts.L),
-        XL: parseInt(stockCounts.XL),
+      const updateObject = {
+        name: name.trim() !== '' ? name : product.name,
+        price: !isNaN(parsedPrice) ? parsedPrice : product.price,
+        img: img.trim() !== '' ? img : product.img,
+        img2: img2.trim() !== '' ? img2 : product.img2,
+        img3: img3.trim() !== '' ? img3 : product.img3,
+        descripcion: descripcion.trim() !== '' ? descripcion : product.descripcion,
+        category: category.trim() !== '' ? category : product.category,
       };
-      await setDoc(sizesCollection, sizesData);
-  
       await updateDoc(productDocRef, updateObject);
+      
+      const updateSizes = async () => {
+        const sizesCollection = collection(db, 'products', product.id, 'sizes');
+        const sizesData = {
+          S: parseInt(stockCounts.S),
+          M: parseInt(stockCounts.M),
+          L: parseInt(stockCounts.L),
+          XL: parseInt(stockCounts.XL),
+        };
+      
+        await setDoc(sizesCollection, sizesData);
+      };
+      await updateSizes();
+  
       setOpen(false);
-
-      setName("");
-      setStockCounts("");
-      setPrice("");
-      setDescripcion("");
-      setImg("");
-      setImg2("");
-      setImg3("");
-      setCategory("");
-      setColors("");
-      setSize("");
+  
+      setName('');
+      setStockCounts({
+        S: '',
+        M: '',
+        L: '',
+        XL: '',
+      });
+      setPrice('');
+      setDescripcion('');
+      setImg('');
+      setImg2('');
+      setImg3('');
+      setCategory('');
+      setColors([]);
       toast.success('Producto actualizado');
     } catch (error) {
       console.error(error);
@@ -294,8 +278,6 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                   <div className="mt-2.5">
                                     <select
                                       required
-                                      value={size}
-                                      onChange={(e) => setSize(e.target.value)}
                                       name="size"
                                       id="size"
                                       className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
