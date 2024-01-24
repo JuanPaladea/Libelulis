@@ -1,4 +1,4 @@
-import { addDoc, collection, getFirestore } from 'firebase/firestore'
+import { addDoc, collection, getFirestore, setDoc } from 'firebase/firestore'
 import React, { useState } from 'react'
 import { useUser } from '../../context/UserContext'
 import LoaderComponent from '../Loader/LoaderComponent'
@@ -60,7 +60,6 @@ const AdminProductFormComponent = () => {
         !img.trim() ||
         !price.trim() ||
         !category.trim() ||
-        !stockCounts.trim() ||
         !size.trim()
       ) {
         toast.error('Por favor, complete todos los campos.');
@@ -84,14 +83,14 @@ const AdminProductFormComponent = () => {
         const productId = productRef.id;
 
         // Add stock counts for each size to the sizes subcollection
-        const sizesCollection = collection(productsCollection, productId, 'sizes');
+        const sizesCollection = collection(db, 'products', productId, 'sizes');
         const sizesData = {
           S: parseInt(stockCounts.S),
           M: parseInt(stockCounts.M),
           L: parseInt(stockCounts.L),
           XL: parseInt(stockCounts.XL),
         };
-        await setDoc(sizesCollection, sizesData);
+        await addDoc(sizesCollection, sizesData);
 
         toast.success('Producto agregado con ID: ' + productRef.id);
         setName('');
