@@ -7,97 +7,149 @@ import LoaderComponent from '../Loader/LoaderComponent'
 import toast from 'react-hot-toast'
 
 export default function AdminEditProductComponent({open, setOpen, product}) {
-    const {isAdmin} = useUser()
-    const [loading, setLoading] = useState(false)
-    const [name, setName] = useState('')
-    const [img, setImg] = useState('')
-    const [img2, setImg2] = useState('')
-    const [img3, setImg3] = useState('')
-    const [descripcion, setDescripcion] = useState('')
-    const [price, setPrice] = useState('')
-    const [stock, setStock] = useState('')
-    const [category, setCategory] = useState('')
-    const db = getFirestore(); 
-    const productsCollection = collection(db, 'products')
-    const productDocRef = doc(productsCollection, product.id)
+  const {isAdmin} = useUser()
+  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState('')
+  const [img, setImg] = useState('')
+  const [img2, setImg2] = useState('')
+  const [img3, setImg3] = useState('')
+  const [descripcion, setDescripcion] = useState('')
+  const [price, setPrice] = useState('')
+  const [size, setSize] = useState('')
+  const [colors, setColors] = useState([])
+  const [category, setCategory] = useState('')
+  const [stockCounts, setStockCounts] = useState({
+    S: '',
+    M: '',
+    L: '',
+    XL: '',
+  });
 
-    useEffect(() => {
-        setName(product.name || '');
-        setImg(product.img || '');
-        setImg2(product.img2 || '');
-        setImg3(product.img3 || '');
-        setDescripcion(product.descripcion || '');
-        setPrice(product.price || '');
-        setCategory(product.category || '');
-        setStock(product.stock || '');
-    }, [product]);
+  const db = getFirestore(); 
+  const productsCollection = collection(db, 'products')
+  const productDocRef = doc(productsCollection, product.id)
 
-    const handleUpdate = async (e) => {
-      e.preventDefault();
-      try {
-        setLoading(true);
+  useEffect(() => {
+      setName(product.name || '');
+      setImg(product.img || '');
+      setImg2(product.img2 || '');
+      setImg3(product.img3 || '');
+      setDescripcion(product.descripcion || '');
+      setPrice(product.price || '');
+      setCategory(product.category || '');
+      setColors(product.colors || '');
+      setSize(product.size || '');
+      const productSizes = product.sizes || {};
+      setStockCounts({
+        S: productSizes.S || '',
+        M: productSizes.M || '',
+        L: productSizes.L || '',
+        XL: productSizes.XL || '',
+      });
+  }, [product]);
 
-        if (!isAdmin) {
-          toast.error('No es administrador');
-          return;
-        }
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
 
-        const parsedPrice = parseFloat(price);
-        if (isNaN(parsedPrice)) {
-          toast.error('Precio debe ser un número');
-          return;
-        }
-    
-        const parsedStock = parseFloat(stock);
-        if (isNaN(parsedStock)) {
-          toast.error('Stock debe ser un número');
-          return;
-        }
-    
-        const updateObject = {};
-        if (name.trim() !== '') {
-          updateObject.name = name;
-        }
-        if (!isNaN(parsedPrice)) {
-          updateObject.price = parsedPrice;
-        }
-        if (img.trim() !== '') {
-          updateObject.img = img;
-        }
-        if (img2.trim() !== '') {
-          updateObject.img2 = img2;
-        }
-        if (img3.trim() !== '') {
-          updateObject.img3 = img3;
-        }
-        if (descripcion.trim() !== '') {
-          updateObject.descripcion = descripcion;
-        }
-        if (category.trim() !== "") {
-          updateObject.category = category;
-        }
-        if (!isNaN(parsedStock)) {
-          updateObject.stock = stock;
-        }
-    
-        await updateDoc(productDocRef, updateObject);
-        setOpen(false);
-        setName("");
-        setStock("");
-        setPrice("");
-        setDescripcion("");
-        setImg("");
-        setImg2("");
-        setImg3("");
-        setCategory("");
-        toast.success('Producto actualizado');
-      } catch (error) {
-        console.error(error);
-        toast.error('Error al actualizar el producto');
-      } finally {
-        setLoading(false);
+      if (!isAdmin) {
+        toast.error('No es administrador');
+        return;
       }
-    };
+
+      const parsedPrice = parseFloat(price);
+      if (isNaN(parsedPrice)) {
+        toast.error('Precio debe ser un número');
+        return;
+      }
+  
+      const parsedStock = parseFloat(stock);
+      if (isNaN(parsedStock)) {
+        toast.error('Stock debe ser un número');
+        return;
+      }
+  
+      const updateObject = {};
+      if (name.trim() !== '') {
+        updateObject.name = name;
+      }
+      if (!isNaN(parsedPrice)) {
+        updateObject.price = parsedPrice;
+      }
+      if (img.trim() !== '') {
+        updateObject.img = img;
+      }
+      if (img2.trim() !== '') {
+        updateObject.img2 = img2;
+      }
+      if (img3.trim() !== '') {
+        updateObject.img3 = img3;
+      }
+      if (descripcion.trim() !== '') {
+        updateObject.descripcion = descripcion;
+      }
+      if (category.trim() !== "") {
+        updateObject.category = category;
+      }
+      if (!isNaN(parsedStock)) {
+        updateObject.stock = stock;
+      }
+
+      const sizesCollection = collection(productsCollection, product.id, 'sizes');
+      const sizesData = {
+        S: parseInt(stockCounts.S),
+        M: parseInt(stockCounts.M),
+        L: parseInt(stockCounts.L),
+        XL: parseInt(stockCounts.XL),
+      };
+      await setDoc(sizesCollection, sizesData);
+  
+      await updateDoc(productDocRef, updateObject);
+      setOpen(false);
+
+      setName("");
+      setStockCounts("");
+      setPrice("");
+      setDescripcion("");
+      setImg("");
+      setImg2("");
+      setImg3("");
+      setCategory("");
+      setColors("");
+      setSize("");
+      toast.success('Producto actualizado');
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al actualizar el producto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const colorList = [
+    'pink',
+    'indigo',
+    'black',
+    'white',
+    'orange',
+    'yellow',
+    'blue',
+    'green',
+    'red',
+    'gray',
+    'lime',
+    'teal',
+    'purple',
+  ];
+
+  const handleColorToggle = (selectedColor) => {
+    if (colors.includes(selectedColor)) {
+      setColors(colors.filter((color) => color !== selectedColor));
+    } else {
+      setColors([...colors, selectedColor]);
+    }
+  };
 
   return (
     <div>
@@ -187,23 +239,6 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
-                                    Stock
-                                    </label>
-                                    <div className="mt-2.5">
-                                    <input
-                                        onChange={(e) => setStock(e.target.value)}
-                                        value={stock}
-                                        placeholder={product.stock}
-                                        type="number"
-                                        name="stock"
-                                        id="stock"
-                                        autoComplete="stock"
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    />
-                                    </div>
-                                </div>
-                                <div>
                                   <label htmlFor="category" className="block text-sm font-semibold leading-6 text-gray-900">
                                     Categoría
                                   </label>
@@ -250,6 +285,63 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                         <span className="ml-2">Otro</span>
                                       </label>
                                     </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="size" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Tamaño
+                                  </label>
+                                  <div className="mt-2.5">
+                                    <select
+                                      required
+                                      value={size}
+                                      onChange={(e) => setSize(e.target.value)}
+                                      name="size"
+                                      id="size"
+                                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    >
+                                      <option value="" disabled>
+                                        Selecciona un tamaño
+                                      </option>
+                                      <option value="S">S</option>
+                                      <option value="M">M</option>
+                                      <option value="L">L</option>
+                                      <option value="XL">XL</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="stock" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Stock Count
+                                  </label>
+                                  <div className="mt-2.5">
+                                    <input
+                                      required
+                                      value={stockCounts[size]}
+                                      onChange={(e) => setStockCounts({ ...stockCounts, [size]: e.target.value })}
+                                      type="number"
+                                      name="stock"
+                                      id="stock"
+                                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                      />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="color" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Color
+                                  </label>
+                                  <div className="mt-2.5 flex flex-wrap">
+                                  {colorList.map((color) => (
+                                    <button
+                                      key={color}
+                                      type="button"
+                                      className={`p-1 mb-2 mr-4 w-7 h-7 ${colors.includes(color) ? 'border-2 border-red-500' : ''} ${color === 'red' && colors.includes('red') ? 'border-2 border-white' : 'border-0'}`}
+                                      style={{ backgroundColor: color }}
+                                      onClick={() => handleColorToggle(color)}
+                                    >
+                                    </button>
+                                  ))}
+
                                   </div>
                                 </div>
                                 <div>
