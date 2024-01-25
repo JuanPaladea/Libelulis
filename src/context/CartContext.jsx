@@ -89,6 +89,8 @@ export const CartProvider = ({ children }) => {
               return;
             } 
 
+            const selectedProduct = { ...product, selectedSize, quantity };
+
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -101,17 +103,18 @@ export const CartProvider = ({ children }) => {
                     const updatedProduct = {
                         ...existingProduct,
                         quantity: (existingProduct.quantity || 0) + quantity,
+                        selectedSize: selectedProduct.selectedSize,
                     };
                     await updateCartItem(productRef, updatedProduct);
                 } else {
                     // Create a new document
-                    const newProduct = { ...product, quantity };
+                    const newProduct = { ...selectedProduct };
                     await addToCartItem(productRef, newProduct);
                 }
-                toast.success(`${product.name} agregado al carrito`);
+                toast.success(`${selectedProduct.name} agregado al carrito`);
             } else {
                 const updatedCart = [...cart];
-                const existingProductIndex = updatedCart.findIndex((item) => item.id === product.id);
+                const existingProductIndex = updatedCart.findIndex((item) => item.id === selectedProduct.id && item.selectedSize === selectedProduct.selectedSize);
     
                 if (existingProductIndex !== -1) {
                     updatedCart[existingProductIndex].quantity += quantity;
