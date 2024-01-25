@@ -77,12 +77,18 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     };
 
-    const addToCart = async (product, quantity = 1) => {    
-        try {            
-            if (quantity > product.stock) {
-                toast.error(`No hay suficiente stock disponible para ${product.name}`);
-                return;
+    const addToCart = async (product, selectedSize, quantity = 1) => {    
+        try {
+            if (!selectedSize || !product.sizes[selectedSize]) {
+              toast.error('Seleccione un tamaño válido');
+              return;
             }
+        
+            if (quantity > product.sizes[selectedSize]) {
+              toast.error(`No hay suficiente stock disponible para ${product.name} en tamaño ${selectedSize}`);
+              return;
+            } 
+
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -144,36 +150,39 @@ export const CartProvider = ({ children }) => {
         }
     };    
 
-    const updateCartItemQuantity = async (product, newQuantity) => {
+    const updateCartItemQuantity = async (product, selectedSize, newQuantity) => {
         try {
-            setLoading(true)
-
-            if (newQuantity > product.stock) {
-                toast.error(`No hay suficiente stock disponible para ${product.name}`);
+            setLoading(true);
+        
+            if (newQuantity > product.sizes[selectedSize]) {
+                toast.error(`No hay suficiente stock disponible para ${product.name} en el tamaño ${selectedSize}`);
                 return;
             }
-
+        
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
-                const productRef = doc(cartItemDocRef, product.id);
+                const productRef = doc(cartItemDocRef, product.id, 'sizes', selectedSize);
                 await updateDoc(productRef, { quantity: newQuantity });
             } else {
                 const updatedCart = cart.map((item) => {
-                    if (item.id === product.id) {
-                        return { ...item, quantity: newQuantity };
-                    }
-                    return item;
+                if (item.id === product.id && item.size === selectedSize) {
+                    return { ...item, quantity: newQuantity };
+                }
+                return item;
                 });
+        
                 setCart(updatedCart);
                 saveCartToLocalStorage(updatedCart);
             }
-        } catch (error) {
+            } catch (error) {
             console.error('Error updating cart item:', error);
-        } finally {
+            } finally {
             // Set loading to false when the data is fetched, regardless of success or failure
             setLoading(false);
-        }
-    };
+            }
+      };
+      
+      
 
     const removeFromCart = async (itemId) => {
         try {
@@ -215,11 +224,22 @@ export const CartProvider = ({ children }) => {
                 // Create a new document in 'compras' collection
                 await setDoc(newCompraDocRef, compraData);
                 
-                const updateStockPromises = cart.map((item) => {
+                const updateStockPromises = cart.map(async (item) => {
                     const productRef = doc(collection(db, 'products'), item.id);
-                    const updatedStock = item.stock - item.quantity;
+                    const productDoc = await getDoc(productRef);
+                    const productData = productDoc.data();
+            
+                    // Check if the item has a size property
+                    if (item.size && productData.sizes && productData.sizes[item.size]) {
+                      const updatedStock = productData.sizes[item.size] - item.quantity;
+                      return updateDoc(productRef, { sizes: { [item.size]: updatedStock } }, { merge: true });
+                    }
+            
+                    // If there is no size or sizes property, update the stock directly
+                    const updatedStock = (productData.stock || 0) - item.quantity;
                     return updateDoc(productRef, { stock: updatedStock });
                 });
+            
                 await Promise.all(updateStockPromises);
                 
                 const deletePromises = cart.map((item) => {
@@ -241,22 +261,6 @@ export const CartProvider = ({ children }) => {
         } else if (cart.length <= 0) {
             toast.error('El carrito está vacío');
         } else if (!user) {
-            // const auth = getAuth();
-            // setLoading(true);
-            // // Sign in anonymously
-            // const { user: anonymousUser } = await signInAnonymously(auth);
-            
-            // const compraCollectionRef = collection(db, 'compras');
-            // const newCompraDocRef = doc(compraCollectionRef);
-            // const compraData = {
-            //     user: [anonymousUser.uid], // You can include additional info if needed
-            //     Direccion: billingData,
-            //     items: cart,
-            //     total: totalWithShipping,
-            //     timestamp: new Date(),
-            // };
-            // setSummary(cart);
-            // setCart([]);
             toast.error('El usuario no esta logeado');
         }
     };

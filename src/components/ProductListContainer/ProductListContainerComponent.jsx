@@ -6,6 +6,9 @@ export default function ProductListContainerComponent({products}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+
   const [orderOption, setOrderOption] = useState('name'); // 'name' or 'price'
   const [orderDirection, setOrderDirection] = useState('asc'); // 'asc' or 'desc'
 
@@ -43,6 +46,20 @@ export default function ProductListContainerComponent({products}) {
           selectedCategories.length === 0
             ? true
             : selectedCategories.includes(product.category)
+        )
+        .filter((product) =>
+          selectedColors.length === 0
+            ? true
+            : selectedColors.includes(product.colors[0]) ||
+              selectedColors.includes(product.colors[1]) ||
+              selectedColors.includes(product.colors[2])
+        )
+        .filter((product) =>
+          selectedSizes.length === 0
+            ? true
+            : selectedSizes.some(
+                (size) => product.sizes[size] && product.sizes[size] > 0
+              )
         )
         .slice(indexOfFirstProduct, indexOfLastProduct);
 
@@ -101,6 +118,50 @@ export default function ProductListContainerComponent({products}) {
     setCurrentPage(1); // Reset current page when category filter changes
   };
 
+  const colorList = [
+    'pink',
+    'indigo',
+    'black',
+    'white',
+    'orange',
+    'yellow',
+    'blue',
+    'green',
+    'red',
+    'gray',
+    'lime',
+    'teal',
+    'purple',
+  ];
+
+  const handleColorToggle = (color) => {
+    // Check if the color is already selected
+    if (selectedColors.includes(color)) {
+      // Remove the color if already selected
+      setSelectedColors(selectedColors.filter((c) => c !== color));
+    } else {
+      // Add the color if not already selected
+      setSelectedColors([...selectedColors, color]);
+    }
+
+    setCurrentPage(1); // Reset current page when color filter changes
+  };
+
+  const sizeList = ['S', 'M', 'L', 'XL'];
+
+  const handleSizeToggle = (size) => {
+    // Check if the size is already selected
+    if (selectedSizes.includes(size)) {
+      // Clear all selected sizes
+      setSelectedSizes([]);
+    } else {
+      // Set the selected size
+      setSelectedSizes([size]);
+    }
+
+    setCurrentPage(1); // Reset current page when size filter changes
+  };
+
   return (
   <section class="px-4 py-4 mx-auto max-w-7xl">
       <div class="flex flex-col">
@@ -142,20 +203,42 @@ export default function ProductListContainerComponent({products}) {
             <h2 class="text-2xl font-bold">Talle</h2>
             <div class="w-16 pb-2 mb-6 border-b border-indigo-600"></div>
             <div class="flex flex-wrap -mb-2">
-              <button class="py-1 mb-2 mr-1 border w-11 hover:border-blue-400">S</button>
-              <button class="py-1 mb-2 mr-1 border w-11 hover:border-blue-400">M</button>
-              <button class="py-1 mb-2 mr-1 border w-11 hover:border-blue-400">L</button>
-              <button class="py-1 mb-2 mr-1 border w-11 hover:border-blue-400">XL</button>
+              {sizeList.map((size) => (
+                <button
+                  key={size}
+                  className={`py-1 mb-2 mr-1 border w-11 ${
+                    selectedSizes.includes(size)
+                      ? 'border-blue-400 bg-blue-200'
+                      : 'hover:border-blue-400'
+                  }`}
+                  onClick={() => handleSizeToggle(size)}
+                >
+                  {size}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div class="p-4 mb-5 bg-white border border-gray-200">
-            <h2 class="text-2xl font-bold">Colores</h2>
-            <div class="w-16 pb-2 mb-6 border-b border-indigo-600"></div>
-            <div class="flex flex-wrap -mx-1 -mb-2">
-              <button class="p-1 mb-2 mr-4">
-                <div class="w-5 h-5 bg-emerald-400"></div>
-              </button>
+          <div className="p-4 mb-5 bg-white border border-gray-200">
+            <h2 className="text-2xl font-bold">Colores</h2>
+            <div className="w-16 pb-2 mb-6 border-b border-indigo-600"></div>
+            <div className="flex flex-wrap -mx-1 -mb-2">
+              {colorList.map((color) => (
+                <button
+                  key={color}
+                  className={`p-1 mb-2 mr-4 w-7 h-7 ${
+                    selectedColors.includes(color)
+                      ? 'border-2 border-red-500'
+                      : ''
+                  } ${
+                    color === 'red' && selectedColors.includes('red')
+                      ? 'border-2 border-white'
+                      : 'border-0'
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleColorToggle(color)}
+                ></button>
+              ))}
             </div>
           </div>
         </div>
@@ -199,7 +282,7 @@ export default function ProductListContainerComponent({products}) {
               </div>
             </div>
           <div class="flex flex-wrap items-center">
-              <ProductListComponent productos={currentProducts}/>
+              <ProductListComponent productos={currentProducts} />
           </div>
 
           <div class="flex justify-end mt-6">

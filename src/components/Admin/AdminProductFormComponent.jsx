@@ -1,4 +1,4 @@
-import { addDoc, collection, getFirestore, setDoc } from 'firebase/firestore'
+import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import React, { useState } from 'react'
 import { useUser } from '../../context/UserContext'
 import LoaderComponent from '../Loader/LoaderComponent'
@@ -13,9 +13,8 @@ const AdminProductFormComponent = () => {
   const [descripcion, setDescripcion] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('');
-  const [size, setSize] = useState('');
   const [colors, setColors] = useState([])
-  const [stockCounts, setStockCounts] = useState({
+  const [sizes, setSizes] = useState({
     S: '',
     M: '',
     L: '',
@@ -59,8 +58,7 @@ const AdminProductFormComponent = () => {
         !name.trim() ||
         !img.trim() ||
         !price.trim() ||
-        !category.trim() ||
-        !size.trim()
+        !category.trim()
       ) {
         toast.error('Por favor, complete todos los campos.');
         setLoading(false);
@@ -77,20 +75,8 @@ const AdminProductFormComponent = () => {
           category,
           descripcion,
           colors,
+          sizes
         });
-
-        // Get the ID of the newly created product
-        const productId = productRef.id;
-
-        // Add stock counts for each size to the sizes subcollection
-        const sizesCollection = collection(db, 'products', productId, 'sizes');
-        const sizesData = {
-          S: parseInt(stockCounts.S),
-          M: parseInt(stockCounts.M),
-          L: parseInt(stockCounts.L),
-          XL: parseInt(stockCounts.XL),
-        };
-        await addDoc(sizesCollection, sizesData);
 
         toast.success('Producto agregado con ID: ' + productRef.id);
         setName('');
@@ -100,9 +86,8 @@ const AdminProductFormComponent = () => {
         setPrice('');
         setCategory('');
         setDescripcion('');
-        setSize('');
-        setColors('');
-        setStockCounts({
+        setColors([]);
+        setSizes({
           S: '',
           M: '',
           L: '',
@@ -156,54 +141,20 @@ const AdminProductFormComponent = () => {
                   Categoría
                 </label>
                 <div className="mt-2.5 flex justify-between align-center">
-                  <div>
-                    <input
-                      type="radio"
-                      name="category"
-                      value="buzo"
-                      checked={category === 'buzo'}
-                      onChange={() => setCategory('buzo')}
-                      />
-                    <label className='mx-2 my-auto'>
-                    Buzo
-                    </label>
-                  </div>
-                  <div>
+                <div className="flex items-center space-x-4">
+                  {['buzo', 'remera', 'campera', 'otro'].map((value) => (
+                    <label className="flex items-center" key={value}>
                       <input
                         type="radio"
-                        name="category"
-                        value="remera"
-                        checked={category === 'remera'}
-                        onChange={() => setCategory('remera')}
-                        />
-                    <label className='mx-2 my-auto'>
-                      Remera
-                    </label>
-                  </div>
-                  <div>
-                      <input
-                        type="radio"
-                        name="category"
-                        value="campera"
-                        checked={category === 'campera'}
-                        onChange={() => setCategory('campera')}
+                        value={value}
+                        checked={category === value}
+                        onChange={() => setCategory(value)}
+                        className="form-radio"
                       />
-                    <label className='mx-2 my-auto'>
-                      Campera
+                      <span className="ml-2">{value.charAt(0).toUpperCase() + value.slice(1)}</span>
                     </label>
-                  </div>
-                  <div>
-                      <input
-                        type="radio"
-                        name="category"
-                        value="otro"
-                        checked={category === 'otro'}
-                        onChange={() => setCategory('otro')}
-                      />
-                    <label className='mx-2 my-auto'>
-                      Otro
-                    </label>
-                  </div>
+                  ))}
+                </div>
                 </div>
               </div>
               <div>
@@ -223,29 +174,6 @@ const AdminProductFormComponent = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="size" className="block text-sm font-semibold leading-6 text-gray-900">
-                  Tamaño
-                </label>
-                <div className="mt-2.5">
-                  <select
-                    required
-                    value={size}
-                    onChange={(e) => setSize(e.target.value)}
-                    name="size"
-                    id="size"
-                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  >
-                    <option value="" disabled>
-                      Selecciona un tamaño
-                    </option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                  </select>
-                </div>
-              </div>
-              <div>
                 <label htmlFor="color" className="block text-sm font-semibold leading-6 text-gray-900">
                   Color
                 </label>
@@ -260,23 +188,30 @@ const AdminProductFormComponent = () => {
                   >
                   </button>
                 ))}
-
                 </div>
               </div>
               <div>
-                <label htmlFor="stock" className="block text-sm font-semibold leading-6 text-gray-900">
-                  Stock Count
+                <label htmlFor="sizes" className="block text-sm font-semibold leading-6 text-gray-900">
+                  Tallas y Stock
                 </label>
-                <div className="mt-2.5">
-                  <input
-                    required
-                    value={stockCounts[size]}
-                    onChange={(e) => setStockCounts({ ...stockCounts, [size]: e.target.value })}
-                    type="number"
-                    name="stock"
-                    id="stock"
-                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                <div className="mt-2.5 grid grid-cols-4 gap-x-4">
+                  {Object.keys(sizes).map((size) => (
+                    <div key={size}>
+                      <label htmlFor={`size-${size}`} className="block text-sm font-semibold leading-6 text-gray-900">
+                        {`Stock ${size}`}
+                      </label>
+                      <div className="mt-2.5">
+                        <input
+                          value={sizes[size]}
+                          onChange={(e) => setSizes((prevSizes) => ({ ...prevSizes, [size]: e.target.value }))}
+                          type="number"
+                          name={`size-${size}`}
+                          id={`size-${size}`}
+                          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div>
@@ -305,8 +240,8 @@ const AdminProductFormComponent = () => {
                     value={img2}
                     onChange={(e) => setImg2(e.target.value)}
                     type="text"
-                    name="img"
-                    id="img"
+                    name="img2"
+                    id="img2"
                     autoComplete="img"
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -321,8 +256,8 @@ const AdminProductFormComponent = () => {
                     value={img3}
                     onChange={(e) => setImg3(e.target.value)}
                     type="text"
-                    name="img"
-                    id="img"
+                    name="img3"
+                    id="img3"
                     autoComplete="img"
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
