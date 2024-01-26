@@ -1,42 +1,46 @@
-import { useEffect, useRef, useState } from 'react'
-import ProductListComponent from '../ProductList/ProductListComponent'
+import { useEffect, useRef, useState } from 'react';
+import ProductListComponent from '../ProductList/ProductListComponent';
 
-export default function ProductListContainerComponent({products}) {
+export default function ProductListContainerComponent({ products }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const resultadosRef = useRef(null)
-
+  const resultadosRef = useRef(null);
   const [orderOption, setOrderOption] = useState('name'); // 'name' or 'price'
   const [orderDirection, setOrderDirection] = useState('asc'); // 'asc' or 'desc'
-
+  const [totalPages, setTotalPages] = useState(1);
   const productsPerPage = 6;
-  const pagesToShow = 3;
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  useEffect(() => {
+    const newTotalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    setTotalPages(newTotalPages);
+  
+    if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages);
+    }
+  }, [filteredProducts, currentPage, productsPerPage]);
 
   const sortedProducts = filteredProducts.slice().sort((a, b) => {
     // Helper function to get the name without the first word
     const getLastName = (str) => str.split(' ').slice(1).join(' ');
-  
+
     if (orderOption === 'name') {
       const nameA = getLastName(a.name);
       const nameB = getLastName(b.name);
-  
+
       return orderDirection === 'asc'
         ? nameA.localeCompare(nameB)
         : nameB.localeCompare(nameA);
     } else if (orderOption === 'price') {
-      return orderDirection === 'asc'
-        ? a.price - b.price
-        : b.price - a.price;
+      return orderDirection === 'asc' ? a.price - b.price : b.price - a.price;
     }
-  
+
     return 0;
   });
 
@@ -63,27 +67,7 @@ export default function ProductListContainerComponent({products}) {
               )
         )
         .slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const generatePageNumbers = () => {
-    const pageNumbers = [];
-    const maxPage = Math.min(currentPage + pagesToShow - 1, totalPages);
-
-    const middlePage = Math.ceil(pagesToShow / 2);
-
-    let startPage = Math.max(1, currentPage - middlePage);
-    let endPage = Math.min(startPage + pagesToShow - 1, totalPages);
-
-    if (endPage - startPage < pagesToShow - 1) {
-      startPage = Math.max(1, endPage - pagesToShow + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return pageNumbers;
-  };
-
+        
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -98,10 +82,39 @@ export default function ProductListContainerComponent({products}) {
     }
   };
 
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 3;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 1);
+      let endPage = Math.min(currentPage + 1, totalPages);
+
+      // Adjust startPage and endPage if necessary
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        if (currentPage === 1) {
+          endPage = startPage + maxVisiblePages - 1;
+        } else if (currentPage === totalPages) {
+          startPage = endPage - maxVisiblePages + 1;
+        }
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+
+    return pages;
+  };
+
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-  
+
     // Filter products based on the search term
     const filtered = products.filter((product) =>
       product.name.toLowerCase().includes(term.toLowerCase())
@@ -126,7 +139,7 @@ export default function ProductListContainerComponent({products}) {
       // Add the category if not already selected
       setSelectedCategories([...selectedCategories, category]);
     }
-  
+
     setCurrentPage(1); // Reset current page when category filter changes
   };
 
