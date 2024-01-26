@@ -1,31 +1,40 @@
 import { useEffect, useState } from "react";
 import { collection, getFirestore, onSnapshot, doc } from "firebase/firestore";
 
-export const useCollection = (collectionName) => {
+export const useCollection = (collectionName, forceReload = false) => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const db = getFirestore();
-    const productsCollection = collection(db, collectionName);
+  const fetchData = async () => {
+    try {
+      const db = getFirestore();
+      const productsCollection = collection(db, collectionName);
 
-    const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
-      setProductos(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-      );
+      const unsubscribe = onSnapshot(productsCollection, (snapshot) => {
+        setProductos(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+        setLoading(false);
+      });
+
+      return () => {
+        // Unsubscribe from the snapshot listener when the component unmounts
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error("Error fetching data:", error);
       setLoading(false);
-    });
+    }
+  };
 
-    return () => {
-      // Unsubscribe from the snapshot listener when the component unmounts
-      unsubscribe();
-    };
-  }, [collectionName]);
+  useEffect(() => {
+    fetchData();
+  }, [collectionName, forceReload]);
 
-  return { productos, loading };
+  return { productos, loading, refetch: fetchData };
 };
 
 export const useUnico = (collectionName, id) => {

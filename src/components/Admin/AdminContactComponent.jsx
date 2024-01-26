@@ -1,102 +1,239 @@
+import { useState, useEffect } from "react";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import LoaderComponent from "../Loader/LoaderComponent";
-import { toast } from "react-toastify";
 import AdminSingleContactComponent from "./AdminSingleContactComponent";
+import toast from "react-hot-toast";
+
 
 export default function AdminContactComponent() {
-    const [contacts, setContacts] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [open, setOpen] = useState(false)
+    const [contacts, setContacts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const PAGE_SIZE = 6;
+    const MAX_MESSAGE_LENGTH = 100; // Adjust the limit as needed
 
-    useEffect(() => {
-        const db = getFirestore();
-        const contactsCollection = collection(db, 'contacts');
-    
-        // Use onSnapshot to listen for real-time updates
-        const unsubscribe = onSnapshot(query(contactsCollection, orderBy('timestamp', 'desc')), (snapshot) => {
-            setContacts(
-            snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            })));
-          setLoading(false); // Set loading to false once the data is loaded or an error occurs
-        });
-    
-        return () => {
-          // Unsubscribe from the snapshot listener when the component unmounts
-          unsubscribe();
-        };
-    }, []); // Empty dependency array means this effect runs once, similar to componentDidMount    
-    
-    const handleSelectContact = (contact) => {
-        setSelectedContact(contact)
-        setOpen(true)
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = getFirestore();
+      const contactsCollection = collection(db, "contacts");
 
-    const removeFromContact = async (contactId) => {
-        setLoading(true)
-        try {
-        const db = getFirestore();
-        const contactDocRef = doc(collection(db, 'contacts'), contactId);
-        await deleteDoc(contactDocRef);
-        toast.success('Mensaje eliminado')
-        } catch (error) {
-            console.error('Error removing contact:', error);
-            toast.error('Ha ocurrido un error: ' + error.message)
-        } finally {
-            setLoading(false)
-        }
+      try {
+        const querySnapshot = await getDocs(
+          query(contactsCollection, orderBy("timestamp", "desc"))
+        );
+        const data = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setContacts(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        toast.error("Error fetching contacts: " + error.message);
+        setLoading(false);
+      }
     };
 
-    return (
-        <div>
-            {
-            loading
-            &&
-            (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
-                <LoaderComponent/>
-                </div>
-            )
-            }
-            {selectedContact && (
-                <AdminSingleContactComponent open={open} setOpen={setOpen} contact={selectedContact} />
-            )} 
-            <ul role="list" className="divide-y divide-gray-100 mx-auto max-w-7xl px-4 mt-8">
-            {contacts.map((contact) => (
-                <li key={contact.email} className="flex justify-between gap-x-6 py-5 hover:bg-gray-100 hover:cursor-pointer" onClick={() => handleSelectContact(contact)}>
-                <div className="flex min-w-0 gap-x-4">
-                    <div className="min-w-0 flex-auto">
-                    <p className="text-sm font-semibold leading-6 text-gray-900">{contact.name} {contact.lastName}</p>
-                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">{contact.email}</p>
-                    </div>
-                </div>
-                <div className="flex w-96 min-w-0 gap-x-4">
-                    <div className="min-w-0 my-auto flex-auto">
-                    <p className="truncate text-xs leading-5 text-gray-500 px-10">{contact.message}</p>
-                    </div>
-                </div>
-                <div className="flex align-center justify-center">
-                    <p className="my-auto text-xs leading-5 text-gray-500">
-                        <time>{contact.timestamp.toDate().toLocaleString()}</time>
-                    </p>
-                    <button
-                        type="button"
-                        className="relative ml-2 -m-2 rounded-md p-2 text-gray-400"
-                        onClick={() => removeFromContact(contact.id)}
-                    >
-                        <span className="absolute -inset-0.5" />
-                        <span className="sr-only">Close menu</span>
-                        <TrashIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                </div>
-                </li>
-            ))}
-            </ul>
+    fetchData();
+  }, []);
+
+  const handleSelectContact = (contact) => {
+    setSelectedContact(contact);
+    setOpen(true);
+  };
+
+  const removeFromContact = async (contactId) => {
+    setLoading(true);
+    try {
+      const db = getFirestore();
+      const contactDocRef = doc(collection(db, "contacts"), contactId);
+      await deleteDoc(contactDocRef);
+      toast.success("Mensaje eliminado");
+    } catch (error) {
+      console.error("Error removing contact:", error);
+      toast.error("Ha ocurrido un error: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate the start and end index for the current page
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+
+  // Get the contacts for the current page
+  const currentContacts = contacts.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(contacts.length / PAGE_SIZE);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  return (
+    <div>
+      {loading && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-80 z-50">
+          <LoaderComponent />
         </div>
-    )
+      )}
+      {selectedContact && (
+        <AdminSingleContactComponent
+          open={open}
+          setOpen={setOpen}
+          contact={selectedContact}
+        />
+      )}
+      <section class="bg-white py-12">
+        <div class="mx-auto max-w-7xl px-4">
+          <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                  <tr>
+                    <th scope="col" class="px-4 py-3">
+                      Usuario
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                      Mensaje
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                      Fecha
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                      <span class="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentContacts.map((contact) => (
+                    <tr class="border-b hover:cursor-pointer hover:bg-gray-50" key={contact.id}>
+                      <td
+                        onClick={() => handleSelectContact(contact)}
+                        scope="row"
+                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
+                      >
+                        {contact.name} {contact.lastName} <br /> {contact.email}
+                      </td>
+                      <td
+                        onClick={() => handleSelectContact(contact)}
+                        class="px-4 py-3"
+                      >
+                        {contact.message.length > MAX_MESSAGE_LENGTH
+                          ? `${contact.message.substring(0, MAX_MESSAGE_LENGTH)}...`
+                          : contact.message}
+                      </td>
+                      <td
+                        onClick={() => handleSelectContact(contact)}
+                        class="px-4 py-3"
+                      >
+                        {contact.timestamp.toDate().toLocaleString()}
+                      </td>
+                      <td
+                        onClick={() => removeFromContact(contact.id)}
+                        class="px-4 py-3 flex items-center justify-end"
+                      >
+                        <TrashIcon className="h-5 w-5 hover:text-gray-700 my-auto" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <nav
+              class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+              aria-label="Table navigation"
+            >
+              <span class="text-sm font-normal text-gray-500 ">
+                Mostrando{" "}
+                <span class="font-semibold text-gray-900">
+                  {startIndex + 1} - {Math.min(endIndex, contacts.length)}
+                </span>{" "}
+                de
+                <span class="font-semibold text-gray-900"> {contacts.length}</span>
+              </span>
+              <ul class="inline-flex items-stretch -space-x-px">
+                <li>
+                  <button
+                    onClick={() =>
+                      handlePageChange(currentPage > 1 ? currentPage - 1 : 1)
+                    }
+                    disabled={currentPage === 1}
+                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  >
+                    <span class="sr-only">Previous</span>
+                    <svg
+                      class="w-5 h-5"
+                      aria-hidden="true"
+                      fill="currentColor"
+                      viewbox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </li>
+                {[...Array(totalPages).keys()].map((page) => (
+                  <li key={page}>
+                    <button
+                      onClick={() => handlePageChange(page + 1)}
+                      class={`flex items-center justify-center text-sm py-2 px-3 leading-tight ${
+                        currentPage === page + 1
+                          ? "text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700"
+                          : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                      }`}
+                    >
+                      {page + 1}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      handlePageChange(
+                        currentPage < totalPages ? currentPage + 1 : totalPages
+                      )
+                    }
+                    disabled={currentPage === totalPages}
+                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  >
+                    <span class="sr-only">Next</span>
+                    <svg
+                      class="w-5 h-5"
+                      aria-hidden="true"
+                      fill="currentColor"
+                      viewbox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10l-3.293-3.293a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
-  

@@ -3,9 +3,9 @@ import { useCart } from '../../context/CartContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { formatedPrice, formatedTotalPrice } from '../../utilities/utils'
 import ItemCountComponent from '../ItemCount/ItemCountComponent'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import LoaderComponent from '../Loader/LoaderComponent'
+import toast from 'react-hot-toast'
 
 const CheckoutComponent = () => {
     const {cart, removeFromCart, totalItems, checkout, totalPrice, loading} = useCart()
@@ -42,7 +42,6 @@ const CheckoutComponent = () => {
         setBillingState('provincia')
         setCP('')
         await checkout(totalWithShipping, billingData);
-        useNavigate('/')
     }
 
     return (
@@ -57,10 +56,10 @@ const CheckoutComponent = () => {
             )
             }
             <div class="grid mx-auto max-w-xl px-4 py-6 lg:max-w-7xl lg:grid-cols-2">
-                <div class="px-4 pt-8">
+                <div class="pt-8 px-4">
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>
-                    <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+                    <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4">
                         {totalItems === 0 ? 
                             'El carrito está vacío' 
                             : 
@@ -69,12 +68,13 @@ const CheckoutComponent = () => {
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4 my-auto">
                                     <span class="font-semibold">{product.name}</span>
+                                        <p className='text-sm text-gray-500'>{product.selectedSize} </p>
                                         <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
                                         <p class="text-md"> {product.quantity > 1 ? `${product.quantity}x ${formatedPrice(product)}` : '' } </p>
                                 </div>
                                 <div class="flex flex-wrap justify-between w-full px-4 py-4 my-auto">
                                     <ItemCountComponent product={product} />
-                                    <XMarkIcon className="h-6 w-6 rounded-md text-gray-400 hover:cursor-pointer" aria-hidden="true" onClick={() => removeFromCart(product.id)}/>
+                                    <XMarkIcon className="h-6 w-6 rounded-md text-gray-400 hover:cursor-pointer" aria-hidden="true" onClick={() => removeFromCart(product, product.selectedSize)}/>
                                 </div>
                             </div>)
                         )}
@@ -173,7 +173,7 @@ const CheckoutComponent = () => {
                         })}</p>
                     </div>
                     </div>
-                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handleCheckout}>Comprar</button>
+                    <button class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white" onClick={handleCheckout}>Iniciar orden</button>
                 </div>
             </div>
         </div>

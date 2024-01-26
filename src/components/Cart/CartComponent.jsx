@@ -83,19 +83,22 @@ export default function CartComponent({cartOpen, setCartOpen}) {
                                                     <div className="ml-4 flex flex-1 flex-col">
                                                     <div>
                                                         <div className="flex justify-between text-base font-medium text-gray-900">
-                                                        <h3>
-                                                            <a>{product.name}</a>
-                                                        </h3>
-                                                        <div className="ml-4 text-right">{formatedTotalPrice(product)}
-                                                        <div class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</div>
-                                                        </div>
+                                                            <h3>
+                                                                <a>{product.name}</a>
+                                                                <div>
+                                                                    <p className='text-sm text-gray-500'>{product.selectedSize} </p>
+                                                                </div>
+                                                            </h3>
+                                                            <div className="ml-4 text-right">{formatedTotalPrice(product)}
+                                                                <div class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-1 items-end justify-between text-sm">
+                                                    <div className="flex flex-1 items-end justify-between">
                                                         <ItemCountComponent product={product} />
                                                         <div className="flex">
                                                         <button
-                                                            onClick={() => removeFromCart(product.id)}
+                                                            onClick={() => removeFromCart(product)}
                                                             type="button"
                                                             className="font-medium text-indigo-600 hover:text-indigo-500"
                                                         >

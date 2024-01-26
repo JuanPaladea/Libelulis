@@ -97,7 +97,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                             )}
                           </div>
                           <div className="font-medium text-gray-700 hover:text-gray-800">
-                            {user.displayName}
+                            {user.displayName || user.email || user.uid}
                           </div>
                         </Link>
                         { isAdmin 
@@ -149,7 +149,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Top" className="mx-auto max-w-7xl px-4">
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center">
               <button
@@ -214,7 +214,7 @@ export default function NavBarComponent({cartOpen, setCartOpen}) {
                           )}
                         </div>
                         <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                          {user.displayName}
+                          {user.displayName || user.email || user.uid}
                         </div>
                         
                       </Menu.Button>

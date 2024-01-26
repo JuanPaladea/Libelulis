@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, updateProfile } from 'firebase/auth';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 
 const UserContext = createContext();
 
@@ -56,7 +56,7 @@ export const UserProvider = ({ children }) => {
             
             // Update the user profile with custom data
             await updateProfile(user, {
-                displayName: `${name} ${lastname}`
+                email: email,
             });
     
             // User creation and profile update successful

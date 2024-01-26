@@ -1,103 +1,119 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from 'firebase/firestore'
 import { useUser } from '../../context/UserContext'
-import { toast } from 'react-toastify'
 import LoaderComponent from '../Loader/LoaderComponent'
+import toast from 'react-hot-toast'
 
 export default function AdminEditProductComponent({open, setOpen, product}) {
-    const {isAdmin} = useUser()
-    const [loading, setLoading] = useState(false)
-    const [name, setName] = useState('')
-    const [img, setImg] = useState('')
-    const [img2, setImg2] = useState('')
-    const [img3, setImg3] = useState('')
-    const [descripcion, setDescripcion] = useState('')
-    const [price, setPrice] = useState('')
-    const [stock, setStock] = useState('')
-    const [category, setCategory] = useState('')
-    const db = getFirestore(); 
-    const productsCollection = collection(db, 'products')
-    const productDocRef = doc(productsCollection, product.id)
+  const {isAdmin} = useUser()
+  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState('')
+  const [img, setImg] = useState('')
+  const [img2, setImg2] = useState('')
+  const [img3, setImg3] = useState('')
+  const [descripcion, setDescripcion] = useState('')
+  const [price, setPrice] = useState('')
+  const [colors, setColors] = useState([])
+  const [category, setCategory] = useState('')
+  const [sizes, setSizes] = useState({
+    S: '',
+    M: '',
+    L: '',
+    XL: '',
+  });
 
-    useEffect(() => {
-        setName(product.name || '');
-        setImg(product.img || '');
-        setImg2(product.img2 || '');
-        setImg3(product.img3 || '');
-        setDescripcion(product.descripcion || '');
-        setPrice(product.price || '');
-        setCategory(product.category || '');
-        setStock(product.stock || '');
+  const db = getFirestore(); 
+  const productsCollection = collection(db, 'products')
+
+  const productDocRef = doc(productsCollection, product.id)
+
+  useEffect(() => {
+      setName(product.name || '');
+      setImg(product.img || '');
+      setImg2(product.img2 || '');
+      setImg3(product.img3 || '');
+      setDescripcion(product.descripcion || '');
+      setPrice(product.price || '');
+      setCategory(product.category || '');
+      setColors(product.colors || '');
+      setSizes(product.sizes || { S: '', M: '', L: '', XL: '' });
     }, [product]);
-
-    const handleUpdate = async (e) => {
-      e.preventDefault();
-      try {
-        setLoading(true);
-
-        if (!isAdmin) {
-          toast.error('No es administrador');
-          return;
-        }
-
-        const parsedPrice = parseFloat(price);
-        if (isNaN(parsedPrice)) {
-          toast.error('Precio debe ser un número');
-          return;
-        }
-    
-        const parsedStock = parseFloat(stock);
-        if (isNaN(parsedStock)) {
-          toast.error('Stock debe ser un número');
-          return;
-        }
-    
-        const updateObject = {};
-        if (name.trim() !== '') {
-          updateObject.name = name;
-        }
-        if (!isNaN(parsedPrice)) {
-          updateObject.price = parsedPrice;
-        }
-        if (img.trim() !== '') {
-          updateObject.img = img;
-        }
-        if (img2.trim() !== '') {
-          updateObject.img2 = img2;
-        }
-        if (img3.trim() !== '') {
-          updateObject.img3 = img3;
-        }
-        if (descripcion.trim() !== '') {
-          updateObject.descripcion = descripcion;
-        }
-        if (category.trim() !== "") {
-          updateObject.category = category;
-        }
-        if (!isNaN(parsedStock)) {
-          updateObject.stock = stock;
-        }
-    
-        await updateDoc(productDocRef, updateObject);
-        setOpen(false);
-        setName("");
-        setStock("");
-        setPrice("");
-        setDescripcion("");
-        setImg("");
-        setImg2("");
-        setImg3("");
-        setCategory("");
-        toast.success('Producto actualizado');
-      } catch (error) {
-        console.error(error);
-        toast.error('Error al actualizar el producto');
-      } finally {
-        setLoading(false);
+        
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+  
+      if (!isAdmin) {
+        toast.error('No es administrador');
+        return;
       }
-    };
+  
+      const parsedPrice = parseFloat(price);
+      if (isNaN(parsedPrice)) {
+        toast.error('Precio debe ser un número');
+        return;
+      }
+  
+      const updateObject = {
+        name: name.trim() !== '' ? name : product.name,
+        price: !isNaN(parsedPrice) ? parsedPrice : product.price,
+        img: img.trim() !== '' ? img : product.img,
+        img2: img2.trim() !== '' ? img2 : product.img2,
+        img3: img3.trim() !== '' ? img3 : product.img3,
+        descripcion: descripcion.trim() !== '' ? descripcion : product.descripcion,
+        category: category.trim() !== '' ? category : product.category,
+        colors: colors.trim() !== '' ? colors : product.colors,
+        sizes: sizes,
+      };
+      await updateDoc(productDocRef, updateObject);
+
+      setOpen(false);
+  
+      setName('');
+      setPrice('');
+      setDescripcion('');
+      setImg('');
+      setImg2('');
+      setImg3('');
+      setCategory('');
+      setColors([]);
+      setSizes({ S: '', M: '', L: '', XL: '' });
+
+      toast.success('Producto actualizado');
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al actualizar el producto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const colorList = [
+    'pink',
+    'indigo',
+    'black',
+    'white',
+    'orange',
+    'yellow',
+    'blue',
+    'green',
+    'red',
+    'gray',
+    'lime',
+    'teal',
+    'purple',
+  ];
+
+  const handleColorToggle = (selectedColor) => {
+    if (colors.includes(selectedColor)) {
+      setColors(colors.filter((color) => color !== selectedColor));
+    } else {
+      setColors([...colors, selectedColor]);
+    }
+  };
 
   return (
     <div>
@@ -187,69 +203,66 @@ export default function AdminEditProductComponent({open, setOpen, product}) {
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="last-name" className="block text-sm font-semibold leading-6 text-gray-900">
-                                    Stock
-                                    </label>
-                                    <div className="mt-2.5">
-                                    <input
-                                        onChange={(e) => setStock(e.target.value)}
-                                        value={stock}
-                                        placeholder={product.stock}
-                                        type="number"
-                                        name="stock"
-                                        id="stock"
-                                        autoComplete="stock"
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    />
-                                    </div>
-                                </div>
-                                <div>
                                   <label htmlFor="category" className="block text-sm font-semibold leading-6 text-gray-900">
                                     Categoría
                                   </label>
                                   <div className="mt-2.5">
                                     <div className="flex items-center space-x-4">
-                                      <label className="flex items-center">
-                                        <input
-                                          type="radio"
-                                          value="buzo"
-                                          checked={category === "buzo"}
-                                          onChange={() => setCategory("buzo")}
-                                          className="form-radio"
-                                        />
-                                        <span className="ml-2">Buzo</span>
-                                      </label>
-                                      <label className="flex items-center">
-                                        <input
-                                          type="radio"
-                                          value="remera"
-                                          checked={category === "remera"}
-                                          onChange={() => setCategory("remera")}
-                                          className="form-radio"
-                                        />
-                                        <span className="ml-2">Remera</span>
-                                      </label>
-                                      <label className="flex items-center">
-                                        <input
-                                          type="radio"
-                                          value="campera"
-                                          checked={category === "campera"}
-                                          onChange={() => setCategory("campera")}
-                                          className="form-radio"
-                                        />
-                                        <span className="ml-2">Campera</span>
-                                      </label>
-                                      <label className="flex items-center">
-                                        <input
-                                          type="radio"
-                                          value="otro"
-                                          checked={category === "otro"}
-                                          onChange={() => setCategory("otro")}
-                                          className="form-radio"
-                                        />
-                                        <span className="ml-2">Otro</span>
-                                      </label>
+                                      {['buzo', 'remera', 'campera', 'otro'].map((value) => (
+                                        <label className="flex items-center" key={value}>
+                                          <input
+                                            type="radio"
+                                            value={value}
+                                            checked={category === value}
+                                            onChange={() => setCategory(value)}
+                                            className="form-radio"
+                                          />
+                                          <span className="ml-2">{value.charAt(0).toUpperCase() + value.slice(1)}</span>
+                                        </label>
+                                      ))}
                                     </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="color" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Color
+                                  </label>
+                                  <div className="mt-2.5 flex flex-wrap">
+                                  {colorList.map((color) => (
+                                    <button
+                                      key={color}
+                                      type="button"
+                                      className={`p-1 mb-2 mr-4 w-7 h-7 ${colors.includes(color) ? 'border-2 border-red-500' : ''} ${color === 'red' && colors.includes('red') ? 'border-2 border-white' : 'border-0'}`}
+                                      style={{ backgroundColor: color }}
+                                      onClick={() => handleColorToggle(color)}
+                                    >
+                                    </button>
+                                  ))}
+
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="sizes" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Tallas y Stock
+                                  </label>
+                                  <div className="mt-2.5 grid grid-cols-4 gap-x-4">
+                                    {Object.keys(sizes).map((size) => (
+                                      <div key={size}>
+                                        <label htmlFor={`size-${size}`} className="block text-sm font-semibold leading-6 text-gray-900">
+                                          {`Stock ${size}`}
+                                        </label>
+                                        <div className="mt-2.5">
+                                          <input
+                                            value={sizes[size]}
+                                            onChange={(e) => setSizes((prevSizes) => ({ ...prevSizes, [size]: e.target.value }))}
+                                            type="number"
+                                            name={`size-${size}`}
+                                            id={`size-${size}`}
+                                            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                          />
+                                        </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
                                 <div>
