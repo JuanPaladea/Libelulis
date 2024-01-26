@@ -68,6 +68,7 @@ const CheckoutComponent = () => {
                                 <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src={product.img} alt="" />
                                 <div class="flex w-full flex-col px-4 py-4 my-auto">
                                     <span class="font-semibold">{product.name}</span>
+                                        <p className='text-sm text-gray-500'>{product.selectedSize} </p>
                                         <p class="text-lg font-bold">{formatedTotalPrice(product)}</p>
                                         <p class="text-md"> {product.quantity > 1 ? `${product.quantity}x ${formatedPrice(product)}` : '' } </p>
                                 </div>

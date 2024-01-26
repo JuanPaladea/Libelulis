@@ -85,6 +85,9 @@ export default function CartComponent({cartOpen, setCartOpen}) {
                                                         <div className="flex justify-between text-base font-medium text-gray-900">
                                                             <h3>
                                                                 <a>{product.name}</a>
+                                                                <div>
+                                                                    <p className='text-sm text-gray-500'>{product.selectedSize} </p>
+                                                                </div>
                                                             </h3>
                                                             <div className="ml-4 text-right">{formatedTotalPrice(product)}
                                                                 <div class="text-sm text-gray-500 text-right"> {product.quantity > 1 ? (`${product.quantity}x ${formatedPrice(product)}`) : ''}</div>

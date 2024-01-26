@@ -80,17 +80,17 @@ export const CartProvider = ({ children }) => {
     const addToCart = async (product, selectedSize, quantity = 1) => {    
         try {
             if (!selectedSize || !product.sizes[selectedSize]) {
-              toast.error('Seleccione un tamaño válido');
-              return;
+                toast.error('Seleccione un tamaño válido');
+                return;
             }
-        
+    
             if (quantity > product.sizes[selectedSize]) {
-              toast.error(`No hay suficiente stock disponible para ${product.name} en tamaño ${selectedSize}`);
-              return;
+                toast.error(`No hay suficiente stock disponible para ${product.name} en tamaño ${selectedSize}`);
+                return;
             } 
-
+    
             const selectedProduct = { ...product, selectedSize, quantity };
-
+    
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
                 const productRef = doc(cartItemDocRef, product.id);
@@ -98,16 +98,25 @@ export const CartProvider = ({ children }) => {
                 const cartItemDoc = await getDoc(productRef);
     
                 if (cartItemDoc.exists()) {
-                    // Update an existing document
+                    // Check if there is an existing product with the same ID but different size
                     const existingProduct = cartItemDoc.data();
-                    const updatedProduct = {
-                        ...existingProduct,
-                        quantity: (existingProduct.quantity || 0) + quantity,
-                        selectedSize: selectedProduct.selectedSize,
-                    };
-                    await updateCartItem(productRef, updatedProduct);
+                    const isDifferentSize = existingProduct.selectedSize !== selectedProduct.selectedSize;
+    
+                    if (isDifferentSize) {
+                        // Add a new line item if the size is different
+                        const newProductRef = doc(cartItemDocRef, `${product.id}_${selectedProduct.selectedSize}`);
+                        await addToCartItem(newProductRef, selectedProduct);
+                    } else {
+                        // Update the existing document if the size is the same
+                        const updatedProduct = {
+                            ...existingProduct,
+                            quantity: (existingProduct.quantity || 0) + quantity,
+                            selectedSize: selectedProduct.selectedSize,
+                        };
+                        await updateCartItem(productRef, updatedProduct);
+                    }
                 } else {
-                    // Create a new document
+                    // Create a new document if it doesn't exist
                     const newProduct = { ...selectedProduct };
                     await addToCartItem(productRef, newProduct);
                 }
@@ -115,11 +124,11 @@ export const CartProvider = ({ children }) => {
             } else {
                 const updatedCart = [...cart];
                 const existingProductIndex = updatedCart.findIndex((item) => item.id === selectedProduct.id && item.selectedSize === selectedProduct.selectedSize);
-    
+
                 if (existingProductIndex !== -1) {
                     updatedCart[existingProductIndex].quantity += quantity;
                 } else {
-                    updatedCart.push({ ...product, quantity });
+                    updatedCart.push({ ...selectedProduct });
                 }
                 setCart(updatedCart);
                 saveCartToLocalStorage(updatedCart);
@@ -132,6 +141,7 @@ export const CartProvider = ({ children }) => {
             setLoading(false);
         }
     };
+    
 
     const updateCartItem = async (productRef, product) => {
         try {
