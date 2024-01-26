@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ProductListComponent from '../ProductList/ProductListComponent'
 
 export default function ProductListContainerComponent({products}) {
@@ -8,6 +8,7 @@ export default function ProductListContainerComponent({products}) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const resultadosRef = useRef(null)
 
   const [orderOption, setOrderOption] = useState('name'); // 'name' or 'price'
   const [orderDirection, setOrderDirection] = useState('asc'); // 'asc' or 'desc'
@@ -67,7 +68,16 @@ export default function ProductListContainerComponent({products}) {
     const pageNumbers = [];
     const maxPage = Math.min(currentPage + pagesToShow - 1, totalPages);
 
-    for (let i = Math.max(1, currentPage - 1); i <= maxPage; i++) {
+    const middlePage = Math.ceil(pagesToShow / 2);
+
+    let startPage = Math.max(1, currentPage - middlePage);
+    let endPage = Math.min(startPage + pagesToShow - 1, totalPages);
+
+    if (endPage - startPage < pagesToShow - 1) {
+      startPage = Math.max(1, endPage - pagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
 
@@ -77,12 +87,14 @@ export default function ProductListContainerComponent({products}) {
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      resultadosRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      resultadosRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -163,7 +175,7 @@ export default function ProductListContainerComponent({products}) {
   };
 
   return (
-  <section class="px-4 py-4 mx-auto max-w-7xl">
+  <section ref={resultadosRef} class="px-4 py-4 mx-auto max-w-7xl">
       <div class="flex flex-col">
         <div class="h-1 bg-gray-200 rounded overflow-hidden">
           <div class="w-24 h-full bg-indigo-500"></div>

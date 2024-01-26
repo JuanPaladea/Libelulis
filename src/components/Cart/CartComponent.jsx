@@ -94,11 +94,11 @@ export default function CartComponent({cartOpen, setCartOpen}) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-1 items-end justify-between text-sm">
+                                                    <div className="flex flex-1 items-end justify-between">
                                                         <ItemCountComponent product={product} />
                                                         <div className="flex">
                                                         <button
-                                                            onClick={() => removeFromCart(product.id)}
+                                                            onClick={() => removeFromCart(product)}
                                                             type="button"
                                                             className="font-medium text-indigo-600 hover:text-indigo-500"
                                                         >

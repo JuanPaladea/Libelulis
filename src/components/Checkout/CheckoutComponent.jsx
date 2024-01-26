@@ -56,10 +56,10 @@ const CheckoutComponent = () => {
             )
             }
             <div class="grid mx-auto max-w-xl px-4 py-6 lg:max-w-7xl lg:grid-cols-2">
-                <div class="px-4 pt-8">
+                <div class="pt-8 px-4">
                     <p class="text-xl font-medium">Tu orden</p>
                     <p class="text-gray-400">Verífica tu orden de compra</p>
-                    <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+                    <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4">
                         {totalItems === 0 ? 
                             'El carrito está vacío' 
                             : 
@@ -74,7 +74,7 @@ const CheckoutComponent = () => {
                                 </div>
                                 <div class="flex flex-wrap justify-between w-full px-4 py-4 my-auto">
                                     <ItemCountComponent product={product} />
-                                    <XMarkIcon className="h-6 w-6 rounded-md text-gray-400 hover:cursor-pointer" aria-hidden="true" onClick={() => removeFromCart(product.id)}/>
+                                    <XMarkIcon className="h-6 w-6 rounded-md text-gray-400 hover:cursor-pointer" aria-hidden="true" onClick={() => removeFromCart(product, product.selectedSize)}/>
                                 </div>
                             </div>)
                         )}

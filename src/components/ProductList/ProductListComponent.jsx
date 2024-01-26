@@ -28,7 +28,7 @@ export default function ProductListComponent({ productos }) {
               <div className="flex flex-col items-start my-2">
                 <span className="font-bold text-gray-600">{formatedPrice(product)}</span>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-wrap items-center space-x-4">
                 <span className="font-bold">Talle:</span>
                 {sizeList.map((size) => (
                   <button

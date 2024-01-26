@@ -2,7 +2,6 @@ import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "./UserContext";
 import toast from "react-hot-toast";
-import { getAuth, signInAnonymously } from "firebase/auth";
 
 const CartContext = createContext()
 
@@ -89,7 +88,14 @@ export const CartProvider = ({ children }) => {
                 return;
             } 
     
-            const selectedProduct = { ...product, selectedSize, quantity };
+            const selectedProduct = { 
+                name: product.name,
+                price: product.price,
+                img: product.img, 
+                sizes: product.sizes,
+                productId: product.id,
+                selectedSize, 
+                quantity };
     
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
@@ -163,120 +169,133 @@ export const CartProvider = ({ children }) => {
         }
     };    
 
-    const updateCartItemQuantity = async (product, selectedSize, newQuantity) => {
+    const updateCartItemQuantity = async (product, newQuantity) => {
         try {
             setLoading(true);
-        
-            if (newQuantity > product.sizes[selectedSize]) {
-                toast.error(`No hay suficiente stock disponible para ${product.name} en el tamaño ${selectedSize}`);
+    
+            if (newQuantity > product.sizes[product.selectedSize]) {
+                toast.error(`No hay suficiente stock disponible para ${product.name}`);
                 return;
             }
-        
+    
             if (user) {
                 const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
-                const productRef = doc(cartItemDocRef, product.id, 'sizes', selectedSize);
+                const productRef = doc(cartItemDocRef, product.id);
                 await updateDoc(productRef, { quantity: newQuantity });
             } else {
                 const updatedCart = cart.map((item) => {
-                if (item.id === product.id && item.size === selectedSize) {
-                    return { ...item, quantity: newQuantity };
-                }
-                return item;
+                    if (item.id === product.id) {
+                        return { ...item, quantity: newQuantity };
+                    }
+                    return item;
                 });
-        
-                setCart(updatedCart);
-                saveCartToLocalStorage(updatedCart);
-            }
-            } catch (error) {
-            console.error('Error updating cart item:', error);
-            } finally {
-            // Set loading to false when the data is fetched, regardless of success or failure
-            setLoading(false);
-            }
-      };
-      
-      
-
-    const removeFromCart = async (itemId) => {
-        try {
-            setLoading(true)
-            if (user) {
-                const cartItemDocRef = collection(db, `users/${user.uid}/cart/`);
-                const ProductRef = doc(cartItemDocRef, itemId);
     
-                await deleteDoc(ProductRef);    
-                const updatedLocalCart = cart.filter((item) => item.id !== itemId);
-                saveCartToLocalStorage(updatedLocalCart);
-                setCart(updatedLocalCart);    
-            } else {
-                const updatedCart = cart.filter((item) => item.id !== itemId);
                 setCart(updatedCart);
                 saveCartToLocalStorage(updatedCart);
             }
         } catch (error) {
-            console.error('Error removing from cart:', error);
+            console.error('Error updating cart item:', error);
         } finally {
             // Set loading to false when the data is fetched, regardless of success or failure
             setLoading(false);
         }
     };
+    
+      
+    const removeFromCart = async (product) => {
+        try {
+            setLoading(true);
+    
+            if (user) {
+                const cartItemDocRef = collection(db, `users/${user.uid}/cart`);
+                const productRef = doc(cartItemDocRef, product.id);
+    
+                const cartItemDoc = await getDoc(productRef);
+    
+                if (cartItemDoc.exists()) {
+                    // Remove the item from the cart
+                    await deleteDoc(productRef);
+                    toast.success(`${product.name} eliminado del carrito`);
+                }
+            } else {
+                const updatedCart = cart.filter((item) => item.id !== product.id);
+    
+                setCart(updatedCart);
+                saveCartToLocalStorage(updatedCart);
+                toast.success(`${product.name} eliminado del carrito`);
+            }
+        } catch (error) {
+            console.error('Error removing from cart:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };    
 
     const checkout = async (totalWithShipping, billingData) => {
         if (user && cart.length > 0) {
-            setLoading(true)
+            setLoading(true);
             const compraCollectionRef = collection(db, 'compras');
             const newCompraDocRef = doc(compraCollectionRef);
-            const compraData = {
-                user: [user.uid, user.email],
-                Direccion: billingData,
-                items: cart,
-                total: totalWithShipping,
-                timestamp: new Date(),
-            };
+            
+            const updateStockPromises = cart.map(async (item) => {
+                const productRef = doc(db, 'products', item.productId);
+    
+                try {
+                    const productSnapshot = await getDoc(productRef);
+                    const sizesData = productSnapshot.data().sizes;
+                    const currentStock = sizesData[item.selectedSize];
+    
+                    if (currentStock >= item.quantity) {
+                        const newStock = currentStock - item.quantity;
+                        sizesData[item.selectedSize] = newStock;
+                        await updateDoc(productRef, { sizes: sizesData });
+                    } else {
+                        throw new Error(`Insufficient stock for product: ${item.name} (${item.selectedSize}). Current stock: ${currentStock}, Quantity requested: ${item.quantity}`);
+                    }
+                } catch (error) {
+                    console.error('Error updating product stock:', error);
+                    throw error;
+                }
+            });
+            
             try {
-                // Create a new document in 'compras' collection
+                await Promise.all(updateStockPromises);
+    
+                const compraData = {
+                    user: [user.uid, user.email],
+                    Direccion: billingData,
+                    items: cart,
+                    total: totalWithShipping,
+                    timestamp: new Date(),
+                };
+                
                 await setDoc(newCompraDocRef, compraData);
                 
-                const updateStockPromises = cart.map(async (item) => {
-                    const productRef = doc(collection(db, 'products'), item.id);
-                    const productDoc = await getDoc(productRef);
-                    const productData = productDoc.data();
-            
-                    // Check if the item has a size property
-                    if (item.size && productData.sizes && productData.sizes[item.size]) {
-                      const updatedStock = productData.sizes[item.size] - item.quantity;
-                      return updateDoc(productRef, { sizes: { [item.size]: updatedStock } }, { merge: true });
-                    }
-            
-                    // If there is no size or sizes property, update the stock directly
-                    const updatedStock = (productData.stock || 0) - item.quantity;
-                    return updateDoc(productRef, { stock: updatedStock });
-                });
-            
-                await Promise.all(updateStockPromises);
+                // Clear the user's cart collection after a successful purchase
+                const cartCollectionRef = collection(db, `users/${user.uid}/cart`);
+                const cartQuerySnapshot = await getDocs(cartCollectionRef);
                 
-                const deletePromises = cart.map((item) => {
-                    const cartCollectionRef = collection(db, 'users', user.uid, 'cart');
-                    const itemDocRef = doc(cartCollectionRef, item.id);
-                    return deleteDoc(itemDocRef);
+                cartQuerySnapshot.forEach(async (doc) => {
+                    await deleteDoc(doc.ref);
                 });
-                await Promise.all(deletePromises);
-                setSummary(cart)
-                // Clear the local cart state
+                
+                // Clear the local cart state after successful purchase
                 setCart([]);
+                    
+                toast.success('Compra realizada con éxito');
             } catch (error) {
                 console.error('Error during checkout:', error);
                 toast.error('Error al realizar la compra');
             } finally {
-                // Set loading to false when the data is fetched, regardless of success or failure
                 setLoading(false);
             }
         } else if (cart.length <= 0) {
             toast.error('El carrito está vacío');
         } else if (!user) {
-            toast.error('El usuario no esta logeado');
+            toast.error('El usuario no está logeado');
         }
     };
+    
 
     const calculateTotalItems = (cartItems) => {
         return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
