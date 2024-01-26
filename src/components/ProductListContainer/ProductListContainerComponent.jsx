@@ -208,6 +208,12 @@ export default function ProductListContainerComponent({products}) {
                   <span class="text-lg">Buzos</span>
                 </label>
               </li>
+              <li class="mb-4">
+                <label for="" class="flex items-center">
+                  <input type="checkbox" class="w-4 h-4 mr-2" onChange={() => handleCategoryFilter('otro')} />
+                  <span class="text-lg">Otros</span>
+                </label>
+              </li>
             </ul>
           </div>
 
