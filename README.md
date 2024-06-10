@@ -49,14 +49,6 @@ The app is live at [Libelulis](https://libelulis.vercel.app/) and is accessible 
 - `npm run dev`: Start the development server.
 - `npm run build`: Build the production-ready app.
 
-## Contributing
-
-Contributions are welcome! Contact [Juan Paladea](mailto:juanpaladea5@gmail.com) for more information.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Contact Information
 
 - Email: juanpaladea5@gmail.com
