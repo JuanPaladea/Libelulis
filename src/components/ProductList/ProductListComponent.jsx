@@ -6,11 +6,17 @@ import { useState } from "react";
 
 export default function ProductListComponent({ productos }) {
   const {addToCart } = useCart()
-  const [selectedSize, setSelectedSize] = useState('M');
+
+  const initialSizes = productos.reduce((sizes, product) => {
+    sizes[product.id] = 'M';
+    return sizes;
+  }, {});
+
+  const [selectedSizes, setSelectedSizes] = useState(initialSizes);
   
   const sizeList = ['S', 'M', 'L', 'XL'];
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
+  const handleSizeSelect = (size, productId) => {
+    setSelectedSizes(prevSizes => ({ ...prevSizes, [productId]: size }));
   };
   
   return (
@@ -33,18 +39,18 @@ export default function ProductListComponent({ productos }) {
                 {sizeList.map((size) => (
                   <button
                     key={size}
-                    className={`px-3 py-1 border rounded-md ${selectedSize === size ? 'border-blue-500 bg-blue-100' : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'}`}
-                    onClick={() => handleSizeSelect(size)}
+                    className={`px-3 py-1 border rounded-md ${selectedSizes[product.id] === size ? 'border-blue-500 bg-blue-100' : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'}`}
+                    onClick={() => handleSizeSelect(size, product.id)}
                   >
                     {size}
                   </button>
                 ))}
               </div>
               <div className="flex mt-2 w-full">
-                {product.sizes[selectedSize] > 0 ? (
+                {product.sizes[selectedSizes[product.id]] > 0 ? (
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => addToCart(product, selectedSize)}
+                    onClick={() => addToCart(product, selectedSizes[product.id])}
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Añadir al carrito
