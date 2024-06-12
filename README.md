@@ -29,12 +29,12 @@ The app is live at [Libelulis](https://libelulis.vercel.app/) and is accessible 
 
 ## Folder Structure
 
-/src
-/components
-/context
-/pages
-/hooks
-/router
+- /src
+- /components
+- /context
+- /pages
+- /hooks
+- /router
 
 ## Scripts
 
