@@ -4,14 +4,6 @@
 
 Libelulis is an e-commerce platform that provides users with features like user login, purchase history, contact form, newsletter subscription, and admin functionalities such as adding/editing products, viewing user contacts, and purchase history.
 
-## Installation
-
-To run the app locally, follow these steps:
-
-1. Clone the repository: `git clone <repository-url>`
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
-
 ## Usage
 
 The app is live at [Libelulis](https://libelulis.vercel.app/) and is accessible on both mobile and desktop devices.
